@@ -3,5 +3,5 @@ class Answer < ApplicationRecord
   belongs_to :question
 
   validates :question_id, :body, :author_id, presence: true
-  validates :body, uniqueness: { scope: :question, message: "of answer can't be repeated." }
+  validates :body, uniqueness: { scope: :question_id, message: "already exists for question." }
 end

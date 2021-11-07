@@ -3,5 +3,5 @@ class Question < ApplicationRecord
   has_many :answers
 
   validates :title, :body, :author_id,  presence: true
-  validates :title,                     uniqueness: true
+  validates :title, uniqueness: true
 end

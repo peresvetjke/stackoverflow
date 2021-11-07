@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :answer do
-    question { nil }
-    body { "MyText" }
-    author_id { 1 }
+    association :question, factory: :question
+    body { "#{(0...50).map { ('a'..'z').to_a[rand(26)] }.join}" }
+    association :author, factory: :user
   end
 end
