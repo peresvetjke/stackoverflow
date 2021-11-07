@@ -7,6 +7,7 @@ RSpec.describe User, type: :model do
 
   it { is_expected.to validate_uniqueness_of(:email) }
   it { is_expected.to validate_uniqueness_of(:login) }
+  it { is_expected.not_to allow_value('asd').for(:email) }
 
   it { is_expected.to have_many(:questions) }
   it { is_expected.to have_many(:answers) }
