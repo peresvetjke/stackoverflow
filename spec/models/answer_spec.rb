@@ -2,9 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
   describe "validations" do
-    it { is_expected.to validate_presence_of(:question_id) }
     it { is_expected.to validate_presence_of(:body) }
-    it { is_expected.to validate_presence_of(:author_id) }
 
     describe "answer uniqueness" do
       answer = FactoryBot.create(:answer, question: FactoryBot.create(:question), body: "Answer")
