@@ -79,6 +79,8 @@ GEM
     childprocess (4.1.0)
     concurrent-ruby (1.1.9)
     crass (1.0.6)
+    decent_exposure (3.0.4)
+      activesupport (>= 4.0)
     diff-lcs (1.4.4)
     erubi (1.10.0)
     factory_bot (6.2.0)
@@ -89,6 +91,8 @@ GEM
     ffi (1.15.4)
     globalid (0.5.2)
       activesupport (>= 5.0)
+    haml (4.0.7)
+      tilt
     i18n (1.8.11)
       concurrent-ruby (~> 1.0)
     jbuilder (2.11.2)
@@ -238,7 +242,9 @@ DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
   capybara (>= 3.26)
+  decent_exposure (~> 3.0)
   factory_bot_rails
+  haml (~> 4.0, >= 4.0.7)
   jbuilder (~> 2.7)
   listen (~> 3.3)
   pg (~> 1.1)
