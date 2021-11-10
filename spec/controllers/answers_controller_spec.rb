@@ -7,7 +7,7 @@ RSpec.describe AnswersController, :type => :controller do
 
     context 'with valid params' do
       it "creates new answer in db" do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question }}.to change(Answer, :count).by(1)
+        expect { post :create, params: { answer: attributes_for(:answer), question_id: question }}.to change(question.answers, :count).by(1)
       end
 
       it "renders show question template with new answer created" do
@@ -18,7 +18,7 @@ RSpec.describe AnswersController, :type => :controller do
 
     context 'with invalid params' do
       it "keeps count unchanged" do
-        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question } }.to change(Answer, :count).by(0)
+        expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question } }.to change(question.answers, :count).by(0)
       end
 
       it "renders show question template with answer unsaved" do
