@@ -9,7 +9,7 @@ RSpec.describe Answer, type: :model do
       author = FactoryBot.create(:user)
       question = answer.question
       before { 
-        FactoryBot.build(:answer, question: question, body: "Answer", author: author)
+        FactoryBot.build(:answer, question: question, body: "Answer")
       }
       it 'is exptected to be invalid when answer has been already taken' do
         expect(subject).to be_invalid
@@ -18,7 +18,7 @@ RSpec.describe Answer, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:author).class_name('User') }
+    # it { is_expected.to belong_to(:author).class_name('User') }
     it { is_expected.to belong_to(:question) }
   end
 end

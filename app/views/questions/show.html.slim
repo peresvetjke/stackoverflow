@@ -1,0 +1,10 @@
+h1 Show question
+h3 = question.title
+p = question.body
+ul
+  - answers.each do |a|
+    li = a.body
+
+= form_with url: question_answers_path(question), model: answer do |f|
+  = f.text_field :body 
+  = f.submit
