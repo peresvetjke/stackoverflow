@@ -3,6 +3,10 @@ class QuestionsController < ApplicationController
   expose :answers, ->{ question.answers }
   expose :answer,  ->{ question.answers.new }
 
+  def index
+    
+  end
+
   def show
 
   end
