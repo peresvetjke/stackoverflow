@@ -3,7 +3,6 @@ require "rails_helper"
 feature 'User can register', %q{
   In order to sign in
   and ask questions or post answers
-  I'd like to be able to register
 } do
 
   background { visit new_user_registration_path }
@@ -46,7 +45,7 @@ feature 'User can register', %q{
     expect(page).to have_text("Email has already been taken")
   end
 
-  scenario "Guest tries to register with correct cridentials" do
+  scenario "Guest tries to register with correct credentials" do
     fill_in "Email", :with => "user@example.com"
     fill_in "Password", :with => "password"
     fill_in "Password confirmation", :with => "password"
@@ -57,9 +56,3 @@ feature 'User can register', %q{
   end
 
 end
-
-=begin
-  - Пользователь может войти в систему
-  - Пользователь может выйти из системы
-  - Пользователь может зарегистрироваться в системе
-=end

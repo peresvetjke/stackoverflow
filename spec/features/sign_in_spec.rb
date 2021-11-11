@@ -1,48 +1,42 @@
-=begin
 require "rails_helper"
 
-RSpec.feature "Sign in", :type => :feature do
+feature 'User can sign in', %q{
+  In order to ask questions or post answers
+} do
 
+  given(:user) { create(:user) }
+  background { visit new_user_session_path }
 
-  feature 'User can sign in', %q{
-    In order to ask questions
-    As an unauthenticated user
-    I'd like to be able to sign in
-  } do
+  scenario "User tries to sign in with blank email" do
+    fill_in "Email", :with => ""
+    fill_in "Password", :with => user.password
+    click_button "Log in"
 
+    expect(page).to have_text("Invalid Email or password")
+  end
 
-    scenario "Registered user can sign in" do
-      visit "/sign_in"
+  scenario "User tries to sign in with blank password" do
+    fill_in "Email", :with => user.email
+    fill_in "Password", :with => ""
+    click_button "Log in"
 
-      fill_in "login", :with => "login"
-      fill_in "password", :with => "password"
-      click_button "Sign in"
+    expect(page).to have_text("Invalid Email or password")
+  end  
 
-      expect(page).to have_text("You have successfully signed in.")
-    end
+  scenario "User tries to sign in with incorrect credentials" do
+    fill_in "Email", :with => "123456"
+    fill_in "Password", :with => "654321"
+    click_button "Log in"
 
-    scenario "User can sign out" do
-      visit "/sign_out"
+    expect(page).to have_text("Invalid Email or password")
+  end
 
-      expect(page).to have_text("You have successfully signed out.")
-    end
+  scenario "User signs in with correct cridentials" do
+    fill_in "Email", :with => user.email
+    fill_in "Password", :with => user.password
+    click_button "Log in"
 
-    scenario "User can register" do
-      visit "/sign_up"
-
-      fill_in "login", :with => "login"
-      fill_in "password", :with => "password"
-      fill_in "password_cofirmation", :with => "password"
-      click_button "Sign up"
-
-      expect(page).to have_text("You have successfully signed up.")
-    end
+    expect(page).to have_text("Signed in successfully")
   end
 
 end
-=end
-=begin
-  - Пользователь может войти в систему
-  - Пользователь может выйти из системы
-  - Пользователь может зарегистрироваться в системе
-=end
