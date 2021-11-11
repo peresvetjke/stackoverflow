@@ -5,7 +5,7 @@ table
   - if questions.present?
     - questions.each do |q|
       tr.question*{data: {id: q.id}}
-        td = q.title
+        td = link_to "#{q.title}", question_path(q)
   - else
     tr
       td No questions yet.

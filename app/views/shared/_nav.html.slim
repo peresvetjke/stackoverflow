@@ -1,6 +1,5 @@
-- unless %w[sessions registrations passwords].include?(controller_name)
-  - if current_user.present?
-    = link_to "Sign out", destroy_user_session_path, method: :delete, id: "sign_out"
-  - else
-    = link_to "Sign in", new_user_session_path, method: :get, id: "sign_in"
-    = link_to "Sign up", new_user_registration_path, method: :get, id: "sign_up"
+- if current_user.present?
+  = link_to "Sign out", destroy_user_session_path, method: :delete, id: "sign_out"
+- else
+  = link_to "Sign in", new_user_session_path, method: :get, id: "sign_in"
+  = link_to "Sign up", new_user_registration_path, method: :get, id: "sign_up"

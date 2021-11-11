@@ -11,20 +11,20 @@ feature 'User can index all questions list', %q{
     sign_in(user)
     }
 
-  scenario "lists index when no question exists" do
+  scenario "views index when no question exists" do
     visit questions_path
     expect(page).to have_text("No questions yet")
   end
 
-  scenario "lists index when 1 question exists" do
+  scenario "views index when 1 question exists" do
     question = create(:question)
     visit questions_path
     expect(page).to have_text(question.title)
   end
 
-  scenario "lists index when few questions exist" do
-    question = create_list(:question, 5)
+  scenario "views index when few questions exist" do
+    questions = create_list(:question, 5)
     visit questions_path
-    expect(page.all('table tr.question').count).to eq(5)
+    expect(page).to satisfy("has all questions") { |page| page.all('table tr.question').count == 5 && questions.all? { |q| page.has_content?(q.title) } }
   end
 end

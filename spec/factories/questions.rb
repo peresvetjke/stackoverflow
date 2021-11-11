@@ -1,7 +1,11 @@
 FactoryBot.define do
+  sequence :title do |n|
+    "title #{n}"
+  end
+
   factory :question do
-    title { "#{(0...10).map { ('a'..'z').to_a[rand(26)] }.join}" }
-    body  { "#{(0...10).map { ('a'..'z').to_a[rand(26)] }.join}" }
+    title
+    body
     # association :author, factory: :user
 
     trait :invalid do

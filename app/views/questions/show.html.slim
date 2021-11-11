@@ -3,7 +3,7 @@ h3 = question.title
 p = question.body
 ul
   - answers.each do |a|
-    li = a.body
+    li.answer*{data: {id: a.id}} = a.body
 
 - if answer.errors.present?
   = render "shared/errors", resource: answer
