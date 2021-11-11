@@ -4,7 +4,6 @@ feature 'User can create a question', %q{
   In order to get an advice with answers
 } do
 
-
   #feature "being unauthorized" do
   #
   #end
@@ -41,16 +40,3 @@ feature 'User can create a question', %q{
     end
  # end
 end
-
-=begin
-  given(:user) { create(:user) }
-  background { visit new_user_session_path }
-
-  scenario "User tries to sign in with blank email" do
-    fill_in "Email", :with => ""
-    fill_in "Password", :with => user.password
-    click_button "Log in"
-
-    expect(page).to have_text("Invalid Email or password")
-  end
-=end

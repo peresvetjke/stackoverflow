@@ -5,12 +5,11 @@ feature 'User can sign out', %q{
 } do
 
   background { 
-    visit new_user_session_path
     sign_in(create(:user))
   }
 
   scenario "User signs out" do
-    click_button "Sign out"
+    click_link "Sign out"
 
     expect(page).to have_text("Signed out successfully")
   end

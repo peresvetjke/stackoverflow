@@ -5,7 +5,10 @@ feature 'User can sign in', %q{
 } do
 
   given(:user) { create(:user) }
-  background { visit new_user_session_path }
+  background { 
+    visit questions_path
+    click_link "Sign in"
+  }
 
   scenario "User tries to sign in with blank email" do
     fill_in "Email", :with => ""
