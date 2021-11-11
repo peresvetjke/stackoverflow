@@ -5,9 +5,7 @@ FactoryBot.define do
 
   factory :user do
     email
-    password { "xxxxxx" }
-    confirmation_password { "xxxxxx" }
-    login { "#{(0...10).map { ('a'..'z').to_a[rand(26)] }.join}" }
+    password { "xxxxxxxx" }
     
     trait :blank_email do
       email { nil }

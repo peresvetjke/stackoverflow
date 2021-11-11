@@ -6,50 +6,54 @@ feature 'User can register', %q{
   I'd like to be able to register
 } do
 
-  scenario "email is blank" do
-    visit "/sign_up"
+  background { visit new_user_registration_path }
 
-    fill_in "email", :with => ""
-    fill_in "password", :with => "password"
-    fill_in "confirmation_password", :with => "password"
+  scenario "Guest tries to register with blank email" do
+    fill_in "Email", :with => ""
+    fill_in "Password", :with => "password"
+    fill_in "Password confirmation", :with => "password"
     click_button "Sign up"
 
-    expect(page).to have_text("Email can't be blank.")
+    expect(page).to have_text("Email can't be blank")
   end
 
-  scenario "confirmation password doesn't match" do
-    visit "/sign_up"
-
-    fill_in "email", :with => "email"
-    fill_in "password", :with => "password"
-    fill_in "confirmation_password", :with => "password123"
+  scenario "Guest tries to register with blank password" do
+    fill_in "Email", :with => "user@example.com"
+    fill_in "Password", :with => ""
+    fill_in "Password confirmation", :with => ""
     click_button "Sign up"
 
-    expect(page).to have_text("Confirmation password doesn't match.")
+    expect(page).to have_text("Password can't be blank")
   end
 
-  scenario "email is taken" do
-    create(:user, email: "user@example.com")
-
-    visit "/sign_up"
-
-    fill_in "email", :with => "user@example.com"
-    fill_in "password", :with => "password"
-    fill_in "confirmation_password", :with => "password123"
+  scenario "Guest tries to register with confirmation password not matched" do
+    fill_in "Email", :with => "user@example.com"
+    fill_in "Password", :with => "password"
+    fill_in "Password confirmation", :with => "passwordxxx"
     click_button "Sign up"
 
-    expect(page).to have_text("Email is taken.")
+    expect(page).to have_text("Password confirmation doesn't match")
   end
 
-  scenario "confirmation password matches and email is correct" do
-    visit "/sign_up"
+  scenario "Guest tries to register with email which is taken" do
+    user = create(:user)
 
-    fill_in "email", :with => "user@example.com"
-    fill_in "password", :with => "password"
-    fill_in "confirmation_password", :with => "password"
+    fill_in "Email", :with => user.email
+    fill_in "Password", :with => user.password
+    fill_in "Password confirmation", :with => user.password
     click_button "Sign up"
 
-    expect(page).to have_text("You have successfully registered.")
+    expect(page).to have_text("Email has already been taken")
+  end
+
+  scenario "Guest tries to register with correct cridentials" do
+    fill_in "Email", :with => "user@example.com"
+    fill_in "Password", :with => "password"
+    fill_in "Password confirmation", :with => "password"
+    
+    click_button "Sign up"
+
+    expect(page).to have_text("You have signed up successfully.")
   end
 
 end

@@ -6,7 +6,7 @@ RSpec.describe Answer, type: :model do
 
     describe "answer uniqueness" do
       answer = FactoryBot.create(:answer, question: FactoryBot.create(:question), body: "Answer")
-      author = FactoryBot.create(:user)
+      # author = FactoryBot.create(:user)
       question = answer.question
       before { 
         FactoryBot.build(:answer, question: question, body: "Answer")
