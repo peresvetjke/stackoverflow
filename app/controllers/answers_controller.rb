@@ -5,7 +5,7 @@ class AnswersController < ApplicationController
 
   def create
     if answer.save
-      redirect_to answer.question
+      redirect_to answer.question, notice: "Answer has been succesfully posted."
     else
       render "questions/show"
     end
