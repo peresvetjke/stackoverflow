@@ -1,7 +1,7 @@
 require "rails_helper"
 
 feature 'User can sign out', %q{
-  In order to destroy session and pass PC to a friend
+  In order to destroy session
 } do
 
   background { 

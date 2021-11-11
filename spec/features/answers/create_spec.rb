@@ -27,7 +27,7 @@ feature 'User can post answer', %q{
     expect(page).to have_text("Body already exists for question")
   end
 
-  scenario "tries to create answer" do
+  scenario "creates answer" do
     visit question_path(question)
     fill_in "Your answer", :with => "My answer"
     click_button "Create Answer"

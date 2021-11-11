@@ -31,7 +31,7 @@ feature 'User can create a question', %q{
       expect(page).to have_text("Body can't be blank")
     end
     
-    scenario "tries to create question" do
+    scenario "creates question" do
       fill_in "Title", :with => "Title"
       fill_in "Body", :with => "Body"
       click_button "Create"

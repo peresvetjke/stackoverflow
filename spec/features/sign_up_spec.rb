@@ -7,7 +7,7 @@ feature 'User can register', %q{
 
   background { visit new_user_registration_path }
 
-  scenario "Guest tries to register with blank email" do
+  scenario "tries to register with blank email" do
     fill_in "Email", :with => ""
     fill_in "Password", :with => "password"
     fill_in "Password confirmation", :with => "password"
@@ -16,7 +16,7 @@ feature 'User can register', %q{
     expect(page).to have_text("Email can't be blank")
   end
 
-  scenario "Guest tries to register with blank password" do
+  scenario "tries to register with blank password" do
     fill_in "Email", :with => "user@example.com"
     fill_in "Password", :with => ""
     fill_in "Password confirmation", :with => ""
@@ -25,7 +25,7 @@ feature 'User can register', %q{
     expect(page).to have_text("Password can't be blank")
   end
 
-  scenario "Guest tries to register with confirmation password not matched" do
+  scenario "tries to register with confirmation password not matched" do
     fill_in "Email", :with => "user@example.com"
     fill_in "Password", :with => "password"
     fill_in "Password confirmation", :with => "passwordxxx"
@@ -34,7 +34,7 @@ feature 'User can register', %q{
     expect(page).to have_text("Password confirmation doesn't match")
   end
 
-  scenario "Guest tries to register with email which is taken" do
+  scenario "tries to register with email which is taken" do
     user = create(:user)
 
     fill_in "Email", :with => user.email
@@ -45,7 +45,7 @@ feature 'User can register', %q{
     expect(page).to have_text("Email has already been taken")
   end
 
-  scenario "Guest tries to register with correct credentials" do
+  scenario "registers with correct credentials" do
     fill_in "Email", :with => "user@example.com"
     fill_in "Password", :with => "password"
     fill_in "Password confirmation", :with => "password"
