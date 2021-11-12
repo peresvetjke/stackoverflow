@@ -4,17 +4,22 @@ feature 'User can create a question', %q{
   In order to get an advice with answers
 } do
 
-  #feature "being unauthorized" do
-  #
-  #end
+  feature "being unauthorized" do
+    scenario "tries to create question" do
+      visit questions_path
+      click_button "Ask question"
+      expect(page).to have_content("You need to sign in or sign up before continuing")
+    end    
+  end
 
-  given(:user) { create(:user) }
-  background { 
+  feature "being authorized" do
+    given(:user) { create(:user) }
+    background { 
     sign_in(user)
-    visit new_question_path 
-  }
+    visit questions_path
+    click_button "Ask question"
+    }
 
-  #feature "being authorized" do
     scenario "tries to create question with blank title" do
       fill_in "Title", :with => ""
       fill_in "Body", :with => "Body"
@@ -38,5 +43,5 @@ feature 'User can create a question', %q{
 
       expect(page).to have_text("Question has been successfully created")
     end
- # end
+  end
 end

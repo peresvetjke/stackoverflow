@@ -2,6 +2,11 @@ require "rails_helper"
 
 RSpec.describe QuestionsController, :type => :controller do
 
+  before {
+    user = create(:user)
+    login(user)
+  }
+
   describe "GET show" do
     let (:question) { create(:question) }
     

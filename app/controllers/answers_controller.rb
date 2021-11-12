@@ -1,4 +1,5 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, only: :create
   expose :question
   expose :answers, ->{ question.answers.select{|a| a.persisted?} }
   expose :answer,  ->{ question.answers.new(answer_params) }

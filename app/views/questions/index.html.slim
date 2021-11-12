@@ -1,5 +1,7 @@
 h2 All questions
-table
+= button_to "Ask question", new_question_path, method: :get
+br
+table.table
   tr
     th  Title
   - if questions.present?

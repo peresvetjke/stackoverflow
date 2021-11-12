@@ -8,7 +8,7 @@ ul
 - if answer.errors.present?
   = render "shared/errors", resource: answer
 
-= form_with url: question_answers_path(question), model: answer do |f|
+= form_with url: question_answers_path(question), model: answer, local: true do |f|
   = f.label :body, "Your answer"
   br
   = f.text_field :body 
