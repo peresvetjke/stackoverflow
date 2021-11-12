@@ -5,6 +5,7 @@ class AnswersController < ApplicationController
   expose :answer,  ->{ question.answers.new(answer_params) }
 
   def create
+    answer.author = current_user
     if answer.save
       redirect_to answer.question, notice: "Answer has been succesfully posted."
     else

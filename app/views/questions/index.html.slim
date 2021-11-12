@@ -4,10 +4,12 @@ br
 table.table
   tr
     th  Title
+    th  Author
   - if questions.present?
     - questions.each do |q|
       tr.question*{data: {id: q.id}}
         td = link_to "#{q.title}", question_path(q)
+        td = q.author.email
   - else
     tr
       td No questions yet.

@@ -16,7 +16,7 @@ feature 'User can view question', %q{
 
   scenario "views question without answers" do
     visit question_path(question)
-    expect(page.all('li.answer').count).to eq(0)
+    expect(page.all('tr.answer').count).to eq(0)
   end
   
   scenario "views question with answers" do
@@ -25,7 +25,7 @@ feature 'User can view question', %q{
     answers = create_list(:answer, 5, question: question)
     visit question_path(question)
     expect(page).to satisfy("has all & only question's answers") do |page| 
-      page.all('li.answer').count == 5 && 
+      page.all('tr.answer').count == 5 && 
       answers.all? { |a| page.has_content?(a.body) } 
     end
   end

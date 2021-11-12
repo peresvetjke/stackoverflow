@@ -2,9 +2,9 @@ require "rails_helper"
 
 RSpec.describe QuestionsController, :type => :controller do
 
+  let (:question) { create(:question) }
 
   describe "GET show" do
-    let (:question) { create(:question) }
     
     it "renders show template" do
       get :show, params: { id: question }
@@ -51,6 +51,7 @@ RSpec.describe QuestionsController, :type => :controller do
         it "keeps count unchanged" do
           expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to change(Question, :count).by(0)
         end
+       
         it "renders new template" do
           post :create, params: { question: attributes_for(:question, :invalid) }
           expect(response).to render_template :new
@@ -67,6 +68,53 @@ RSpec.describe QuestionsController, :type => :controller do
           expect(response).to redirect_to(controller.question)
         end
       end
+    end
+  end
+
+  describe "DELETE destroy" do
+    let(:user)     { create(:user) }
+    let(:question) { create(:question, author: user) }
+
+    context "when unauthorized" do
+      it "doesn't delete question" do
+        question
+        expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(0)
+      end
+      it "renders question show template" do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to new_user_session_path
+      end   
+    end
+
+    context "when authorized" do
+      context "being not an author of question" do
+        before {
+          other_user = create(:user)
+          login(other_user)
+        }
+
+        it "doesn't delete question" do
+          question
+          expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(0)
+        end
+        it "renders question show template" do
+          delete :destroy, params: { id: question }
+          expect(response).to redirect_to question_path(question)
+        end        
+      end
+
+      context "being an author of question" do
+        before { login(user) }
+
+        it "deletes question from db" do
+          question
+          expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+        end        
+        it "renders questions index template" do
+          delete :destroy, params: { id: question }
+          expect(response).to redirect_to questions_path
+        end
+      end      
     end
   end
 end

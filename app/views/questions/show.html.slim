@@ -1,9 +1,19 @@
 h1 Show question
-h3 = question.title
-p = question.body
-ul
+h2 = "Title: #{question.title}"
+p = "Body: #{question.body}"
+p = "Author: #{question.author.email}"
+
+- if current_user == question.author
+  = button_to "Delete Question", question_path(question), method: :delete, data: { confirm: "Are you sure?" }
+
+table.table
+  tr
+    th Title
+    th Author
   - answers.each do |a|
-    li.answer*{data: {id: a.id}} = a.body
+    tr.answer*{data: {id: a.id}} 
+      td = a.body
+      td = a.author.email 
 
 - if answer.errors.present?
   = render "shared/errors", resource: answer
