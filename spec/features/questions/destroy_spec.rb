@@ -26,10 +26,10 @@ feature 'User can destroy question', %q{
 
     scenario "deletes own question" do
       visit question_path(question)
-      click_button "Delete"
+      click_button "Delete Question"
       expect(page).to satisfy("Question and its answers deleted") do |page| 
         page.has_content?("Your question has been deleted") && 
-        page.has_no_content?(question.title) 
+        page.has_no_content?(question.title)
       end
     end
   end

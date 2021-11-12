@@ -4,16 +4,19 @@ p = "Body: #{question.body}"
 p = "Author: #{question.author.email}"
 
 - if current_user == question.author
-  = button_to "Delete Question", question_path(question), method: :delete, data: { confirm: "Are you sure?" }
+  = button_to "Delete Question", question_path(question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
+h4 Answers
 table.table
   tr
-    th Title
+    th Body
     th Author
+    th
   - answers.each do |a|
-    tr.answer*{data: {id: a.id}} 
+    tr.answer 
       td = a.body
       td = a.author.email 
+      td = current_user == a.author ? button_to('Delete answer', answer_path(a), method: :delete, data: { confirm: "Are you sure?" }) : ""
 
 - if answer.errors.present?
   = render "shared/errors", resource: answer

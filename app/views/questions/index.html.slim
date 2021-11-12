@@ -7,7 +7,7 @@ table.table
     th  Author
   - if questions.present?
     - questions.each do |q|
-      tr.question*{data: {id: q.id}}
+      tr.question
         td = link_to "#{q.title}", question_path(q)
         td = q.author.email
   - else

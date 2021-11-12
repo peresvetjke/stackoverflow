@@ -39,4 +39,48 @@ RSpec.describe AnswersController, :type => :controller do
       end
     end
   end
+
+  describe "DELETE destroy" do
+    let(:user)       { create(:user) }
+    let(:question)   { create(:question, author: user) }
+    let(:answer)     { create(:answer, author: user, question: question) }
+    let(:other_user) { create(:user) }
+
+    context "when unauthorized" do
+      it "doesn't delete answer" do
+        answer
+        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(0)
+      end
+      it "renders question show template" do
+        delete :destroy, params: { id: answer }
+        expect(response).to redirect_to question_path(question)
+      end
+    end
+
+    context "when authorized" do
+      before { login(other_user) }
+      context "being not an author of question" do
+        it "doesn't delete question" do
+          answer
+          expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(0)
+        end
+        it "renders question show template" do
+          delete :destroy, params: { id: answer }
+          expect(response).to redirect_to question_path(question)
+        end
+      end
+
+      context "being an author of answer" do
+        before { login(user) }
+        it "deletes question from db" do
+          answer
+          expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        end        
+        it "renders questions index template" do
+          delete :destroy, params: { id: answer }
+          expect(response).to redirect_to question_path(question)
+        end
+      end      
+    end
+  end
 end
