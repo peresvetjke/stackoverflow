@@ -4,16 +4,12 @@ RSpec.describe Answer, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:body) }
 
-    describe "answer uniqueness" do
-      answer = FactoryBot.create(:answer, question: FactoryBot.create(:question), body: "Answer")
+    it 'is exptected to be invalid when answer has been already taken' do
+      question = create(:question)
+      answer = create(:answer, question: question, body: "Answer")
       # author = FactoryBot.create(:user)
-      question = answer.question
-      before { 
-        FactoryBot.build(:answer, question: question, body: "Answer")
-      }
-      it 'is exptected to be invalid when answer has been already taken' do
-        expect(subject).to be_invalid
-      end
+      new_answer = build(:answer, question: question, body: "Answer")
+      expect(new_answer).to be_invalid
     end
   end
 
