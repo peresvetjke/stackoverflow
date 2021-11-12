@@ -7,7 +7,6 @@ RSpec.describe Answer, type: :model do
     it 'is expected to be invalid when answer has been already taken' do
       question = create(:question)
       answer = create(:answer, question: question, body: "Answer")
-      # author = FactoryBot.create(:user)
       new_answer = build(:answer, question: question, body: "Answer")
       expect(new_answer).to be_invalid
     end

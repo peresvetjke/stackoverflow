@@ -5,6 +5,7 @@ feature 'User can create a question', %q{
 } do
 
   feature "being unauthorized" do
+
     scenario "tries to create question" do
       visit questions_path
       click_button "Ask question"
@@ -13,18 +14,18 @@ feature 'User can create a question', %q{
   end
 
   feature "being authorized" do
+
     given(:user) { create(:user) }
     background { 
-    sign_in(user)
-    visit questions_path
-    click_button "Ask question"
+      sign_in(user)
+      visit questions_path
+      click_button "Ask question"
     }
 
     scenario "tries to create question with blank title" do
       fill_in "Title", :with => ""
       fill_in "Body", :with => "Body"
       click_button "Create"
-
       expect(page).to have_text("Title can't be blank")
     end
 
@@ -32,7 +33,6 @@ feature 'User can create a question', %q{
       fill_in "Title", :with => "Title"
       fill_in "Body", :with => ""
       click_button "Create"
-
       expect(page).to have_text("Body can't be blank")
     end
     
@@ -40,7 +40,6 @@ feature 'User can create a question', %q{
       fill_in "Title", :with => "Title"
       fill_in "Body", :with => "Body"
       click_button "Create"
-
       expect(page).to have_text("Question has been successfully created")
     end
   end

@@ -7,6 +7,7 @@ feature 'User can post answer', %q{
   given(:question) { create(:question) }
 
   feature "being unauthorized" do
+
     scenario "tries to create answer" do
       visit question_path(question)
       fill_in "Your answer", :with => "My answer"
@@ -17,10 +18,7 @@ feature 'User can post answer', %q{
 
   feature "being authorized" do
     given(:user)     { create(:user) }
-    
-    background {
-      sign_in(user)
-      }
+    background {sign_in(user)}
 
     scenario "tries to create answer with blank body" do
       visit question_path(question)
@@ -31,7 +29,6 @@ feature 'User can post answer', %q{
 
     scenario "tries to create answer with non-unique body" do
       answer = create(:answer, question: question)
-
       visit question_path(question)
       fill_in "Your answer", :with => answer.body
       click_button "Create Answer"

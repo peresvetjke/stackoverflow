@@ -6,25 +6,16 @@ feature 'User can index all questions list', %q{
 
   given(:user){ create(:user) }
 
-  background { 
-    Question.destroy_all
-    sign_in(user)
-    }
+  background { sign_in(user) }
 
-  scenario "views index when no question exists" do
+  scenario "without questions" do
     visit questions_path
     expect(page).to have_text("No questions yet")
   end
 
-  scenario "views index when 1 question exists" do
-    question = create(:question)
-    visit questions_path
-    expect(page).to have_text(question.title)
-  end
-
-  scenario "views index when few questions exist" do
+  scenario "with few questions" do
     questions = create_list(:question, 5)
     visit questions_path
-    expect(page).to satisfy("has all questions") { |page| page.all('table tr.question').count == 5 && questions.all? { |q| page.has_content?(q.title) } }
+    expect(page).to satisfy("has all questions") { |page| page.all('tr.question').count == 5 && questions.all? { |q| page.has_content?(q.title) } }
   end
 end

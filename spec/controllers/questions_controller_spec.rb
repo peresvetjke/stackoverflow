@@ -2,10 +2,11 @@ require "rails_helper"
 
 RSpec.describe QuestionsController, :type => :controller do
 
-  let (:question) { create(:question) }
+  let (:user)     { create(:user) }
+  let (:question) { create(:question, author: user) }
 
   describe "GET show" do
-    
+
     it "renders show template" do
       get :show, params: { id: question }
       expect(response).to render_template(:show)
@@ -13,6 +14,7 @@ RSpec.describe QuestionsController, :type => :controller do
   end
 
   describe "GET new" do
+
     context "when unauthorized" do
       it "renders log_in template" do
         get :new
@@ -21,10 +23,7 @@ RSpec.describe QuestionsController, :type => :controller do
     end
 
     context "when authorized" do
-      before {
-        user = create(:user)
-        login(user)
-      }
+      before { login(user) }
 
       it "renders new template" do
         get :new
@@ -34,7 +33,12 @@ RSpec.describe QuestionsController, :type => :controller do
   end
 
   describe "POST create" do    
+
     context "when unauthorized" do
+      it "keeps count unchanged" do
+        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(0)
+      end
+
       it "renders log_in template" do 
         post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to(new_user_session_path)
@@ -72,14 +76,14 @@ RSpec.describe QuestionsController, :type => :controller do
   end
 
   describe "DELETE destroy" do
-    let(:user)     { create(:user) }
-    let(:question) { create(:question, author: user) }
 
     context "when unauthorized" do
+
       it "doesn't delete question" do
         question
         expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(0)
       end
+
       it "renders question show template" do
         delete :destroy, params: { id: question }
         expect(response).to redirect_to new_user_session_path
@@ -87,6 +91,7 @@ RSpec.describe QuestionsController, :type => :controller do
     end
 
     context "when authorized" do
+
       context "being not an author of question" do
         before {
           other_user = create(:user)
@@ -97,6 +102,7 @@ RSpec.describe QuestionsController, :type => :controller do
           question
           expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(0)
         end
+
         it "renders question show template" do
           delete :destroy, params: { id: question }
           expect(response).to redirect_to question_path(question)
@@ -109,7 +115,13 @@ RSpec.describe QuestionsController, :type => :controller do
         it "deletes question from db" do
           question
           expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
-        end        
+        end
+
+        it "deletes all question's answers from db" do
+          answers = create_list(:answer, 5, question: question)
+          expect { delete :destroy, params: { id: question } }.to change(question.answers, :count).by(-5)
+        end
+
         it "renders questions index template" do
           delete :destroy, params: { id: question }
           expect(response).to redirect_to questions_path

@@ -2,11 +2,14 @@ require "rails_helper"
 
 RSpec.describe AnswersController, :type => :controller do
 
+  let(:user)     { create(:user) }
+  let(:question) { create(:question, author: user) }
+  let(:answer)   { create(:answer, author: user, question: question) }
+
   describe "POST create" do
-    let (:question) { create(:question) }
-    let (:user)     { create(:user) }
 
     context "when unauthorized" do
+
       it "renders log_in template" do
         post :create, params: { answer: attributes_for(:answer), question_id: question }
         expect(response).to redirect_to(new_user_session_path)
@@ -14,9 +17,7 @@ RSpec.describe AnswersController, :type => :controller do
     end
 
     context "when authorized" do
-      before {
-        login(user)
-      }
+      before { login(user) }
 
       context 'with invalid params' do
         it "keeps count unchanged" do
@@ -41,16 +42,14 @@ RSpec.describe AnswersController, :type => :controller do
   end
 
   describe "DELETE destroy" do
-    let(:user)       { create(:user) }
-    let(:question)   { create(:question, author: user) }
-    let(:answer)     { create(:answer, author: user, question: question) }
-    let(:other_user) { create(:user) }
-
+    
     context "when unauthorized" do
+
       it "doesn't delete answer" do
         answer
         expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(0)
       end
+
       it "renders question show template" do
         delete :destroy, params: { id: answer }
         expect(response).to redirect_to question_path(question)
@@ -58,12 +57,16 @@ RSpec.describe AnswersController, :type => :controller do
     end
 
     context "when authorized" do
-      before { login(other_user) }
+
       context "being not an author of question" do
+        let(:other_user) { create(:user) }
+        before { login(other_user) }
+
         it "doesn't delete question" do
           answer
           expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(0)
         end
+
         it "renders question show template" do
           delete :destroy, params: { id: answer }
           expect(response).to redirect_to question_path(question)
@@ -72,10 +75,12 @@ RSpec.describe AnswersController, :type => :controller do
 
       context "being an author of answer" do
         before { login(user) }
+
         it "deletes question from db" do
           answer
           expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
         end        
+
         it "renders questions index template" do
           delete :destroy, params: { id: answer }
           expect(response).to redirect_to question_path(question)
