@@ -15,11 +15,11 @@ feature 'User can destroy question', %q{
   end
 
   feature "being authorized" do
+    given(:other_user)     { create(:user) }
+    given(:other_question) { create(:question, author: other_user) }
     background { sign_in(user) }
 
     scenario "tries to delete other's question" do
-      other_user = create(:user)
-      other_question = create(:question, author: other_user)
       visit question_path(other_question)
       expect(page).to have_no_button("Delete Question")
     end

@@ -25,7 +25,6 @@ feature 'User can sign in', %q{
   end  
 
   scenario "tries to sign in with incorrect credentials" do
-    create(:user)
     fill_in "Email", :with => "123456"
     fill_in "Password", :with => "654321"
     click_button "Log in"

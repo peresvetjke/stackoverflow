@@ -4,9 +4,11 @@ feature 'User can destroy answer', %q{
   In order to delete it completely
 } do
 
-  given(:user)     { create(:user) }
-  given(:question) { create(:question, author: user) }
-  given(:answer)   { create(:answer, author: user, question: question) }
+  given(:user)         { create(:user) }
+  given(:question)     { create(:question, author: user) }
+  given(:answer)       { create(:answer, author: user, question: question) }
+  given(:other_user)   { create(:user) }
+  given(:other_answer) { create(:answer, question: question, author: other_user) }
 
   feature "being unauthorized" do
     scenario "tries to delete answer" do
@@ -19,8 +21,7 @@ feature 'User can destroy answer', %q{
     background { sign_in(user) }
     
     scenario "tries to delete other's question" do
-      other_user = create(:user)
-      other_answer = create(:answer, question: question, author: other_user)
+      other_answer
       visit question_path(question)
       expect(find(:xpath, "//*[contains(text(), '#{other_answer.body}')]/parent::tr")).to have_no_button("Delete answer")
     end

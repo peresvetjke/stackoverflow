@@ -4,8 +4,11 @@ feature 'User can view question', %q{
   In order to check it or look through answers
 } do
 
-  given(:user)     { create(:user) }
-  given(:question) { create(:question) }
+  given(:user)           { create(:user) }
+  given(:question)       { create(:question) }
+  given(:answers)        { create_list(:answer, 5, question: question) }
+  given(:other_question) { create(:question) }
+  given(:other_answers)  { create_list(:answer, 5, question: other_question) }
   background { sign_in(user) }
 
   scenario "views question and see its title and body" do
@@ -19,12 +22,11 @@ feature 'User can view question', %q{
   end
   
   scenario "views question with answers" do
-    other_question = create(:question)
-    other_answers = create_list(:answer, 5, question: other_question)
-    answers = create_list(:answer, 5, question: question)
+    answers
+    other_answers
     visit question_path(question)
     expect(page).to satisfy("has all & only question's answers") do |page| 
-      page.all('tr.answer').count == 5 && 
+      page.all('tr.answer').count == answers.count && 
       answers.all? { |a| page.has_content?(a.body) } 
     end
   end
