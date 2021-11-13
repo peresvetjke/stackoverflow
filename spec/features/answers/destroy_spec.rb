@@ -9,7 +9,6 @@ feature 'User can destroy answer', %q{
   given(:answer)   { create(:answer, author: user, question: question) }
 
   feature "being unauthorized" do
-
     scenario "tries to delete answer" do
       visit question_path(question)
       expect(page).to have_no_button("Delete")
@@ -17,7 +16,6 @@ feature 'User can destroy answer', %q{
   end
 
   feature "being authorized" do
-    
     background { sign_in(user) }
     
     scenario "tries to delete other's question" do

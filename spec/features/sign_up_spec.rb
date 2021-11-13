@@ -12,7 +12,6 @@ feature 'User can register', %q{
     fill_in "Password", :with => "password"
     fill_in "Password confirmation", :with => "password"
     click_button "Sign up"
-
     expect(page).to have_text("Email can't be blank")
   end
 
@@ -21,7 +20,6 @@ feature 'User can register', %q{
     fill_in "Password", :with => ""
     fill_in "Password confirmation", :with => ""
     click_button "Sign up"
-
     expect(page).to have_text("Password can't be blank")
   end
 
@@ -30,18 +28,15 @@ feature 'User can register', %q{
     fill_in "Password", :with => "password"
     fill_in "Password confirmation", :with => "passwordxxx"
     click_button "Sign up"
-
     expect(page).to have_text("Password confirmation doesn't match")
   end
 
   scenario "tries to register with email which is taken" do
     user = create(:user)
-
     fill_in "Email", :with => user.email
     fill_in "Password", :with => user.password
     fill_in "Password confirmation", :with => user.password
     click_button "Sign up"
-
     expect(page).to have_text("Email has already been taken")
   end
 
@@ -49,9 +44,7 @@ feature 'User can register', %q{
     fill_in "Email", :with => "user@example.com"
     fill_in "Password", :with => "password"
     fill_in "Password confirmation", :with => "password"
-    
     click_button "Sign up"
-
     expect(page).to have_text("You have signed up successfully.")
   end
 

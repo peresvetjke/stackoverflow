@@ -7,9 +7,7 @@ RSpec.describe AnswersController, :type => :controller do
   let(:answer)   { create(:answer, author: user, question: question) }
 
   describe "POST create" do
-
     context "when unauthorized" do
-
       it "renders log_in template" do
         post :create, params: { answer: attributes_for(:answer), question_id: question }
         expect(response).to redirect_to(new_user_session_path)
@@ -41,10 +39,8 @@ RSpec.describe AnswersController, :type => :controller do
     end
   end
 
-  describe "DELETE destroy" do
-    
+  describe "DELETE destroy" do    
     context "when unauthorized" do
-
       it "doesn't delete answer" do
         answer
         expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(0)
@@ -57,7 +53,6 @@ RSpec.describe AnswersController, :type => :controller do
     end
 
     context "when authorized" do
-
       context "being not an author of question" do
         let(:other_user) { create(:user) }
         before { login(other_user) }

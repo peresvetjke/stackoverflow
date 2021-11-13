@@ -14,7 +14,6 @@ feature 'User can sign in', %q{
     fill_in "Email", :with => ""
     fill_in "Password", :with => user.password
     click_button "Log in"
-
     expect(page).to have_text("Invalid Email or password")
   end
 
@@ -22,7 +21,6 @@ feature 'User can sign in', %q{
     fill_in "Email", :with => user.email
     fill_in "Password", :with => ""
     click_button "Log in"
-
     expect(page).to have_text("Invalid Email or password")
   end  
 
@@ -31,7 +29,6 @@ feature 'User can sign in', %q{
     fill_in "Email", :with => "123456"
     fill_in "Password", :with => "654321"
     click_button "Log in"
-
     expect(page).to have_text("Invalid Email or password")
   end
 
@@ -39,7 +36,6 @@ feature 'User can sign in', %q{
     fill_in "Email", :with => user.email
     fill_in "Password", :with => user.password
     click_button "Log in"
-
     expect(page).to have_text("Signed in successfully")
   end
 

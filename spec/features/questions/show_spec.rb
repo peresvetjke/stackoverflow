@@ -6,7 +6,6 @@ feature 'User can view question', %q{
 
   given(:user)     { create(:user) }
   given(:question) { create(:question) }
-
   background { sign_in(user) }
 
   scenario "views question and see its title and body" do

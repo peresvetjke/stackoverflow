@@ -8,7 +8,6 @@ feature 'User can destroy question', %q{
   given(:question) { create(:question, author: user) }
 
   feature "being unauthorized" do
-
     scenario "tries to delete question" do
       visit question_path(question)
       expect(page).to have_no_button("Delete Question")

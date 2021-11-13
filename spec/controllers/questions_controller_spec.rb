@@ -6,7 +6,6 @@ RSpec.describe QuestionsController, :type => :controller do
   let (:question) { create(:question, author: user) }
 
   describe "GET show" do
-
     it "renders show template" do
       get :show, params: { id: question }
       expect(response).to render_template(:show)
@@ -14,7 +13,6 @@ RSpec.describe QuestionsController, :type => :controller do
   end
 
   describe "GET new" do
-
     context "when unauthorized" do
       it "renders log_in template" do
         get :new
@@ -33,7 +31,6 @@ RSpec.describe QuestionsController, :type => :controller do
   end
 
   describe "POST create" do    
-
     context "when unauthorized" do
       it "keeps count unchanged" do
         expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(0)
@@ -78,7 +75,6 @@ RSpec.describe QuestionsController, :type => :controller do
   describe "DELETE destroy" do
 
     context "when unauthorized" do
-
       it "doesn't delete question" do
         question
         expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(0)
@@ -91,7 +87,6 @@ RSpec.describe QuestionsController, :type => :controller do
     end
 
     context "when authorized" do
-
       context "being not an author of question" do
         before {
           other_user = create(:user)

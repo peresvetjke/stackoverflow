@@ -5,7 +5,6 @@ feature 'User can create a question', %q{
 } do
 
   feature "being unauthorized" do
-
     scenario "tries to create question" do
       visit questions_path
       click_button "Ask question"
@@ -14,7 +13,6 @@ feature 'User can create a question', %q{
   end
 
   feature "being authorized" do
-
     given(:user) { create(:user) }
     background { 
       sign_in(user)

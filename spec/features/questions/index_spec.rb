@@ -5,7 +5,6 @@ feature 'User can index all questions list', %q{
 } do
 
   given(:user){ create(:user) }
-
   background { sign_in(user) }
 
   scenario "without questions" do
