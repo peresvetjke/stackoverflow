@@ -1,10 +1,14 @@
 h1 Create new question
+- if question.errors.present?
+  = render "shared/errors", resource: question
 
-= form_with url: questions_path, model: question do |f|
-  = f.label       :title
-  = f.text_field  :title
+= form_with url: questions_path, model: question, local: true do |f|
+  = f.label      :title
   br
-  = f.label       :body
-  = f.text_field  :body
+  = f.text_field :title
+  br
+  = f.label      :body
+  br
+  = f.text_area  :body
   br
   = f.submit

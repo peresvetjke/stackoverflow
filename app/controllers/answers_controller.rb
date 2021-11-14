@@ -1,14 +1,29 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, only: :create
+  
   expose :question
-  expose :answers, ->{ question.answers.select{|a| a.persisted?} }
-  expose :answer,  ->{ question.answers.new(answer_params) }
+  exposure_config :answer_find, find:   ->{ Answer.find(params[:id]) }
+  exposure_config :answer_build, build: ->{ question.answers.new(answer_params) }
+  expose :answer, with: [:answer_find, :answer_build]
+  expose :answers,                      ->{ question.answers.select{|a| a.persisted?} }
 
   def create
+    answer.author = current_user
     if answer.save
-      redirect_to answer.question
+      redirect_to answer.question, notice: "Answer has been succesfully posted."
     else
       render "questions/show"
     end
+  end
+
+  def destroy
+    question = answer.question
+    if current_user&.author_of?(answer)
+      answer.destroy
+      redirect_to question_path(question), notice: "Your answer has been deleted."
+    else
+      redirect_to question_path(question), notice: "The answer can be deleted only by its author"
+    end    
   end
 
   private

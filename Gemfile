@@ -30,6 +30,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 gem 'slim-rails'
 gem 'decent_exposure', '~> 3.0'
+gem 'devise'
 
 
 group :development, :test do
@@ -54,11 +55,13 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 3.26'
+  gem "launchy"
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
   gem 'shoulda-matchers', '~> 5.0'
   gem 'rails-controller-testing'
+  gem 'database_cleaner-active_record'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
