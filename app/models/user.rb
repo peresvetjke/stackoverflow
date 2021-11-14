@@ -10,4 +10,8 @@ class User < ApplicationRecord
   validates :email, :password, presence: true
   validates :email, uniqueness: true
   validates :email, format: /@/
+
+  def author_of?(object)
+    object.author_id == self.id
+  end
 end
