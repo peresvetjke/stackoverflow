@@ -13,7 +13,9 @@ feature 'User can create a question', %q{
   end
 
   feature "being authorized" do
-    given(:user) { create(:user) }
+    given(:user)     { create(:user) }
+    given(:question) { build(:question) }
+
     background { 
       sign_in(user)
       visit questions_path
@@ -22,23 +24,17 @@ feature 'User can create a question', %q{
 
     scenario "tries to create question with blank title" do
       fill_in "Title", :with => ""
-      fill_in "Body", :with => "Body"
+      fill_in "Body", :with => question.body
       click_button "Create"
       expect(page).to have_text("Title can't be blank")
     end
 
-    scenario "tries to create question with blank body" do
-      fill_in "Title", :with => "Title"
-      fill_in "Body", :with => ""
-      click_button "Create"
-      expect(page).to have_text("Body can't be blank")
-    end
-    
     scenario "creates question" do
-      fill_in "Title", :with => "Title"
-      fill_in "Body", :with => "Body"
+      fill_in "Title", :with => question.title
+      fill_in "Body", :with => question.body
       click_button "Create"
       expect(page).to have_text("Question has been successfully created")
+      expect(page).to have_content(question.title)
     end
   end
 end

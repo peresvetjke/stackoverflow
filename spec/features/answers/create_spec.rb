@@ -40,6 +40,7 @@ feature 'User can post answer', %q{
       fill_in "Your answer", :with => "My answer"
       click_button "Create Answer"
       expect(page).to have_text("Answer has been succesfully posted")
+      expect(page).to have_content(question.title)
     end
   end
 end

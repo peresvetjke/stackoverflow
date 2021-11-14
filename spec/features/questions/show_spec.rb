@@ -13,7 +13,8 @@ feature 'User can view question', %q{
 
   scenario "views question and see its title and body" do
     visit question_path(question)
-    expect(page).to satisfy("has title and body") { |page| page.has_content?(question.title) && page.has_content?(question.body) }
+    expect(page).to have_content(question.title)
+    expect(page).to have_content(question.body)
   end
 
   scenario "views question without answers" do
