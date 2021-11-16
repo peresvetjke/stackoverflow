@@ -17,7 +17,7 @@ feature 'User can destroy answer', %q{
     end
   end
 
-  feature "being authorized" do
+  feature "being authorized", js: true do
     background { sign_in(user) }
     
     scenario "tries to delete other's question" do
