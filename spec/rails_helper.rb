@@ -36,6 +36,8 @@ RSpec.configure do |config|
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
 
+  Capybara.javascript_driver = :selenium_chrome_headless
+
   # cleaner
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
