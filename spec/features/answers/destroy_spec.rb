@@ -29,8 +29,9 @@ feature 'User can destroy answer', %q{
     scenario "deletes own answer" do
       answer
       visit question_path(question)
-      page.find(:xpath, "//*[contains(text(), '#{answer.body}')]/parent::tr").click_button("Delete answer")
-      expect(page).to have_content("Your answer has been deleted")
+      accept_alert {
+        page.find(:xpath, "//*[contains(text(), '#{answer.body}')]/parent::tr").click_button("Delete answer")
+      }
       expect(page).to have_no_content(answer.body)
     end
   end

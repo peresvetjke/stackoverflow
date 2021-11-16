@@ -28,10 +28,8 @@ class AnswersController < ApplicationController
 
   def destroy
     return redirect_to answer.question, notice: "The answer can be deleted only by its author" unless current_user&.author_of?(answer)
-
-    # question = answer.question
+    
     answer.destroy
-    # redirect_to question, notice: "Your answer has been deleted."
   end
 
   private

@@ -139,11 +139,11 @@ RSpec.describe AnswersController, :type => :controller do
     context "when unauthorized" do
       it "doesn't delete answer" do
         answer
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(0)
+        expect { delete :destroy, params: { id: answer }, format: :js }.not_to change(Answer, :count)
       end
 
       it "renders question show template" do
-        delete :destroy, params: { id: answer }
+        delete :destroy, params: { id: answer }, format: :js
         expect(response).to redirect_to question_path(question)
       end
     end
@@ -155,7 +155,7 @@ RSpec.describe AnswersController, :type => :controller do
 
         it "doesn't delete question" do
           answer
-          expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(0)
+          expect { delete :destroy, params: { id: answer }, format: :js }.not_to change(Answer, :count)
         end
 
         it "renders question show template" do
@@ -169,12 +169,7 @@ RSpec.describe AnswersController, :type => :controller do
 
         it "deletes question from db" do
           answer
-          expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
-        end        
-
-        it "renders questions index template" do
-          delete :destroy, params: { id: answer }
-          expect(response).to redirect_to question_path(question)
+          expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
         end
       end      
     end
