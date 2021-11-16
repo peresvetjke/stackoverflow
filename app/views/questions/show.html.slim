@@ -4,6 +4,7 @@ p = "Body: #{question.body}"
 p = "Author: #{question.author.email}"
 
 - if current_user&.author_of?(question)
+  = button_to "Edit Question", edit_question_path(question), method: :get, local: true
   = button_to "Delete Question", question_path(question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
 h4 Answers
@@ -27,3 +28,5 @@ div.errors
   p 
     = link_to "Sign in", new_user_session_path, method: :get   
     |  to post answer
+
+= link_to "Back to questions", questions_path

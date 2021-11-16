@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create destroy]
+  before_action :authenticate_user!, only: %i[new create edit update destroy]
   expose :questions, -> {Question.all}
   expose :question
   expose :answers,   ->{ question.answers }
@@ -23,6 +23,18 @@ class QuestionsController < ApplicationController
       redirect_to question, notice: "Question has been successfully created."
     else
       render :new
+    end
+  end
+
+  def edit
+
+  end
+
+  def update
+    if question.update(question_params)
+      redirect_to question, notice: "Question has been successfully updated."
+    else
+      render :edit
     end
   end
 

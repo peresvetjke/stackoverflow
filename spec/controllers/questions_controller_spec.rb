@@ -95,13 +95,15 @@ RSpec.describe QuestionsController, :type => :controller do
   describe "PATCH update" do    
     context "when unauthorized" do
       it "keeps unchanged" do
-        patch :update, params: { question: { id: question, body: "corrections" } }
+        # question.body = "corrections"
+        patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
+        # patch :update, params: { question: { id: question, body: "corrections" } }
         question.reload
         expect(question.body).to eq(question.body)
       end
 
       it "renders log_in template" do 
-        patch :update, params: { question: { id: question, body: "corrections" } }
+        patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -113,25 +115,25 @@ RSpec.describe QuestionsController, :type => :controller do
 
       context 'with invalid params' do
         it "keeps unchanged" do
-          patch :update, params: { question: { id: question, body: "corrections" } }
+          patch :update, params: { id: question, question: attributes_for(:question, body: "") }
           question.reload
           expect(question.body).to eq(question.body)
         end
        
         it "renders edit template" do
-          patch :update, params: { question: { id: question, body: "corrections" } }
-          expect(response).to render_template :edit
+          patch :update, params: { id: question, question: attributes_for(:question, body: "") }
+          expect(response).to render_template(:edit)
         end
       end
 
       context 'with valid params' do
         it "updates question in db" do
-          patch :update, params: { question: { id: question, body: "corrections" } }
+          patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
           expect(question.reload.body).to eq("corrections")
         end
 
         it "renders show template" do 
-          patch :update, params: { question: { id: question, body: "corrections" } }
+          patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
           expect(response).to redirect_to(controller.question)
         end
       end
