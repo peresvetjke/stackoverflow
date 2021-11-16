@@ -3,4 +3,5 @@ tr.answer
   td = answer.author.email 
   td
     - if current_user&.author_of?(answer) 
+      = button_to('Edit answer', edit_answer_path(answer), method: :get)
       = button_to('Delete answer', answer_path(answer), method: :delete, data: { confirm: "Are you sure?" })

@@ -15,7 +15,7 @@ feature 'User can edit a question', %q{
   end
 
   feature "when authorized" do
-    scenario "being not an author of question" do
+    feature "being not an author of question" do
       given(:other_user)     { create(:user) }
       background { 
         sign_in(other_user)
@@ -25,17 +25,9 @@ feature 'User can edit a question', %q{
         visit question_path(question)
         expect(page).to have_no_button("Edit Question")
       end
-
-      scenario "edits question" do
-        fill_in "Title", :with => question.title
-        fill_in "Body", :with => question.body + " corrections"
-        click_button "Update Question"
-        expect(page).to have_text("Question has been successfully updated")
-        expect(page).to have_content(question.body + " corrections")
-      end
     end
 
-    scenario "being an author of question" do
+    feature "being an author of question" do
       background { 
         sign_in(user)
         visit question_path(question)
