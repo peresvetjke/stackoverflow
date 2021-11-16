@@ -12,13 +12,7 @@ table.table
     th Body
     th Author
     th
-  - answers.each do |a|
-    tr.answer 
-      td = a.body
-      td = a.author.email 
-      td
-        - if current_user&.author_of?(a) 
-          = button_to('Delete answer', answer_path(a), method: :delete, data: { confirm: "Are you sure?" })
+  = render partial: answers
 
 - if answer.errors.present?
   = render "shared/errors", resource: answer
