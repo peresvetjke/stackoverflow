@@ -1,0 +1,10 @@
+<% if answer.persisted? %>
+  $(".answers").append('<%= render answer %>');
+<% end %>
+
+$(".errors").empty();
+<% if answer.errors.present? %>
+  $(".errors").append('<%= render "shared/errors", resource: answer %>');
+<% else %>
+$("#answer_body").val('')
+<% end %>

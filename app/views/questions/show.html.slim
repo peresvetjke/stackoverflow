@@ -7,17 +7,16 @@ p = "Author: #{question.author.email}"
   = button_to "Delete Question", question_path(question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
 h4 Answers
-table.table
+table.table.answers
   tr
     th Body
     th Author
     th
   = render partial: answers
 
-- if answer.errors.present?
-  = render "shared/errors", resource: answer
+div.errors
 
-= form_with url: question_answers_path(question), model: answer, local: true do |f|
+= form_with url: question_answers_path(question), model: answer, local: false do |f|
   = f.label :body, "Your answer"
   br
   = f.text_field :body 
