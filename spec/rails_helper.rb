@@ -37,6 +37,7 @@ RSpec.configure do |config|
   config.include FeatureHelpers, type: :feature
 
   Capybara.javascript_driver = :selenium_chrome_headless
+  Capybara.default_max_wait_time = 2
 
   # cleaner
   config.before(:suite) do
@@ -44,11 +45,11 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
-  end
+  #config.around(:each) do |example|
+  #  DatabaseCleaner.cleaning do
+  #    example.run
+  #  end
+  #end
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

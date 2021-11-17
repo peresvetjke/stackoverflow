@@ -133,22 +133,13 @@ RSpec.describe AnswersController, :type => :controller do
     end
   end
 
-
-# begin
-#  let(:user)     { create(:user) }
-#  let(:question) { create(:question, author: user) }
-#  let(:answer)   { create(:answer, author: user, question: question) }
-
-
-  describe "POST best!" do    
+  describe "POST mark_best" do    
     let(:other_user) { create(:user) }
-    let(:answers)    { create_list(:answer, 5, question: question) }
 
     context "when unauthorized" do
       it "keeps unchanged" do
-        post :best!, params: { id: answer }
-        expect(response).to have_http_status(401)
-        expect{ question.answers.select {|q| q.best }.count }.to eq(0)
+        post :mark_best, params: { id: answer }, format: :js
+        expect(question.answers.select {|q| q.best }.count).to eq(0)
       end
     end
 
@@ -157,33 +148,24 @@ RSpec.describe AnswersController, :type => :controller do
         before { login(other_user) }
 
         it "doesn't update answer" do
-          post :best!, params: { id: answer }
-          expect{ question.answers.select {|q| q.best }.count }.to eq(0)
+          post :mark_best, params: { id: answer }, format: :js
+          expect(answer.reload.best).to be false
         end
       end
 
       context "being an author of answer" do
-        context 'without best answer' do
+        before { login(user) }
+
+        context 'marks best answer' do
           it "marks as best" do
-            post :best!, params: { id: answers.last }
-            expect{ question.answers.select {|q| q.best }.count }.to eq(1)
-            expect(answers.last.reload).to be true
-          end
-        end
-
-        context 'with best answer' do
-          before { answers.first.best = true }
-
-          it "changes best question" do
-            post :best!, params: { id: answers.last }
-            expect{ question.answers.select {|q| q.best }.count }.to eq(1)
-            expect(answers.last.reload).to be true
+            post :mark_best, params: { id: answer }, format: :js
+            # expect(question.reload.answers.reload.select {|q| a.best }.count).to eq(1)
+            expect(answer.reload.best).to be true
           end
         end
       end
     end
   end
-# end
 
   describe "DELETE destroy" do    
     context "when unauthorized" do
@@ -192,9 +174,9 @@ RSpec.describe AnswersController, :type => :controller do
         expect { delete :destroy, params: { id: answer }, format: :js }.not_to change(Answer, :count)
       end
 
-      it "renders question show template" do
+      it "returns 401 unauthorized status" do
         delete :destroy, params: { id: answer }, format: :js
-        expect(response).to redirect_to question_path(question)
+        expect(response).to have_http_status(401)
       end
     end
 
@@ -209,7 +191,7 @@ RSpec.describe AnswersController, :type => :controller do
         end
 
         it "renders question show template" do
-          delete :destroy, params: { id: answer }
+          delete :destroy, params: { id: answer }, format: :js
           expect(response).to redirect_to question_path(question)
         end
       end

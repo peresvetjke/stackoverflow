@@ -1,7 +1,10 @@
-tr*{'answer-id' => answer.id}
+tr class=(answer.best == true ? "best" : nil) *{'answer-id' => answer.id}
   td = answer.body
   td = answer.author.email 
   td
+    - if current_user&.author_of?(question) 
+      = button_to('Mark best', mark_best_answer_path(answer), remote: true, class: (answer.best == true ? "mark_best hide" : "mark_best"))
+        
     - if current_user&.author_of?(answer) 
       = button_to('Edit answer', edit_answer_path(answer), method: :get)
       = button_to('Delete answer', answer_path(answer), method: :delete, remote: true, data: { confirm: "Are you sure?" })

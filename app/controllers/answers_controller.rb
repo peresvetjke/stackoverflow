@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: :create
+  before_action :authenticate_user!, only: %i[create destroy mark_best]
   
   expose :question
   exposure_config :answer_find, find:   ->{ Answer.find(params[:id]) }
@@ -28,8 +28,13 @@ class AnswersController < ApplicationController
 
   def destroy
     return redirect_to answer.question, notice: "The answer can be deleted only by its author" unless current_user&.author_of?(answer)
-    
+
     answer.destroy
+  end
+
+  def mark_best
+    return redirect_to answer.question, notice: "The answer can be edited only by its author" unless current_user&.author_of?(answer.question)
+    answer.mark_best!
   end
 
   private

@@ -1,0 +1,4 @@
+$(".answers tbody tr[answer-id='<%= answer.id %>']").prependTo(".answers tbody");
+
+$(".answers tr .mark_best").removeClass('hide')
+$(".answers tr[answer-id='<%= answer.id %>'] .mark_best").addClass('hide')

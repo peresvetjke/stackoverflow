@@ -6,8 +6,8 @@ feature 'User can choose best answer', %q{
 
   given(:user)         { create(:user) }
   given(:question)     { create(:question, author: user) }
-  given(:answers)      { create_list(:answer, 10) }
-  given(:best_answer)  { create(:answer, best: true) }
+  given!(:answers)     { create_list(:answer, 5, question: question, author: user) }
+  given(:best_answer)  { create(:answer, question: question) }
   given(:other_user)   { create(:user) }
 
   feature "being unauthorized" do
@@ -32,7 +32,8 @@ feature 'User can choose best answer', %q{
     scenario "marks best answer" do
       sign_in(user)
       visit question_path(question)
-      expect(find(:xpath, '//table[contains(@class, "answers")]//tr[2]')).to have_content(best_answer.body)
+      page.find(:xpath, "//*[contains(text(), '#{best_answer.body}')]/parent::tr").click_button("Mark best")
+      expect(find(:xpath, '//table[contains(@class, "answers")]/tbody/tr[1]')).to have_content(best_answer.body)
     end
   end
 end

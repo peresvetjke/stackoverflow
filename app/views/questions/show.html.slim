@@ -9,11 +9,13 @@ p = "Author: #{question.author.email}"
 
 h4 Answers
 table.table.answers
-  tr
-    th Body
-    th Author
-    th
-  = render partial: answers
+  thead
+    tr
+      th Body
+      th Author
+      th
+  tbody
+    = render partial: answers
 
 div.errors
 
