@@ -72,8 +72,6 @@ RSpec.describe QuestionsController, :type => :controller do
     end
   end
 
-# edit-update / BEGIN
-
   describe "GET edit" do
     context "when unauthorized" do
       it "renders log_in template" do
@@ -82,7 +80,7 @@ RSpec.describe QuestionsController, :type => :controller do
       end      
     end
 
-    context "when authorized" do           # being an author - and not
+    context "when authorized" do
       context "being not an author of question" do
         before { 
           other_user = create(:user)
@@ -167,8 +165,6 @@ RSpec.describe QuestionsController, :type => :controller do
       end
     end
   end
-
-# edit-update / END
 
   describe "DELETE destroy" do
 

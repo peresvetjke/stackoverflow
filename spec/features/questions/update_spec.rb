@@ -17,9 +17,7 @@ feature 'User can edit a question', %q{
   feature "when authorized" do
     feature "being not an author of question" do
       given(:other_user)     { create(:user) }
-      background { 
-        sign_in(other_user)
-      }
+      background { sign_in(other_user)}
 
       scenario "tries to edit question" do
         visit question_path(question)

@@ -32,7 +32,7 @@ class QuestionsController < ApplicationController
 
   def update
     return redirect_to question, notice: "The question can be edited only by its author" unless current_user.author_of?(question)
-
+    
     if question.update(question_params)
       redirect_to question, notice: "Question has been successfully updated."
     else
@@ -42,7 +42,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     return redirect_to question, notice: "The question can be deleted only by its author" unless current_user.author_of?(question)
-    
+
     question.destroy
     redirect_to questions_path, notice: "Your question has been deleted."
   end

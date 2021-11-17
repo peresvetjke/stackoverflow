@@ -144,7 +144,7 @@ RSpec.describe AnswersController, :type => :controller do
     end
 
     context "when authorized" do
-      context "being not an author of answer" do
+      context "being not an author of question" do
         before { login(other_user) }
 
         it "doesn't update answer" do
@@ -153,7 +153,7 @@ RSpec.describe AnswersController, :type => :controller do
         end
       end
 
-      context "being an author of answer" do
+      context "being an author of question" do
         before { login(user) }
 
         context 'marks best answer' do
