@@ -4,4 +4,6 @@ class Question < ApplicationRecord
 
   validates :title, :body,  presence: true
   validates :title, uniqueness: true
+
+  has_many_attached :files
 end

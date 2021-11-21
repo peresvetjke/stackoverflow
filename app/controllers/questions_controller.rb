@@ -2,8 +2,8 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, only: %i[new create edit update destroy]
   expose :questions, -> {Question.all}
   expose :question
-  expose :answers,   ->{ question.answers }
-  expose :answer,    ->{ question.answers.new }
+  expose :answers,   -> { question.answers }
+  expose :answer,    -> { question.answers.new }
 
   def index
     
@@ -50,6 +50,6 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, files: [])
   end
 end
