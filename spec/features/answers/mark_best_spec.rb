@@ -32,8 +32,8 @@ feature 'User can choose best answer', %q{
     scenario "marks best answer" do
       sign_in(user)
       visit question_path(question)
-      page.find(:xpath, "//*[contains(text(), '#{best_answer.body}')]/parent::tr").click_button("Mark best")
-      expect(find(:xpath, '//table[contains(@class, "answers")]/tbody/tr[1]')).to have_content(best_answer.body)
+      within("tr", text: best_answer.body) { click_button("Mark best") }
+      expect(find(:css, "table.answers tbody tr:first-child")).to have_content(best_answer.body)
     end
   end
 end

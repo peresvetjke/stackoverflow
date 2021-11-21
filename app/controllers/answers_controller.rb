@@ -12,7 +12,9 @@ class AnswersController < ApplicationController
   end
 
   def update
-    return redirect_to answer.question, notice: "The answer can be edited only by its author" unless current_user&.author_of?(answer)
+    unless current_user&.author_of?(answer)
+      return redirect_to answer.question, notice: "The answer can be edited only by its author"
+    end
 
     if answer.update(answer_params)
       redirect_to answer.question, notice: "Answer has been successfully updated."
@@ -27,15 +29,19 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    return redirect_to answer.question, notice: "The answer can be deleted only by its author" unless current_user&.author_of?(answer)
-
-    answer.destroy
+    if current_user&.author_of?(answer)
+      answer.destroy
+    else 
+      redirect_to answer.question, notice: "The answer can be deleted only by its author"
+    end
   end
 
   def mark_best
-    return redirect_to answer.question, notice: "The answer can be edited only by its author" unless current_user&.author_of?(answer.question)
-    
-    answer.mark_best!
+    if current_user&.author_of?(answer.question)
+      answer.mark_best!  
+    else 
+      redirect_to answer.question, notice: "The answer can be edited only by its author"
+    end
   end
 
   private

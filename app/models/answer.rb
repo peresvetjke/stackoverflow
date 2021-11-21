@@ -8,9 +8,9 @@ class Answer < ApplicationRecord
   default_scope { order(best: :desc) }
 
   def mark_best!
-    # binding.pry
-    self.question.answers.update_all(best: false)
-    self.best = true
-    self.save
+    Answer.transaction do
+      self.question.answers.update_all(best: false)
+      self.update!(best: true)
+    end
   end
 end

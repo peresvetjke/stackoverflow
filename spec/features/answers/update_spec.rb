@@ -28,12 +28,12 @@ feature 'User can edit an answer', %q{
     scenario "tries to edit other's answer" do
       other_answer
       visit question_path(question)
-      expect(find(:xpath, "//*[contains(text(), '#{other_answer.body}')]/parent::tr")).to have_no_button("Edit answer")
+      expect(find("tr", text: other_answer.body)).to have_no_button("Edit answer")
     end
 
     scenario "edits own answer" do
       visit question_path(question)
-      page.find(:xpath, "//*[contains(text(), '#{answer.body}')]/parent::tr").click_button("Edit answer")
+      within("tr", text: answer.body) { click_button("Edit answer") }
       fill_in "Body", :with => "my corrections"
       page.click_button("Update Answer")
       expect(page).to have_content("my corrections")
