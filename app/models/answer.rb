@@ -5,6 +5,8 @@ class Answer < ApplicationRecord
   validates :body, presence: true
   validates :body, uniqueness: { scope: :question_id, message: "already exists for question." }
 
+  has_many_attached :files
+  
   default_scope { order(best: :desc) }
 
   def mark_best!

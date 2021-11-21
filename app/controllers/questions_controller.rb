@@ -1,9 +1,9 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, only: %i[new create edit update destroy]
-  expose :questions, -> {Question.all}
-  expose :question
-  expose :answers,   -> { question.answers }
-  expose :answer,    -> { question.answers.new }
+  expose :question, find:   ->{ Question.with_attached_files.find(params[:id]) }
+  expose :questions,        -> {Question.with_attached_files}
+  expose :answers,          -> { question.answers.with_attached_files }
+  expose :answer,           -> { question.answers.new }
 
   def index
     

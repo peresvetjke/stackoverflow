@@ -26,10 +26,12 @@ table.table.answers
 div.errors
 
 - if current_user.present?
-  = form_with url: question_answers_path(question), model: answer, local: false do |f|
+  = form_with url: question_answers_path(question), model: answer, local: false, id: "answer_form" do |f|
     = f.label :body, "Your answer"
     br
     = f.text_field :body 
+    br
+    = f.file_field :files, multiple: true
     br
     = f.submit
 - else 

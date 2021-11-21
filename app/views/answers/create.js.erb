@@ -6,5 +6,5 @@ $(".errors").empty();
 <% if answer.errors.present? %>
   $(".errors").append('<%= render "shared/errors", resource: answer %>');
 <% else %>
-$("#answer_body").val('')
+  $("#answer_form")[0].reset()
 <% end %>
