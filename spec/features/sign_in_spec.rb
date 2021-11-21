@@ -25,7 +25,7 @@ feature 'User can sign in', %q{
   end  
 
   scenario "tries to sign in with incorrect credentials" do
-    fill_in "Email", :with => "123456"
+    fill_in "Email", :with => "1234@asd.com"
     fill_in "Password", :with => "654321"
     click_button "Log in"
     expect(page).to have_text("Invalid Email or password")

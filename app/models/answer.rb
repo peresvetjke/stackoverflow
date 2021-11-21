@@ -4,4 +4,13 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
   validates :body, uniqueness: { scope: :question_id, message: "already exists for question." }
+
+  default_scope { order(best: :desc) }
+
+  def mark_best!
+    Answer.transaction do
+      self.question.answers.update_all(best: false)
+      self.update!(best: true)
+    end
+  end
 end

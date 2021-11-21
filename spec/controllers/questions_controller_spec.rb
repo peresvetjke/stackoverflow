@@ -72,6 +72,100 @@ RSpec.describe QuestionsController, :type => :controller do
     end
   end
 
+  describe "GET edit" do
+    context "when unauthorized" do
+      it "renders log_in template" do
+        get :edit, params: { id: question }
+        expect(response).to redirect_to(new_user_session_path)
+      end      
+    end
+
+    context "when authorized" do
+      context "being not an author of question" do
+        before { 
+          other_user = create(:user)
+          login(other_user)
+        }
+
+        it "redirects to show question" do
+          get :edit, params: { id: question }
+          expect(response).to redirect_to question_path(question)
+        end
+      end
+
+      context "being an author of question" do
+        before { login(user) }
+
+        it "renders edit template" do
+          get :edit, params: { id: question }
+          expect(response).to render_template(:edit)
+        end
+      end
+    end
+  end
+
+  describe "PATCH update" do    
+    context "when unauthorized" do
+      it "keeps unchanged" do
+        patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
+        question.reload
+        expect(question.body).to eq(question.body)
+      end
+
+      it "renders log_in template" do 
+        patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context "when authorized" do
+      context "being not an author of question" do
+        before {
+          other_user = create(:user)
+          login(other_user)
+        }
+
+        it "doesn't update question" do
+          patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
+          expect(question.reload.body).to eq(question.body)
+        end
+
+        it "redirects to show question" do
+          patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
+          expect(response).to redirect_to question_path(question)
+        end                
+      end
+
+      context "being an author of question" do
+        before { login(user) }
+
+        context 'with invalid params' do
+          it "keeps unchanged" do
+            patch :update, params: { id: question, question: attributes_for(:question, body: "") }
+            expect(question.reload.body).to eq(question.body)
+          end
+         
+          it "renders edit template" do
+            patch :update, params: { id: question, question: attributes_for(:question, body: "") }
+            expect(response).to render_template(:edit)
+          end
+        end
+
+        context 'with valid params' do
+          it "updates question in db" do
+            patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
+            expect(question.reload.body).to eq("corrections")
+          end
+
+          it "renders show template" do 
+            patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
+            expect(response).to redirect_to(controller.question)
+          end
+        end
+      end
+    end
+  end
+
   describe "DELETE destroy" do
 
     context "when unauthorized" do

@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create destroy]
+  before_action :authenticate_user!, only: %i[new create edit update destroy]
   expose :questions, -> {Question.all}
   expose :question
   expose :answers,   ->{ question.answers }
@@ -26,13 +26,25 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def destroy
-    if current_user.author_of?(question)
-      question.destroy
-      redirect_to questions_path, notice: "Your question has been deleted."
+  def edit
+    redirect_to question, notice: "The question can be edited only by its author" unless current_user.author_of?(question)
+  end
+
+  def update
+    return redirect_to question, notice: "The question can be edited only by its author" unless current_user.author_of?(question)
+    
+    if question.update(question_params)
+      redirect_to question, notice: "Question has been successfully updated."
     else
-      redirect_to question, notice: "The question can be deleted only by its author"
+      render :edit
     end
+  end
+
+  def destroy
+    return redirect_to question, notice: "The question can be deleted only by its author" unless current_user.author_of?(question)
+
+    question.destroy
+    redirect_to questions_path, notice: "Your question has been deleted."
   end
 
   private

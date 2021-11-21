@@ -27,7 +27,7 @@ feature 'User can view question', %q{
     other_answers
     visit question_path(question)
     expect(page).to satisfy("has all & only question's answers") do |page| 
-      page.all('tr.answer').count == answers.count && 
+      page.all('.answers tr').count - 1 == answers.count && 
       answers.all? { |a| page.has_content?(a.body) } 
     end
   end

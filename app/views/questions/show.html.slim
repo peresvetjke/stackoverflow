@@ -4,28 +4,31 @@ p = "Body: #{question.body}"
 p = "Author: #{question.author.email}"
 
 - if current_user&.author_of?(question)
+  = button_to "Edit Question", edit_question_path(question), method: :get, local: true
   = button_to "Delete Question", question_path(question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
 h4 Answers
-table.table
-  tr
-    th Body
-    th Author
-    th
-  - answers.each do |a|
-    tr.answer 
-      td = a.body
-      td = a.author.email 
-      td
-        - if current_user&.author_of?(a) 
-          = button_to('Delete answer', answer_path(a), method: :delete, data: { confirm: "Are you sure?" })
+table.table.answers
+  thead
+    tr
+      th Body
+      th Author
+      th
+  tbody
+    = render partial: answers
 
-- if answer.errors.present?
-  = render "shared/errors", resource: answer
+div.errors
 
-= form_with url: question_answers_path(question), model: answer, local: true do |f|
-  = f.label :body, "Your answer"
-  br
-  = f.text_field :body 
-  br
-  = f.submit
+- if current_user.present?
+  = form_with url: question_answers_path(question), model: answer, local: false do |f|
+    = f.label :body, "Your answer"
+    br
+    = f.text_field :body 
+    br
+    = f.submit
+- else 
+  p 
+    = link_to "Sign in", new_user_session_path, method: :get   
+    |  to post answer
+
+= link_to "Back to questions", questions_path

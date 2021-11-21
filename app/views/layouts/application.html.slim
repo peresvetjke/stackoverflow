@@ -10,7 +10,10 @@ html
       = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
   
   body
-    .nav = render "shared/nav"
+    .nav.justify-content-center
+      .nav = render "shared/nav"
     p.notice = notice
     p.alert = alert
-    .content = yield
+    .container 
+      .row.justify-content-md-center.block
+        .content = yield
