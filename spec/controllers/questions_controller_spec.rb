@@ -226,12 +226,12 @@ RSpec.describe QuestionsController, :type => :controller do
 
     context "when unauthorized" do
       it "doesn't delete attachment" do
-        expect { delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js }.not_to change(question.files, :count)
+        expect { delete :delete_attachment, params: { id: question, attachment_id: question.files.first.id }, format: :js }.not_to change(question.files, :count)
       end
 
-      it "renders question show template" do
-        delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js
-        expect(response).to redirect_to question_path(question)
+      it "returns unauthorized status (401)" do
+        delete :delete_attachment, params: { id: question, attachment_id: question.files.first.id }, format: :js
+        expect(response).to have_http_status(401)
       end   
     end   
 
@@ -243,11 +243,11 @@ RSpec.describe QuestionsController, :type => :controller do
         }
 
         it "doesn't delete question" do
-          expect {delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js}.not_to change(question.files, :count)
+          expect {delete :delete_attachment, params: { id: question, attachment_id: question.files.first.id }, format: :js}.not_to change(question.files, :count)
         end
 
         it "renders question show template" do
-          delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js
+          delete :delete_attachment, params: { id: question, attachment_id: question.files.first.id }, format: :js
           expect(response).to redirect_to question_path(question)
         end        
       end
@@ -256,12 +256,12 @@ RSpec.describe QuestionsController, :type => :controller do
         before { login(user) }
 
         it "deletes attachment from db" do
-          expect {delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js}.to change(question.files, :count).by(-1)
+          expect {delete :delete_attachment, params: { id: question, attachment_id: question.files.first.id }, format: :js}.to change(question.files, :count).by(-1)
         end
 
-        it "renders questions index template" do
-          delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js
-          expect(response).to render_template(:destroy_attachment)
+        it "renders questions destroy template" do
+          delete :delete_attachment, params: { id: question, attachment_id: question.files.first.id }, format: :js
+          expect(response).to render_template(:delete_attachment)
         end
       end      
     end

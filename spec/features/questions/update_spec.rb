@@ -50,7 +50,7 @@ feature 'User can edit a question', %q{
 
       end
         
-      feature "with attachments" do
+      feature "with attachments", js: true do
         background { 
           sign_in(user)
           question.files.attach(create_file_blob)
@@ -68,11 +68,12 @@ feature 'User can edit a question', %q{
         end
 
         scenario "removes existing attachment" do
-          within(".attachments tr", text: "image.jpeg") { find(".delete").click }
-          click_button "Update Question"
-          within(".attachments") do
-            expect(page).to have_no_link('image.jpeg')
+          within(".attachments tr", text: "image.jpeg") do
+            accept_alert { find(".delete").click }
           end
+          click_button "Update Question"
+          expect(page).to have_no_css('.attachments')
+          expect(page).to have_no_link('image.jpeg')
         end
       end
     end
