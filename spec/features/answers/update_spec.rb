@@ -23,33 +23,49 @@ feature 'User can edit an answer', %q{
   end
 
   feature "being authorized" do
-    background { sign_in(user) }
-    
-    scenario "tries to edit other's answer" do
-      other_answer
-      visit question_path(question)
-      expect(find("tr", text: other_answer.body)).to have_no_button("Edit answer")
+    feature "without attachments" do
+      background { sign_in(user) }
+      
+      scenario "tries to edit other's answer" do
+        other_answer
+        visit question_path(question)
+        expect(find("tr", text: other_answer.body)).to have_no_button("Edit answer")
+      end
+
+      scenario "edits own answer" do
+        visit question_path(question)
+        within("tr", text: answer.body) { click_button("Edit answer") }
+        fill_in "Body", :with => "my corrections"
+        page.click_button("Update Answer")
+        expect(page).to have_content("my corrections")
+        expect(page).to have_no_content(answer.body)
+      end
     end
 
-    scenario "edits own answer" do
-      visit question_path(question)
-      within("tr", text: answer.body) { click_button("Edit answer") }
-      fill_in "Body", :with => "my corrections"
-      page.click_button("Update Answer")
-      expect(page).to have_content("my corrections")
-      expect(page).to have_no_content(answer.body)
-    end
-
-    feature "with attachments" do
+    feature "with attachments", js: true do
       background { 
-        visit edit_answer_path(answer)
-      }
+        sign_in(user)
+        answer.files.attach(create_file_blob)
+        visit question_path(question)
+        within("tr", text: answer.body) { click_button("Edit answer") }
+      }  
 
-      scenario "adds new file" do
+      scenario "adds new attachment" do
         attach_file 'answer_files', ["#{Rails.root}/spec/spec_helper.rb"]
         click_button "Update Answer"
-        expect(page).to have_link('rails_helper.rb')
-        expect(page).to have_link('spec_helper.rb')
+        within(".attachments") do
+          expect(page).to have_link('image.jpeg')
+          expect(page).to have_link('spec_helper.rb')
+        end
+      end
+
+      scenario "removes existing attachment" do
+        within(".attachments tr", text: "image.jpeg") do
+          accept_alert { find(".delete").click }
+        end
+        click_button "Update Answer"
+        expect(page).to have_no_css('.attachments')
+        expect(page).to have_no_link('image.jpeg')
       end
     end
   end
