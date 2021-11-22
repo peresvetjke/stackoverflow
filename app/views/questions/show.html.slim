@@ -8,10 +8,13 @@ p = "Author: #{question.author.email}"
   = button_to "Delete Question", question_path(question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
 - if question.files.attached?
-  p = "Attachments (#{question.files.count}):"
-  - question.files.each do |file|
-    = link_to file.filename.to_s, url_for(file)
-    br
+  table.attachments
+    thead 
+      tr 
+        th = "Attachments (#{question.files.count}):"
+    - question.files.each do |file|
+      tr 
+        td = link_to file.filename.to_s, url_for(file)
 
 h4 Answers
 table.table.answers

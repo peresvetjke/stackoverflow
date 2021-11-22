@@ -32,7 +32,9 @@ class QuestionsController < ApplicationController
 
   def update
     return redirect_to question, notice: "The question can be edited only by its author" unless current_user.author_of?(question)
-    
+    # model.attachment.attach(params[:attachment_value])
+    # byebug
+    # question.files.attach(params[:question][:files])
     if question.update(question_params)
       redirect_to question, notice: "Question has been successfully updated."
     else

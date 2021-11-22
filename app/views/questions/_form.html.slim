@@ -7,6 +7,16 @@
   br
   = f.text_area  :body
   br
+  - if question.files.attached?
+  table.attachments
+    thead 
+      tr 
+        th = "Attachments (#{question.files.count}):"
+    - question.files.each do |file|
+      tr 
+        td = link_to file.filename.to_s, url_for(file)
+        td
+          = link_to "Delete attachment", ".delete"
   = f.file_field :files, multiple: true
   br
   = f.submit

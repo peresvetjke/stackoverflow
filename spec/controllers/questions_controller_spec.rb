@@ -218,4 +218,52 @@ RSpec.describe QuestionsController, :type => :controller do
       end      
     end
   end
+
+  describe "DELETE delete_attachment" do
+    before { 
+      question.files.attach(create_file_blob)
+    }
+
+    context "when unauthorized" do
+      it "doesn't delete attachment" do
+        expect { delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js }.not_to change(question.files, :count)
+      end
+
+      it "renders question show template" do
+        delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js
+        expect(response).to redirect_to question_path(question)
+      end   
+    end   
+
+    context "when authorized" do
+      context "being not an author of question" do
+        before {
+          other_user = create(:user)
+          login(other_user)
+        }
+
+        it "doesn't delete question" do
+          expect {delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js}.not_to change(question.files, :count)
+        end
+
+        it "renders question show template" do
+          delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js
+          expect(response).to redirect_to question_path(question)
+        end        
+      end
+
+      context "being an author of question" do
+        before { login(user) }
+
+        it "deletes attachment from db" do
+          expect {delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js}.to change(question.files, :count).by(-1)
+        end
+
+        it "renders questions index template" do
+          delete :delete_attachment, params: { id: question.files.first.signed_id }, format: :js
+          expect(response).to render_template(:destroy_attachment)
+        end
+      end      
+    end
+  end
 end

@@ -39,5 +39,18 @@ feature 'User can edit an answer', %q{
       expect(page).to have_content("my corrections")
       expect(page).to have_no_content(answer.body)
     end
+
+    feature "with attachments" do
+      background { 
+        visit edit_answer_path(answer)
+      }
+
+      scenario "adds new file" do
+        attach_file 'answer_files', ["#{Rails.root}/spec/spec_helper.rb"]
+        click_button "Update Answer"
+        expect(page).to have_link('rails_helper.rb')
+        expect(page).to have_link('spec_helper.rb')
+      end
+    end
   end
 end
