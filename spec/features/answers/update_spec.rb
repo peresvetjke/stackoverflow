@@ -63,9 +63,8 @@ feature 'User can edit an answer', %q{
         within(".attachments tr", text: "image.jpeg") do
           accept_alert { find(".delete").click }
         end
-        click_button "Update Answer"
-        expect(page).to have_no_css('.attachments')
-        expect(page).to have_no_link('image.jpeg')
+        expect(page).to have_no_css(".attachments tr", text: "image.jpeg")
+        expect(page).to have_no_link("image.jpeg")
       end
     end
   end

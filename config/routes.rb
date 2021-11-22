@@ -4,10 +4,11 @@ Rails.application.routes.draw do
   root to: "questions#index"
 
   resources :questions do
-    delete "/attachments/:attachment_id", to: "questions#delete_attachment", on: :member
     resources :answers, shallow: true, only: %i[create edit update destroy] do
       post :mark_best, on: :member
       delete "/attachments/:attachment_id", to: "answers#delete_attachment", on: :member
     end
   end
+
+  resources :attachments, only: :destroy
 end

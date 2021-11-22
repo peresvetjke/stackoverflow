@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create edit update destroy delete_attachment]
+  before_action :authenticate_user!, only: %i[new create edit update destroy]
   expose :question, find:   ->{ Question.with_attached_files.find(params[:id]) }
   expose :questions,        -> {Question.with_attached_files}
   expose :answers,          -> { question.answers.with_attached_files }
@@ -47,15 +47,6 @@ class QuestionsController < ApplicationController
 
     question.destroy
     redirect_to questions_path, notice: "Your question has been deleted."
-  end
-
-  def delete_attachment
-    unless current_user.author_of?(question)
-      return redirect_to question, notice: "The question can be edited only by its author"
-    end
-
-    attachment = question.files.find(params[:attachment_id])
-    attachment.purge
   end
 
   private
