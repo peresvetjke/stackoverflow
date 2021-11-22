@@ -249,7 +249,7 @@ RSpec.describe QuestionsController, :type => :controller do
           login(other_user)
         }
 
-        it "doesn't delete question" do
+        it "doesn't delete attachment" do
           expect {delete :delete_attachment, params: { id: question, attachment_id: question.files.first.id }, format: :js}.not_to change(question.files, :count)
         end
 
