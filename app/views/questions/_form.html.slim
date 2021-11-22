@@ -11,7 +11,7 @@
   table.attachments
     thead 
       tr 
-        th = "Attachments (#{question.files.count}):"
+        th = "Attachments:"
     - question.files.each do |file|
       tr*{'attachment-id' => file.id}
         td = link_to file.filename.to_s, url_for(file)

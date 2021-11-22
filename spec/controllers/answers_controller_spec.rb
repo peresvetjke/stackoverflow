@@ -254,9 +254,9 @@ RSpec.describe AnswersController, :type => :controller do
           expect {delete :delete_attachment, params: { id: answer, attachment_id: answer.files.first.id }, format: :js}.to change(answer.files, :count).by(-1)
         end
 
-        it "renders answers delete template" do
-          delete :delete_attachment, params: { id: delete, attachment_id: answer.files.first.id }, format: :js
-          expect(response).to render_template(:delete_attachment)
+        it "redirects to question show template" do
+          delete :delete_attachment, params: { id: answer, attachment_id: answer.files.first.id }, format: :js
+          expect(response).to redirect_to(question)
         end
       end      
     end

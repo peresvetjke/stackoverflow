@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: %i[create destroy mark_best]
+  before_action :authenticate_user!, only: %i[create destroy mark_best delete_attachment]
   
   expose :question
   exposure_config :answer_find, find:   ->{ Answer.with_attached_files.find(params[:id]) }
@@ -42,6 +42,15 @@ class AnswersController < ApplicationController
     else 
       redirect_to answer.question, notice: "The answer can be edited only by its author"
     end
+  end
+
+  def delete_attachment
+    unless current_user.author_of?(answer)
+      return redirect_to answer.question, notice: "The answer can be edited only by its author"
+    end
+
+    attachment = answer.files.find(params[:attachment_id])
+    attachment.purge
   end
 
   private
