@@ -11,7 +11,7 @@ p = "Author: #{question.author.email}"
   table.attachments
     thead 
       tr 
-        th = "Attachments (#{question.files.count}):"
+        th = "Attachments:"
     - question.files.each do |file|
       tr 
         td = link_to file.filename.to_s, url_for(file)
@@ -34,7 +34,7 @@ div.errors
     br
     = f.text_field :body 
     br
-    = f.file_field :files, multiple: true
+    = f.file_field :files, multiple: true, direct_upload: true
     br
     = f.submit
 - else 

@@ -17,6 +17,6 @@
           td = link_to file.filename.to_s, url_for(file)
           td
             = link_to "Delete", attachment_path(file.id), method: :delete, remote: true, data: {confirm: "Are you sure?"}, class: "delete"
-  = f.file_field :files, multiple: true
+  = f.file_field :files, multiple: true, direct_upload: true
   br
   = f.submit
