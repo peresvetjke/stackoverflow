@@ -4,8 +4,6 @@ import { DirectUpload } from "@rails/activestorage"
 document.addEventListener('turbolinks:load', function() {
 
   // https://edgeguides.rubyonrails.org/active_storage_overview.html
-
-
   const input = document.querySelector('input[type=file]')
 
   if (input) { 
