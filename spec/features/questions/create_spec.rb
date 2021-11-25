@@ -15,6 +15,7 @@ feature 'User can create a question', %q{
   feature "being authorized" do
     given(:user)     { create(:user) }
     given(:question) { build(:question) }
+    given(:link)     { build(:link) }
 
     background { 
       sign_in(user)
@@ -44,6 +45,17 @@ feature 'User can create a question', %q{
       click_button "Create"
       expect(page).to have_link('rails_helper.rb')
       expect(page).to have_link('spec_helper.rb')
+    end
+
+    scenario "attaches link" do
+      fill_in "Title", :with => question.title
+      fill_in "Body", :with => question.body
+      within(".links") do
+        fill_in "Title", :with => link.title
+        fill_in "URL", :with => link.url
+      end
+      click_button "Create"
+      expect(page).to have_link(link.title, href: link.url)
     end
   end
 end
