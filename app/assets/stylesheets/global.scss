@@ -2,18 +2,6 @@
   text-align: center;
 }
 
-.errors {
-  text-align: center;  
-}
-
-.content {
-  text-align: center;
-}
-
-.table {
-  margin-left:auto;margin-right:auto;
-}
-
 .hide {
   display: none !important;
 }
@@ -22,6 +10,9 @@
   background-color: hsl(89, 43%, 51%);
 }
 
-table {
-  margin-left:auto;margin-right:auto;
+.block {
+  background-color: #ffffff;
+  border: 2px solid lightgray;
+  border-radius: 8px;
+  padding: 5px;
 }
