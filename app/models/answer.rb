@@ -6,7 +6,7 @@ class Answer < ApplicationRecord
   validates :body, presence: true
   validates :body, uniqueness: { scope: :question_id, message: "already exists for question." }
 
-  accepts_nested_attributes_for :links
+  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
   
   has_many_attached :files
   

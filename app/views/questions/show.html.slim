@@ -16,6 +16,15 @@ p = "Author: #{question.author.email}"
       tr 
         td = link_to file.filename.to_s, url_for(file)
 
+- if question.links.present?
+  table.links
+    thead 
+      tr 
+        th = "Links:"
+    - question.links.each do |link|
+      tr 
+        td = link_to link.title, link.url, target: "_blank"
+
 h4 Answers
 table.table.answers
   thead

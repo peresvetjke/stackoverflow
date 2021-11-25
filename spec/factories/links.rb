@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :link do
-    title { "Google" }
-    url { "https://www.google.com/" }
+    title { "Stackoverflow" }
+    url { "https://stackoverflow.com/" }
     linkable { nil }
   end
 end
