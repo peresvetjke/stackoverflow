@@ -31,15 +31,17 @@ strong Author:
 h3 Answers
 table.table.answers
   tbody
-    = render partial: answers
+    - if question.answers.present?
+      = render partial: answers
 
 div.errors
 
 - if current_user.present?
+  br
   = form_with url: question_answers_path(question), model: answer, local: false, id: "answer_form" do |f|
-    = f.label :body, "Your answer"
+    h4 = f.label :body, "Your answer"
     br
-    = f.text_field :body 
+    = f.text_area :body 
     br
     = f.file_field :files, multiple: true, direct_upload: true
     br

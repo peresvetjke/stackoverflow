@@ -13,7 +13,7 @@ feature 'User can choose best answer', %q{
   feature "being unauthorized" do
     scenario "tries to mark best answer" do
       visit question_path(question)
-      expect(page).to have_no_button("Mark as best")
+      expect(page).to have_no_button("Mark best")
     end
   end
 
@@ -26,14 +26,15 @@ feature 'User can choose best answer', %q{
     scenario "tries to mark best answer of other's question" do
       sign_in(other_user)
       visit question_path(question)
-      expect(page).to have_no_button("Mark as best")
+      expect(page).to have_no_button("Mark best")
     end
 
     scenario "marks best answer" do
       sign_in(user)
       visit question_path(question)
-      within("tr", text: best_answer.body) { click_button("Mark best") }
-      expect(find(:css, "table.answers tbody tr:first-child")).to have_content(best_answer.body)
+      page.first("table.answers > tbody > tr", text: best_answer.body).click_button("Mark best")
+      sleep(1)
+      expect(page.first("table.answers > tbody > tr")).to have_content(best_answer.body)
     end
   end
 end

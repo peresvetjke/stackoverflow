@@ -23,13 +23,13 @@ feature 'User can destroy answer', %q{
     scenario "tries to delete other's question" do
       other_answer
       visit question_path(question)
-      expect(find("tr", text: other_answer.body)).to have_no_button("Delete answer")
+      expect(find(".answers table", text: other_answer.body)).to have_no_button("Delete answer")
     end
 
     scenario "deletes own answer" do
       answer
       visit question_path(question)
-      within(".answers tr", text: answer.body) do
+      within(".answers table", text: answer.body) do
         accept_alert { click_button("Delete answer") }
       end
       expect(page).to have_no_content(answer.body)

@@ -19,7 +19,7 @@ feature 'User can view question', %q{
 
   scenario "views question without answers" do
     visit question_path(question)
-    expect(page.all('tr.answer').count).to eq(0)
+    expect(page.all('.answers tbody table').count).to eq(0)
   end
   
   scenario "views question with answers" do
@@ -27,7 +27,7 @@ feature 'User can view question', %q{
     other_answers
     visit question_path(question)
     expect(page).to satisfy("has all & only question's answers") do |page| 
-      page.all('.answers tr').count - 1 == answers.count && 
+      page.all('.answers tbody table').count == answers.count && 
       answers.all? { |a| page.has_content?(a.body) } 
     end
   end

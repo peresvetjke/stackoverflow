@@ -1,5 +1,5 @@
 <% if answer.persisted? %>
-  $(".answers").append('<%= render answer %>');
+  $(".answers > tbody").append('<%= render answer %>');
 <% end %>
 
 $(".errors").empty();
