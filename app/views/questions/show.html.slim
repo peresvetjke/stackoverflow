@@ -7,6 +7,15 @@ p = "Author: #{question.author.email}"
   = button_to "Edit Question", edit_question_path(question), method: :get, local: true
   = button_to "Delete Question", question_path(question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
+- if question.files.attached?
+  table.attachments
+    thead 
+      tr 
+        th = "Attachments:"
+    - question.files.each do |file|
+      tr 
+        td = link_to file.filename.to_s, url_for(file)
+
 h4 Answers
 table.table.answers
   thead
@@ -20,10 +29,12 @@ table.table.answers
 div.errors
 
 - if current_user.present?
-  = form_with url: question_answers_path(question), model: answer, local: false do |f|
+  = form_with url: question_answers_path(question), model: answer, local: false, id: "answer_form" do |f|
     = f.label :body, "Your answer"
     br
     = f.text_field :body 
+    br
+    = f.file_field :files, multiple: true, direct_upload: true
     br
     = f.submit
 - else 

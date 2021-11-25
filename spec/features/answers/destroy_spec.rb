@@ -29,7 +29,7 @@ feature 'User can destroy answer', %q{
     scenario "deletes own answer" do
       answer
       visit question_path(question)
-      within("tr", text: answer.body) do
+      within(".answers tr", text: answer.body) do
         accept_alert { click_button("Delete answer") }
       end
       expect(page).to have_no_content(answer.body)

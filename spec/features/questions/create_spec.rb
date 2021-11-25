@@ -36,5 +36,14 @@ feature 'User can create a question', %q{
       expect(page).to have_text("Question has been successfully created")
       expect(page).to have_content(question.title)
     end
+
+    scenario "attaches file" do
+      fill_in "Title", :with => question.title
+      fill_in "Body", :with => question.body
+      attach_file 'question_files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      click_button "Create"
+      expect(page).to have_link('rails_helper.rb')
+      expect(page).to have_link('spec_helper.rb')
+    end
   end
 end

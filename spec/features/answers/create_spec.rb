@@ -18,28 +18,38 @@ feature 'User can post answer', %q{
     given(:user)       { create(:user) }
     given(:answer)     { create(:answer, question: question) }
     given(:new_answer) { build(:answer)}
-    background {sign_in(user)}
+    background {
+      sign_in(user)
+      visit question_path(question)
+    }
 
     scenario "tries to create answer with blank body" do
-      visit question_path(question)
       fill_in "Your answer", :with => ""
       click_button "Create Answer"
       expect(page).to have_text("Body can't be blank")
     end
 
     scenario "tries to create answer with non-unique body" do
-      visit question_path(question)
       fill_in "Your answer", :with => answer.body
       click_button "Create Answer"
       expect(page).to have_text("Body already exists for question")
     end
 
     scenario "creates answer" do
-      visit question_path(question)
       fill_in "Your answer", :with => new_answer.body
       click_button "Create Answer"
       within(".answers") do
         expect(page).to have_content(new_answer.body)
+      end
+    end
+
+    scenario "attaches file" do
+      fill_in "Your answer", :with => new_answer.body
+      attach_file 'answer_files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]  
+      click_button "Create Answer"
+      within(".answers") do
+        expect(page).to have_link('rails_helper.rb')
+        expect(page).to have_link('spec_helper.rb')
       end
     end
   end

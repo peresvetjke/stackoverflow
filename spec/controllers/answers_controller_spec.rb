@@ -129,6 +129,13 @@ RSpec.describe AnswersController, :type => :controller do
             expect(response).to redirect_to(answer.question)
           end
         end
+
+        context "with new file attached" do
+          it "creates attachment in db" do
+            expect{ patch :update, params: { id: answer, answer: attributes_for(:answer, files: [Rack::Test::UploadedFile.new('spec/support/image.jpeg', 'image/jpeg')]) } }
+              .to change(ActiveStorage::Attachment, :count).by(1)
+          end    
+        end
       end
     end
   end

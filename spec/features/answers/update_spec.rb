@@ -23,21 +23,49 @@ feature 'User can edit an answer', %q{
   end
 
   feature "being authorized" do
-    background { sign_in(user) }
-    
-    scenario "tries to edit other's answer" do
-      other_answer
-      visit question_path(question)
-      expect(find("tr", text: other_answer.body)).to have_no_button("Edit answer")
+    feature "without attachments" do
+      background { sign_in(user) }
+      
+      scenario "tries to edit other's answer" do
+        other_answer
+        visit question_path(question)
+        expect(find("tr", text: other_answer.body)).to have_no_button("Edit answer")
+      end
+
+      scenario "edits own answer" do
+        visit question_path(question)
+        within("tr", text: answer.body) { click_button("Edit answer") }
+        fill_in "Body", :with => "my corrections"
+        page.click_button("Update Answer")
+        expect(page).to have_content("my corrections")
+        expect(page).to have_no_content(answer.body)
+      end
     end
 
-    scenario "edits own answer" do
-      visit question_path(question)
-      within("tr", text: answer.body) { click_button("Edit answer") }
-      fill_in "Body", :with => "my corrections"
-      page.click_button("Update Answer")
-      expect(page).to have_content("my corrections")
-      expect(page).to have_no_content(answer.body)
+    feature "with attachments" do
+      background { 
+        sign_in(user)
+        answer.files.attach(create_file_blob)
+        visit question_path(question)
+        within("tr", text: answer.body) { click_button("Edit answer") }
+      }  
+
+      scenario "adds new attachment" do
+        attach_file 'answer_files', ["#{Rails.root}/spec/spec_helper.rb"]
+        click_button "Update Answer"
+        within("tr", text: answer.body) do
+          expect(page).to have_link('image.jpeg')
+          expect(page).to have_link('spec_helper.rb')
+        end
+      end
+
+      scenario "removes existing attachment", js: true do
+        within(".attachments tr", text: "image.jpeg") do
+          accept_alert { find(".delete").click }
+        end
+        expect(page).to have_no_css(".attachments tr", text: "image.jpeg")
+        expect(page).to have_no_link("image.jpeg")
+      end
     end
   end
 end
