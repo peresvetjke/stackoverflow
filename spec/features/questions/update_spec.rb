@@ -91,7 +91,6 @@ feature 'User can edit a question', %q{
         given(:question) { create(:question, :with_link, author: user) }
         background { 
           sign_in(user)
-          question.files.attach(create_file_blob)
           visit question_path(question)
           click_button "Edit Question"
         }  

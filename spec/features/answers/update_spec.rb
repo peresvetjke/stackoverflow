@@ -67,5 +67,20 @@ feature 'User can edit an answer', %q{
         expect(page).to have_no_link("image.jpeg")
       end
     end
+
+    feature "with links", js: true do
+      given!(:answer_with_link) { create(:answer, :with_link, question: question, author: user) }
+      background { 
+        sign_in(user)
+      }  
+
+      scenario "removes existing link" do
+        visit question_path(question)
+        page.first("table.answers > tbody > tr", text: answer_with_link.body).click_button("Edit answer")
+        within("#links") { click_link "remove link" }
+        click_button "Update Answer"
+        expect(page).to have_no_link("Stackoverflow", href: "https://stackoverflow.com/")
+      end
+    end
   end
 end

@@ -23,6 +23,17 @@ tr class=(answer.best? ? "best" : nil) *{'answer-id' => answer.id}
               = link_to file.filename.to_s, url_for(file)
               br
 
+      - if answer.links.present?
+        tr
+          td
+            table.links
+              thead 
+                tr 
+                  th = "Links:"
+              - answer.links.each do |link|
+                tr 
+                  td = link_to link.title, link.url, target: "_blank"
+
       - if current_user&.author_of?(answer) 
         tr
           td
