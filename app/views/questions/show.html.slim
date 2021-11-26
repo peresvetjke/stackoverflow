@@ -5,6 +5,13 @@ strong Body:
 br
 strong Author: 
 = question.author.email
+br
+- if question.awarding.present?
+  #awarding
+    strong Awarding: 
+    = question.awarding.title
+    br
+    = image_tag(question.awarding.image)
 
 - if current_user&.author_of?(question)
   = button_to "Edit Question", edit_question_path(question), method: :get, local: true
@@ -27,6 +34,7 @@ strong Author:
     - question.links.each do |link|
       tr 
         td = link_to link.title, link.url, target: "_blank"
+br
 
 h3 Answers
 table.table.answers

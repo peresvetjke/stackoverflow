@@ -57,5 +57,18 @@ feature 'User can create a question', %q{
       click_button "Create"
       expect(page).to have_link("Google", href: "https://www.google.com/")
     end
+
+    scenario "attaches awarding", js: true do
+      fill_in "Title", :with => question.title
+      fill_in "Body", :with => question.body
+      within("#awarding") do
+        click_link "add awarding"
+        fill_in "Title", :with => "Altruist"
+        attach_file 'Image', "#{Rails.root}/spec/support/image.jpeg"
+      end
+      click_button "Create"
+      expect(page).to have_css("#awarding")
+      expect(page).to have_content("Altruist")
+    end
   end
 end

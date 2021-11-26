@@ -25,5 +25,11 @@
     .links
       = link_to_add_association 'add link', f, :links,
         partial: 'shared/link_fields'
+  h3 Awarding
+  #awarding
+    = f.fields_for :awarding do |awarding|
+      = render 'awarding_fields', f: awarding
+    .awarding.max-one-association
+      = link_to_add_association 'add awarding', f, :awarding, force_non_association_create: true
   br
   = f.submit
