@@ -1,0 +1,12 @@
+h1 Your awardings
+- if awardings.present?
+  table#awardings
+    tbody
+      - awardings.each do |a|
+        tr
+          td 
+            = a.title
+            br
+            = link_to a.question.title, question_path(a.question)
+            br
+            = image_tag (a.image.variant(resize_to_limit: [100, 100]))

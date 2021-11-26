@@ -17,5 +17,6 @@ class Answer < ApplicationRecord
       self.question.answers.update_all(best: false)
       self.update!(best: true)
     end
+    self.author.awardings.push(self.question.awarding) if self.question.awarding.present?
   end
 end

@@ -2,7 +2,7 @@ h2 Edit answer
 - if answer.errors.present?
   = render "shared/errors", resource: answer
 
-= form_with model: answer, local: true do |f|
+= form_with model: answer, local: true, id: "direct_upload_form" do |f|
   = f.label      :body
   br
   = f.text_area  :body

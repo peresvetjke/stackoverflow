@@ -1,5 +1,6 @@
 ul.nav.justify-content-center
   li.nav-item = link_to "Questions", questions_path, class: "nav-link"
+  li.nav-item = link_to "My awardings", awardings_path, class: "nav-link"
   - if current_user.present?
     li.nav-item = link_to "(#{current_user.email}) Sign out", destroy_user_session_path, method: :delete, id: "sign_out", class: "nav-link"
   - else

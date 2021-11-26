@@ -11,7 +11,7 @@ br
     strong Awarding: 
     = question.awarding.title
     br
-    = image_tag(question.awarding.image)
+    = image_tag(question.awarding.image.variant(resize_to_limit: [100, 100]))
 
 - if current_user&.author_of?(question)
   = button_to "Edit Question", edit_question_path(question), method: :get, local: true
@@ -46,7 +46,7 @@ div.errors
 
 - if current_user.present?
   br
-  = form_with url: question_answers_path(question), model: answer, local: false, id: "answer_form" do |f|
+  = form_with url: question_answers_path(question), model: answer, local: false, id: "direct_upload_form" do |f|
     h4 = f.label :body, "Your answer"
     br
     = f.text_area :body 

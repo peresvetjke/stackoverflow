@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :awarding do
-    title { "MyText" }
+    title { "Benefactor" }
+    image { Rack::Test::UploadedFile.new("#{Rails.root}/spec/support/image.jpeg", 'image/jpeg') }
     user { nil }
     question { nil }
   end
