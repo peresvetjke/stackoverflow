@@ -2,7 +2,7 @@ class Awarding < ApplicationRecord
   belongs_to :question
   belongs_to :user, optional: true
 
-  validates :title, presence: true
+  validates :title, :image, presence: true
 
   has_one_attached :image
 

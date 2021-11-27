@@ -4,7 +4,7 @@ RSpec.describe Awarding, type: :model do
   
   describe "validations" do
     it { is_expected.to validate_presence_of(:title) }
-    # it { is_expected.to validate_presence_of(:image) }
+    it { is_expected.to validate_presence_of(:image) }
   end
 
   describe "associations" do
