@@ -13,7 +13,6 @@ import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import "../../assets/javascripts/direct_uploads.js"
-import "../../assets/javascripts/gist_embedding.js"
 require("jquery")
 require("@nathanvda/cocoon")
 require("gist-embed/dist/gist-embed.min.js")
