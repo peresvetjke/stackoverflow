@@ -1,10 +1,22 @@
 require 'uri'
 
 class Link < ApplicationRecord
+  
+  GIST_HOST = 'gist.github.com'
+
   belongs_to :linkable, polymorphic: true
 
   validates :title, :url, presence: true
   validate :validate_url
+
+  def gist?
+    uri = URI.parse(self.url)
+    uri.host == GIST_HOST
+  end
+
+  def gist_id
+    URI(self.url).path.split('/').last
+  end
 
   private
 

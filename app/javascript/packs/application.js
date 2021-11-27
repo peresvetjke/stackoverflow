@@ -15,6 +15,7 @@ import "channels"
 import "../../assets/javascripts/direct_uploads.js"
 require("jquery")
 require("@nathanvda/cocoon")
+global.Gh3 = require("gh3/gh3.min.js")
 
 Rails.start()
 Turbolinks.start()
