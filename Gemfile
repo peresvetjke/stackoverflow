@@ -34,8 +34,6 @@ gem 'devise'
 gem 'bootstrap', '~> 5.1.3'
 gem "aws-sdk-s3", require: false
 gem "cocoon"
-# gem "mini_magick"
-# gem "ruby-vips"
 gem 'image_processing'
 
 group :development, :test do
