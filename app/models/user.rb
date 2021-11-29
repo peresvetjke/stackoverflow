@@ -13,6 +13,6 @@ class User < ApplicationRecord
   validates :email, format: /@/
 
   def author_of?(object)
-    object.author_id == self.id
+    object.author_id == id
   end
 end

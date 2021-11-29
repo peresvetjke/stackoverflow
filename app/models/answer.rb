@@ -14,9 +14,9 @@ class Answer < ApplicationRecord
 
   def mark_best!
     Answer.transaction do
-      self.question.answers.update_all(best: false)
-      self.update!(best: true)
+      question.answers.update_all(best: false)
+      update!(best: true)
+      question.awarding&.update!(user: author)
     end
-    self.author.awardings.push(self.question.awarding) if self.question.awarding.present?
   end
 end

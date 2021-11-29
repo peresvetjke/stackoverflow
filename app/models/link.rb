@@ -10,18 +10,18 @@ class Link < ApplicationRecord
   validate :validate_url
 
   def gist?
-    uri = URI.parse(self.url)
+    uri = URI.parse(url)
     uri.host == GIST_HOST
   end
 
   def gist_id
-    URI(self.url).path.split('/').last
+    URI(url).path.split('/').last
   end
 
   private
 
   def validate_url
-    self.errors.add :url, message: "has wrong format" unless valid_url?(self.url)
+    errors.add :url, message: "has wrong format" unless valid_url?(self.url)
   end
 
   def valid_url?(url)
