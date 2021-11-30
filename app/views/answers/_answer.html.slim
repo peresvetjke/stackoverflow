@@ -1,4 +1,13 @@
-tr class=(answer.best? ? "best" : nil) *{'answer-id' => answer.id}
+tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
+  td
+    table.vote
+      tr 
+        td.up = button_to "Vote up", accept_vote_answer_path(answer), params: {preference: true}, remote: true, format: JSON
+      tr 
+        td.rating = answer.rating
+      tr 
+        td.down = button_to "Vote down", accept_vote_answer_path(answer), params: {preference: false}, remote: true, format: JSON
+
   td
     table
       - if current_user&.author_of?(question) 

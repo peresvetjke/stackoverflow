@@ -82,5 +82,23 @@ feature 'User can edit an answer', %q{
         expect(page).to have_no_link("Stackoverflow", href: "https://stackoverflow.com/")
       end
     end
+
+    feature "vote for an answer", js: true do
+      background { 
+        answer
+        sign_in(user)
+        visit question_path(question)
+      }
+
+      scenario "gets rating up" do
+        within(page.first(".answers > tbody > tr .vote .up")) { click_button }
+        expect(page.first(".answers > tbody > tr .vote .rating")).to have_text("1")
+      end
+
+      scenario "gets rating down" do
+        within(page.first(".answers > tbody > tr .vote .down")) { click_button }
+        expect(page.first(".answers > tbody > tr .vote .rating")).to have_text("-1")
+      end
+    end
   end
 end
