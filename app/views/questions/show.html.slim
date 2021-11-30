@@ -3,13 +3,7 @@ h1 Show question
 table.question *{'item-id': question.id}
   tr
     td
-      table.vote
-        tr 
-          td.up = button_to "Vote up", accept_vote_question_path(question), params: {preference: true}, remote: true, format: JSON
-        tr 
-          td.rating = question.rating
-        tr 
-          td.down = button_to "Vote down", accept_vote_question_path(question), params: {preference: false}, remote: true, format: JSON
+      = render partial: "shared/votes", locals: {resource: question}
           
     td
       h2 = "Title: #{question.title}"

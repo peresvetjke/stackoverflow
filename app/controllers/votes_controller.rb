@@ -1,14 +1,12 @@
 class VotesController < ApplicationController
   before_action :authenticate_user!, only: :accept
   before_action :set_votable, only: :accept
-  # before_action :set_vote, only: :accept
 
   def accept
     @votable.accept_vote(preference: params[:preference], author: current_user)
     respond_to do |format|
       format.json { render json: @votable.with_rating }
     end
-    # redirect_to @votable
   end
 
   private

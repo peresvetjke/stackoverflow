@@ -1,0 +1,7 @@
+table.vote
+  tr 
+    td.up = button_to "Vote up", send("accept_vote_#{resource.class.to_s.underscore}_path", resource), params: {preference: true}, remote: true, format: JSON
+  tr 
+    td.rating = resource.rating
+  tr 
+    td.down = button_to "Vote down", send("accept_vote_#{resource.class.to_s.underscore}_path", resource), params: {preference: false}, remote: true, format: JSON

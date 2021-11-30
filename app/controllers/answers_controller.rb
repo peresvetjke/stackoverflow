@@ -44,10 +44,6 @@ class AnswersController < ApplicationController
     end
   end
 
-  def vote
-    answer.accept_vote(author: user, preference: params[:preference])
-  end
-
   private
 
   def answer_params
