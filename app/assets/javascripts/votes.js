@@ -7,4 +7,8 @@ document.addEventListener('turbolinks:load', function() {
 
     $(`.${klass}[item-id=${id}] .vote .rating`)[0].textContent = rating
   })
+    .on('ajax:error', function(e) {
+      var error = e.detail[0]
+      window.alert(error)
+  })
 })

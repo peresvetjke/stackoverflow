@@ -101,23 +101,6 @@ feature 'User can edit a question', %q{
           expect(page).to have_no_link("Stackoverflow", href: "https://stackoverflow.com/")
         end
       end
-
-      feature "vote for a question", js: true do
-        background { 
-          sign_in(user)
-          visit question_path(question)
-        }
-
-        scenario "gets rating up" do
-          within(".question .vote .up") { click_button }
-          expect(page.find('.question .vote .rating')).to have_text("1")
-        end
-
-        scenario "gets rating down" do
-          within(".question .vote .down") { click_button }
-          expect(page.find('.question .vote .rating')).to have_text("-1")
-        end
-      end
     end
   end
 end

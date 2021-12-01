@@ -5,7 +5,11 @@ class VotesController < ApplicationController
   def accept
     @votable.accept_vote(preference: params[:preference], author: current_user)
     respond_to do |format|
-      format.json { render json: @votable.with_rating }
+      if current_user.author_of?(@votable)
+        format.json { render json: "You can't vote for your own record.", status: :unprocessable_entity }
+      else
+        format.json { render json: @votable.with_rating }
+      end
     end
   end
 

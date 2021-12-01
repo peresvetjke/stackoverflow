@@ -10,13 +10,9 @@ feature 'User can edit an answer', %q{
   given(:other_user)   { create(:user) }
   given(:other_answer) { create(:answer, question: question, author: other_user) }
 
-  background {
-    answer
-    other_answer
-  }
-
   feature "when unauthorized" do
     scenario "tries to edit answer" do
+      answer
       visit question_path(question)
       expect(find(:xpath, "//*[contains(text(), '#{answer.body}')]/parent::tr")).to have_no_button("Edit answer")
     end
@@ -33,6 +29,7 @@ feature 'User can edit an answer', %q{
       end
 
       scenario "edits own answer" do
+        answer
         visit question_path(question)
         within(".answers table", text: answer.body) { click_button("Edit answer") }
         fill_in "Body", :with => "my corrections"
@@ -80,24 +77,6 @@ feature 'User can edit an answer', %q{
         within("#links") { click_link "remove link" }
         click_button "Update Answer"
         expect(page).to have_no_link("Stackoverflow", href: "https://stackoverflow.com/")
-      end
-    end
-
-    feature "vote for an answer", js: true do
-      background { 
-        answer
-        sign_in(user)
-        visit question_path(question)
-      }
-
-      scenario "gets rating up" do
-        within(page.first(".answers > tbody > tr .vote .up")) { click_button }
-        expect(page.first(".answers > tbody > tr .vote .rating")).to have_text("1")
-      end
-
-      scenario "gets rating down" do
-        within(page.first(".answers > tbody > tr .vote .down")) { click_button }
-        expect(page.first(".answers > tbody > tr .vote .rating")).to have_text("-1")
       end
     end
   end
