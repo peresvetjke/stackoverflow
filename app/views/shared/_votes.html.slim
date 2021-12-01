@@ -1,11 +1,12 @@
-table.vote
-  tr
-    td.up 
-      = button_to send("accept_vote_#{resource.class.to_s.underscore}_path", resource), params: {preference: true}, method: :post, remote: true, format: JSON do
-        = octicon "chevron-up"
-  tr
-    td.rating = resource.rating
-  tr 
-    td.down 
-      = button_to send("accept_vote_#{resource.class.to_s.underscore}_path", resource), params: {preference: false}, method: :post, remote: true, format: JSON do
-        = octicon "chevron-down"
+- if current_user.present?
+  table.vote
+    tr
+      td.up 
+        = button_to send("accept_vote_#{resource.class.to_s.underscore}_path", resource), params: {preference: true}, method: :post, remote: true, format: JSON do
+          = octicon "chevron-up"
+    tr
+      td.rating = resource.rating
+    tr 
+      td.down 
+        = button_to send("accept_vote_#{resource.class.to_s.underscore}_path", resource), params: {preference: false}, method: :post, remote: true, format: JSON do
+          = octicon "chevron-down"
