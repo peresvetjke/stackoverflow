@@ -34,7 +34,7 @@ document.addEventListener('turbolinks:load', function() {
           hiddenField.setAttribute("type", "hidden");
           hiddenField.setAttribute("value", blob.signed_id);
           hiddenField.name = input.name
-          document.querySelector('form').appendChild(hiddenField)
+          document.querySelector('#direct_upload_form').appendChild(hiddenField)
         }
       })
     }

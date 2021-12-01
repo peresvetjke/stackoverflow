@@ -1,7 +1,17 @@
 h1 Show question
 h2 = "Title: #{question.title}"
-p = "Body: #{question.body}"
-p = "Author: #{question.author.email}"
+strong Body: 
+= question.body
+br
+strong Author: 
+= question.author.email
+br
+- if question.awarding.present?
+  #awarding
+    strong Awarding: 
+    = question.awarding.title
+    br
+    = image_tag(question.awarding.image.variant(resize_to_limit: [100, 100]))
 
 - if current_user&.author_of?(question)
   = button_to "Edit Question", edit_question_path(question), method: :get, local: true
@@ -16,25 +26,40 @@ p = "Author: #{question.author.email}"
       tr 
         td = link_to file.filename.to_s, url_for(file)
 
-h4 Answers
+- if question.links.present?
+  table.links
+    thead 
+      tr 
+        th = "Links:"
+    - question.links.each do |link|
+      tr 
+        td = link_to link.title, link.url, target: "_blank"
+br
+
+h3 Answers
 table.table.answers
-  thead
-    tr
-      th Body
-      th Author
-      th
   tbody
-    = render partial: answers
+    - if question.answers.present?
+      = render partial: answers
 
 div.errors
 
 - if current_user.present?
-  = form_with url: question_answers_path(question), model: answer, local: false, id: "answer_form" do |f|
-    = f.label :body, "Your answer"
+  br
+  = form_with url: question_answers_path(question), model: answer, local: false, id: "direct_upload_form" do |f|
+    h4 = f.label :body, "Your answer"
     br
-    = f.text_field :body 
+    = f.text_area :body 
     br
     = f.file_field :files, multiple: true, direct_upload: true
+    br
+    h3 Links
+    #links
+      = f.fields_for :links do |link|
+        = render 'shared/link_fields', f: link
+      .links
+        = link_to_add_association 'add link', f, :links,
+          partial: 'shared/link_fields'
     br
     = f.submit
 - else 

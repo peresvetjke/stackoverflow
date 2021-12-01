@@ -6,6 +6,7 @@ feature 'User can edit a question', %q{
 
   given(:user)     { create(:user) }
   given(:question) { create(:question, author: user) }
+  # given(:link) { build(:link) }
 
   feature "when unauthorized" do
     scenario "tries to edit question" do
@@ -26,7 +27,7 @@ feature 'User can edit a question', %q{
     end
 
     feature "being an author of question" do
-      feature "without attachments" do
+      feature "without existing attachments and links" do
         background { 
           sign_in(user)
           visit question_path(question)
@@ -48,6 +49,15 @@ feature 'User can edit a question', %q{
           expect(page).to have_content(question.body + " corrections")
         end
 
+        scenario "attaches link", js: true do
+          within("#links") do  
+            click_link "add link"
+            fill_in "Title", :with => "Google"
+            fill_in "Url", :with => "https://www.google.com/"
+          end
+          click_button "Update Question"
+          expect(page).to have_link("Google", href: "https://www.google.com/")
+        end
       end
         
       feature "with attachments" do
@@ -73,6 +83,22 @@ feature 'User can edit a question', %q{
           end
           expect(page).to have_no_css('.attachments tbody')
           expect(page).to have_no_link('image.jpeg')
+        end
+
+      end
+
+      feature "with links" do
+        given(:question) { create(:question, :with_link, author: user) }
+        background { 
+          sign_in(user)
+          visit question_path(question)
+          click_button "Edit Question"
+        }  
+
+        scenario "removes existing link", js: true do
+          within("#links") { click_link "remove link" }
+          click_button "Update Question"
+          expect(page).to have_no_link("Stackoverflow", href: "https://stackoverflow.com/")
         end
       end
     end

@@ -45,5 +45,30 @@ feature 'User can create a question', %q{
       expect(page).to have_link('rails_helper.rb')
       expect(page).to have_link('spec_helper.rb')
     end
+
+    scenario "attaches link", js: true do
+      fill_in "Title", :with => question.title
+      fill_in "Body", :with => question.body
+      within("#links") do  
+        click_link "add link"
+        fill_in "Title", :with => "Google"
+        fill_in "Url", :with => "https://www.google.com/"
+      end
+      click_button "Create"
+      expect(page).to have_link("Google", href: "https://www.google.com/")
+    end
+
+    scenario "attaches awarding", js: true do
+      fill_in "Title", :with => question.title
+      fill_in "Body", :with => question.body
+      within("#awarding") do
+        click_link "add awarding"
+        fill_in "Title", :with => "Altruist"
+        attach_file 'Image', "#{Rails.root}/spec/support/image.jpeg"
+      end
+      click_button "Create"
+      expect(page).to have_css("#awarding")
+      expect(page).to have_content("Altruist")
+    end
   end
 end

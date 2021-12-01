@@ -29,12 +29,12 @@ feature 'User can edit an answer', %q{
       scenario "tries to edit other's answer" do
         other_answer
         visit question_path(question)
-        expect(find("tr", text: other_answer.body)).to have_no_button("Edit answer")
+        expect(find(".answers table", text: other_answer.body)).to have_no_button("Edit answer")
       end
 
       scenario "edits own answer" do
         visit question_path(question)
-        within("tr", text: answer.body) { click_button("Edit answer") }
+        within(".answers table", text: answer.body) { click_button("Edit answer") }
         fill_in "Body", :with => "my corrections"
         page.click_button("Update Answer")
         expect(page).to have_content("my corrections")
@@ -47,13 +47,13 @@ feature 'User can edit an answer', %q{
         sign_in(user)
         answer.files.attach(create_file_blob)
         visit question_path(question)
-        within("tr", text: answer.body) { click_button("Edit answer") }
+        within(".answers table", text: answer.body) { click_button("Edit answer") }
       }  
 
       scenario "adds new attachment" do
         attach_file 'answer_files', ["#{Rails.root}/spec/spec_helper.rb"]
         click_button "Update Answer"
-        within("tr", text: answer.body) do
+        within(".answers table", text: answer.body) do
           expect(page).to have_link('image.jpeg')
           expect(page).to have_link('spec_helper.rb')
         end
@@ -65,6 +65,21 @@ feature 'User can edit an answer', %q{
         end
         expect(page).to have_no_css(".attachments tr", text: "image.jpeg")
         expect(page).to have_no_link("image.jpeg")
+      end
+    end
+
+    feature "with links", js: true do
+      given!(:answer_with_link) { create(:answer, :with_link, question: question, author: user) }
+      background { 
+        sign_in(user)
+      }  
+
+      scenario "removes existing link" do
+        visit question_path(question)
+        page.first("table.answers > tbody > tr", text: answer_with_link.body).click_button("Edit answer")
+        within("#links") { click_link "remove link" }
+        click_button "Update Answer"
+        expect(page).to have_no_link("Stackoverflow", href: "https://stackoverflow.com/")
       end
     end
   end

@@ -6,12 +6,13 @@ class User < ApplicationRecord
          
   has_many :questions, foreign_key: "author_id"
   has_many :answers, foreign_key: "author_id"
+  has_many :awardings
 
   validates :email, :password, presence: true
   validates :email, uniqueness: true
   validates :email, format: /@/
 
   def author_of?(object)
-    object.author_id == self.id
+    object.author_id == id
   end
 end

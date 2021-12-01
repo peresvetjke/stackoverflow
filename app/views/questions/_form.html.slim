@@ -1,7 +1,7 @@
-= form_with url: (question.new_record? ? questions_path : question_path(question)), model: question, local: true do |f|
+= form_with url: (question.new_record? ? questions_path : question_path(question)), model: question, local: true, id: "direct_upload_form" do |f|
   = f.label      :title
   br
-  = f.text_field :title
+  = f.text_area :title
   br
   = f.label      :body
   br
@@ -18,5 +18,18 @@
           td
             = link_to "Delete", attachment_path(file.id), method: :delete, remote: true, data: {confirm: "Are you sure?"}, class: "delete"
   = f.file_field :files, multiple: true, direct_upload: true
+  h3 Links
+  #links
+    = f.fields_for :links do |link|
+      = render 'shared/link_fields', f: link
+    .links
+      = link_to_add_association 'add link', f, :links,
+        partial: 'shared/link_fields'
+  h3 Awarding
+  #awarding
+    = f.fields_for :awarding do |awarding|
+      = render 'awarding_fields', f: awarding
+    .awarding.max-one-association
+      = link_to_add_association 'add awarding', f, :awarding, force_non_association_create: true
   br
   = f.submit

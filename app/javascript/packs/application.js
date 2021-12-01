@@ -14,6 +14,8 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import "../../assets/javascripts/direct_uploads.js"
 require("jquery")
+require("@nathanvda/cocoon")
+require("gist-embed/dist/gist-embed.min.js")
 
 Rails.start()
 Turbolinks.start()

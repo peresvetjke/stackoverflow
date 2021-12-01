@@ -5,4 +5,8 @@ module FeatureHelpers
     fill_in "Password", :with => user.password
     click_button "Log in"
   end
+
+  def sign_out
+    find("#sign_out").click
+  end
 end
