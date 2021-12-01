@@ -3,6 +3,7 @@ class VotesController < ApplicationController
   before_action :set_votable, only: :accept
 
   def accept
+    # byebug
     @votable.accept_vote(preference: params[:preference], author: current_user)
     respond_to do |format|
       format.json { render json: @votable.with_rating }

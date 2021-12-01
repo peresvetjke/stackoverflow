@@ -2,6 +2,7 @@ module Votable
   extend ActiveSupport::Concern
   
   included do
+    
     def accept_vote(preference:, author:)
       vote = Vote.find_or_initialize_by(votable: self, author: author)
       

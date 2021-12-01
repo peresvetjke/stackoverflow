@@ -16,3 +16,27 @@
   border-radius: 8px;
   padding: 5px;
 }
+
+.answers > {
+  tbody > {
+    tr > {
+      td {
+        padding-bottom: 1em;
+      }
+    }
+  }
+}
+
+.vote {
+  button {
+    background: transparent !important;
+    border: none !important;
+  }
+
+  td {
+    width: 50px;
+    text-align: center;
+    padding-right: 20px;
+
+  }
+}
