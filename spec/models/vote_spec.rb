@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Vote, type: :model do
   describe "validations" do
-    it { is_expected.to validate_inclusion_of(:preference).in_array([true, false]) }
+    it { is_expected.to validate_inclusion_of(:preference).in_array([-1, 1]) }
   end
 
   describe "associations" do

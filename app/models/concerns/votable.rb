@@ -2,10 +2,12 @@ module Votable
   extend ActiveSupport::Concern
   
   included do
+    has_many :votes, as: :votable, dependent: :destroy
+
     def accept_vote(preference:, author:)
-      vote = Vote.find_or_initialize_by(votable: self, author: author)
-      
-      if vote.persisted? && vote.preference == ActiveModel::Type::Boolean.new.cast(preference) 
+      vote = votes.find_or_initialize_by(author: author)
+
+      if vote.persisted? && vote.preference == preference.to_i
         return vote.destroy
       end
       
@@ -18,7 +20,7 @@ module Votable
     end
 
     def rating
-      Vote.where(votable: self, preference: true).count - Vote.where(votable: self, preference: false).count
+      votes.sum(:preference)
     end
   end
 end
