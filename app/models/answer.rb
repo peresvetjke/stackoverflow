@@ -12,7 +12,9 @@ class Answer < ApplicationRecord
   
   has_many_attached :files
   
-  default_scope { order(best: :desc) }
+  default_scope { order(best: :desc, created_at: :asc) }
+
+  after_create_commit :publish_answer
 
   def mark_best!
     Answer.transaction do
@@ -20,5 +22,12 @@ class Answer < ApplicationRecord
       update!(best: true)
       question.awarding&.update!(user: author)
     end
+  end
+
+  def publish_answer
+    ActionCable.server.broadcast(
+      "answers_channel_#{question.id}",
+      to_json(include: [:author, :question, :files => {methods: [:filename, :url]}, :links => {methods: [:gist?, :gist_id]} ], methods: :rating)
+    ) 
   end
 end

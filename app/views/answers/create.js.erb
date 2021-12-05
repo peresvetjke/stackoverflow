@@ -6,6 +6,7 @@ $(".errors").empty();
 <% if answer.errors.present? %>
   $(".errors").append('<%= render "shared/errors", resource: answer %>');
 <% else %>
+  $("#direct_upload_form input[type=hidden][name='answer[files][]']").remove()
   $("#direct_upload_form")[0].reset()
 <% end %>
 

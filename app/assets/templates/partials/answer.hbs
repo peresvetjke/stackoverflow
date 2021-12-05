@@ -1,0 +1,113 @@
+<tr class="answer" item-id="{{ answer.id }}">
+  <td>
+    <table class="vote">
+      <tbody>
+        <tr>
+          <td class="up">
+            <form class="button_to" method="post" action="/answers/{{ answer.id }}/accept_vote" data-remote="true">
+              <button format="JSON" type="submit">
+                <svg class="octicon octicon-chevron-up" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M3.22 9.78a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0l4.25 4.25a.75.75 0 01-1.06 1.06L8 6.06 4.28 9.78a.75.75 0 01-1.06 0z">
+                  </path>
+                </svg>
+              </button>
+              <input type="hidden" name="preference" value="1">
+            </form>
+          </td>
+        </tr>
+        <tr>
+          <td class="rating">{{ answer.rating }}</td>
+        </tr>
+        <tr>
+          <td class="down">
+            <form class="button_to" method="post" action="/answers/{{ answer.id }}/accept_vote" data-remote="true">
+              <button format="JSON" type="submit">
+                <svg class="octicon octicon-chevron-down" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M12.78 6.22a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0L3.22 7.28a.75.75 0 011.06-1.06L8 9.94l3.72-3.72a.75.75 0 011.06 0z">
+                  </path>
+                </svg>
+              </button>
+              <input type="hidden" name="preference" value="-1">
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </td>
+
+  <td>
+    <table>
+      <tdbody>
+
+{{! ------------------------------------ Mark best ------------------------------------ }}
+        
+      {{#if current_user_id }}
+        {{#if (areEqual current_user_id answer.question.author_id) }}
+
+        <tr>
+          <td>
+            <form class="button_to" method="post" action="/answers/{{ answer.id }}/mark_best" data-remote="true">
+              <input class="mark_best" type="submit" value="Mark best">
+            </form>
+          </td>
+        </tr>
+
+        {{/if}}     
+      {{/if}}   
+
+{{! END }}
+
+        <tr>
+          <td>
+            <strong>Body: </strong>{{ answer.body }}
+          </td>
+        <tr>
+          <td><strong>Author: </strong>{{ answer.author.email }}</td>
+        </tr>
+
+{{! ------------------------------------ Attachments ------------------------------------ }}
+      
+      {{#if answer.files }}
+        <tr>
+          <td>
+            <strong>Attachments: </strong><br>
+
+            {{#each answer.files}}
+              {{> files}}
+            {{/each}}
+
+          </td>
+        </tr>
+      {{/if}}
+
+{{! Attachments(END) }}
+
+{{! ------------------------------------ Links ----------------------------------------- }}
+
+      {{#if answer.links}}
+        <tr>
+          <td>
+            <table class="links">
+              <thead>
+                <tr>
+                  <th>Links:</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              {{#each answer.links}}
+                {{> links }}    
+              {{/each}}
+
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      {{/if}}       
+
+{{! Links(END) }}
+
+      </tbody>
+    </table>
+  </td>
+</tr>

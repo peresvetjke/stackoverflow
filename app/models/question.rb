@@ -13,4 +13,5 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :awarding, reject_if: :all_blank, allow_destroy: true
 
   has_many_attached :files
+  
 end

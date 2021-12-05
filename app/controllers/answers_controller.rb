@@ -1,6 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, only: %i[create destroy mark_best]
-  
+  # after_action :publish_answer, only: :create
+
   expose :question
   exposure_config :answer_find, find:   ->{ Answer.with_attached_files.find(params[:id]) }
   exposure_config :answer_build, build: ->{ question.answers.new(answer_params) }

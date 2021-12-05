@@ -5,7 +5,6 @@ Rails.application.routes.draw do
 
   resources :questions do
     post :accept_vote, to: "votes#accept", on: :member, defaults: { votable: 'questions' }
-    
     resources :answers, shallow: true, only: %i[create edit update destroy] do
       post :accept_vote, to: "votes#accept", on: :member, defaults: { votable: 'answers' }
     
@@ -15,4 +14,6 @@ Rails.application.routes.draw do
 
   resources :attachments, only: :destroy
   resources :awardings, only: :index
+
+  mount ActionCable.server => '/cable'
 end

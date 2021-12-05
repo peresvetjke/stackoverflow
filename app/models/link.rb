@@ -18,6 +18,13 @@ class Link < ApplicationRecord
     URI(url).path.split('/').last
   end
 
+  def to_builder
+    Jbuilder.new do |link|
+      link.title title
+      link.url url
+    end
+  end
+
   private
 
   def validate_url
@@ -30,6 +37,4 @@ class Link < ApplicationRecord
   rescue URI::InvalidURIError
     false
   end
-
-
 end

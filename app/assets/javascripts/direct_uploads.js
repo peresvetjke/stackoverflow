@@ -1,13 +1,15 @@
 import { DirectUpload } from "@rails/activestorage"
 
-document.addEventListener('turbolinks:load', function() {
-
+function ready () {
   // https://edgeguides.rubyonrails.org/active_storage_overview.html
+  
   const input = document.querySelector('input[type=file]')
 
   if (input) { 
     // Bind to normal file selection
-    input.addEventListener('change', (event) => {
+    $(document).on('change', 'input[type=file]', function(event) {
+    
+      // input.addEventListener('change', (event) => {
       Array.from(input.files).forEach(file => uploadFile(file))
       // you might clear the selected files from the input
       input.value = null
@@ -37,5 +39,11 @@ document.addEventListener('turbolinks:load', function() {
         }
       })
     }
+
   }
-})
+}
+
+
+document.addEventListener('turbolinks:load', ready)
+document.addEventListener('page:load', ready)
+document.addEventListener('page:update', ready)
