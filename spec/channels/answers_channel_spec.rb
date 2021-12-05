@@ -33,7 +33,6 @@ RSpec.describe AnswersChannel, type: :channel do
       end
 
       Capybara.using_session('guest') do
-        save_and_open_page
         expect(page).to have_content "New answer"
         expect(page).to have_link("Google", href: "https://www.google.com/")
           # expect(page).to have_link('rails_helper.rb')
