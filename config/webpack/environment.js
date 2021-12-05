@@ -24,5 +24,4 @@ environment.loaders.prepend('Handlebars', {
   }
 });
 
-
 module.exports = environment

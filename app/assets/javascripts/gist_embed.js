@@ -1,7 +1,7 @@
 function ready() {
   const input = document.querySelector('.answers')
   
-  if input {
+  if (input) {
     window.GistEmbed.init()  
   }
 }

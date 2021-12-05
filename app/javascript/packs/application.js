@@ -9,14 +9,15 @@
 //= require action_cable
 //= require_tree .
 
+function importAll(r) {
+  r.keys().forEach(r);
+}
 
 import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
-require("../../assets/javascripts/direct_uploads.js")
-require("../../assets/javascripts/votes.js")
-require("../../assets/javascripts/answers")
+importAll(require.context("../../assets/javascripts/", true, /\.js$/))
 require("jquery")
 require("@nathanvda/cocoon")
 require("gist-embed/dist/gist-embed.min.js")
