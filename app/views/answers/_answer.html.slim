@@ -1,4 +1,7 @@
-tr class=(answer.best? ? "best" : nil) *{'answer-id' => answer.id}
+tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
+  td
+    = render partial: "shared/votes", locals: {resource: answer}
+
   td
     table
       - if current_user&.author_of?(question) 

@@ -10,13 +10,9 @@ feature 'User can edit an answer', %q{
   given(:other_user)   { create(:user) }
   given(:other_answer) { create(:answer, question: question, author: other_user) }
 
-  background {
-    answer
-    other_answer
-  }
-
   feature "when unauthorized" do
     scenario "tries to edit answer" do
+      answer
       visit question_path(question)
       expect(find(:xpath, "//*[contains(text(), '#{answer.body}')]/parent::tr")).to have_no_button("Edit answer")
     end
@@ -33,6 +29,7 @@ feature 'User can edit an answer', %q{
       end
 
       scenario "edits own answer" do
+        answer
         visit question_path(question)
         within(".answers table", text: answer.body) { click_button("Edit answer") }
         fill_in "Body", :with => "my corrections"

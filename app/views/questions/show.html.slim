@@ -1,43 +1,50 @@
 h1 Show question
-h2 = "Title: #{question.title}"
-strong Body: 
-= question.body
-br
-strong Author: 
-= question.author.email
-br
-- if question.awarding.present?
-  #awarding
-    strong Awarding: 
-    = question.awarding.title
-    br
-    = image_tag(question.awarding.image.variant(resize_to_limit: [100, 100]))
 
-- if current_user&.author_of?(question)
-  = button_to "Edit Question", edit_question_path(question), method: :get, local: true
-  = button_to "Delete Question", question_path(question), method: :delete, local: true, data: { confirm: "Are you sure?" }
+table.question *{'item-id': question.id}
+  tr
+    td
+      = render partial: "shared/votes", locals: {resource: question}
+          
+    td
+      h2 = "Title: #{question.title}"
+      strong Body: 
+      = question.body
+      br
+      strong Author: 
+      = question.author.email
+      br
+      - if question.awarding.present?
+        #awarding
+          strong Awarding: 
+          = question.awarding.title
+          br
+          = image_tag(question.awarding.image.variant(resize_to_limit: [100, 100]))
 
-- if question.files.attached?
-  table.attachments
-    thead 
-      tr 
-        th = "Attachments:"
-    - question.files.each do |file|
-      tr 
-        td = link_to file.filename.to_s, url_for(file)
+      - if current_user&.author_of?(question)
+        = button_to "Edit Question", edit_question_path(question), method: :get, local: true
+        = button_to "Delete Question", question_path(question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
-- if question.links.present?
-  table.links
-    thead 
-      tr 
-        th = "Links:"
-    - question.links.each do |link|
-      tr 
-        td = link_to link.title, link.url, target: "_blank"
-br
+      - if question.files.attached?
+        table.attachments
+          thead 
+            tr 
+              th = "Attachments:"
+          - question.files.each do |file|
+            tr 
+              td = link_to file.filename.to_s, url_for(file)
+
+      - if question.links.present?
+        table.links
+          thead 
+            tr 
+              th = "Links:"
+          - question.links.each do |link|
+            tr 
+              td = link_to link.title, link.url, target: "_blank"
+      br
 
 h3 Answers
-table.table.answers
+table.answers
   tbody
     - if question.answers.present?
       = render partial: answers

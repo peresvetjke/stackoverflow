@@ -157,6 +157,11 @@ GEM
     nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
+    octicons (16.1.1)
+    octicons_helper (16.1.1)
+      actionview
+      octicons (= 16.1.1)
+      railties
     orm_adapter (0.5.0)
     pg (1.2.3)
     popper_js (2.9.3)
@@ -314,6 +319,7 @@ DEPENDENCIES
   jbuilder (~> 2.7)
   launchy
   listen (~> 3.3)
+  octicons_helper
   pg (~> 1.1)
   pry
   puma (~> 5.0)
