@@ -8,7 +8,6 @@ function ready() {
 
     consumer.subscriptions.create({ channel: "QuestionsChannel" }, {
       received(data) {
-        console.log('Got message!')
         appendQuestion(questionsList, data);
       }
     })

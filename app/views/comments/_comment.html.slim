@@ -1,7 +1,7 @@
 tr.comment *{ 'item-id' => comment.id }
   td
     span.comment_body   = comment.body
-    span.comment_author = " - #{comment.author_name}"
+    span.comment_author = " - #{comment.author.email}"
     - if current_user&.author_of?(comment)
       = render "comments/form_inline", comment: comment
       td = link_to 'Edit', comment_path(comment), class: "form_inline_link"
