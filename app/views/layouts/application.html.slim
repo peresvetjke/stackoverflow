@@ -19,4 +19,6 @@ html
     p.alert = alert
     .container 
       .row.justify-content-md-center.block
-        .content = yield
+        .content 
+          #errors
+          = yield

@@ -1,12 +1,12 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, only: %i[create destroy mark_best]
-  # after_action :publish_answer, only: :create
 
   expose :question
-  exposure_config :answer_find, find:   ->{ Answer.with_attached_files.find(params[:id]) }
-  exposure_config :answer_build, build: ->{ question.answers.new(answer_params) }
+  exposure_config :answer_find, find:   -> { Answer.with_attached_files.find(params[:id]) }
+  exposure_config :answer_build, build: -> { question.answers.new(answer_params) }
   expose :answer, with: [:answer_find, :answer_build]
-  expose :answers,                      ->{ question.answers.with_attached_files.select{|a| a.persisted?} }
+  expose :answers,                      -> { question.answers.with_attached_files.select{|a| a.persisted?} }
+  expose :comment,                      -> { answer.comments.new }
 
   def edit
     redirect_to answer.question, notice: "The answer can be edited only by its author" unless current_user&.author_of?(answer)

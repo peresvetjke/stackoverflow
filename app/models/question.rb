@@ -1,7 +1,8 @@
 class Question < ApplicationRecord
+  include Authorable
+  include Commentable
   include Votable
 
-  belongs_to :author, class_name: "User", foreign_key: "author_id"
   has_many :answers, dependent: :destroy
   has_many :links, as: :linkable, dependent: :destroy
   has_one :awarding
@@ -17,7 +18,7 @@ class Question < ApplicationRecord
 
   def publish_question
     ActionCable.server.broadcast(
-      "questions_channel",
+      "questions",
       to_json(include: :author, methods: :rating)
     ) 
   end

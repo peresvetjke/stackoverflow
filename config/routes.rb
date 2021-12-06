@@ -3,10 +3,13 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   root to: "questions#index"
 
-  resources :questions do
+  resources :questions, shallow: true do
     post :accept_vote, to: "votes#accept", on: :member, defaults: { votable: 'questions' }
+    resources :comments, defaults: { commentable: 'questions' }
+
     resources :answers, shallow: true, only: %i[create edit update destroy] do
       post :accept_vote, to: "votes#accept", on: :member, defaults: { votable: 'answers' }
+      resources :comments, defaults: { commentable: 'answers' }
     
       post :mark_best, on: :member
     end

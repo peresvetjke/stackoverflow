@@ -2,7 +2,6 @@ import consumer from "../../javascript/channels/consumer"
 var answer_template = require("../../assets/templates/partials/answer.hbs")
 
 function ready() {
-  console.log('Answers are ready! ')
   var answersList = $("table.answers > tbody")
   if (answersList.length > 0) {
 

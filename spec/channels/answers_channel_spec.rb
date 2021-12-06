@@ -27,12 +27,13 @@ RSpec.describe AnswersChannel, type: :channel do
           fill_in "Url", :with => "https://www.google.com/"
         end
           # attach_file 'answer_files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]  
-        click_button "Create"
+        click_button "Create Answer"
         expect(page).to have_content "New answer"
 
       end
 
       Capybara.using_session('guest') do
+        sleep(1)
         expect(page).to have_content "New answer"
         expect(page).to have_link("Google", href: "https://www.google.com/")
           # expect(page).to have_link('rails_helper.rb')

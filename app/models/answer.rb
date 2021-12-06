@@ -1,7 +1,8 @@
 class Answer < ApplicationRecord
+  include Authorable
+  include Commentable
   include Votable
   
-  belongs_to :author, class_name: "User", foreign_key: "author_id"
   belongs_to :question
   has_many :links, as: :linkable, dependent: :destroy
   has_many_attached :files
@@ -25,7 +26,7 @@ class Answer < ApplicationRecord
 
   def publish_answer
     ActionCable.server.broadcast(
-      "answers_channel_#{question.id}",
+      "questions/#{question.id}/answers",
       to_json(include: [:author, :question, :files => {methods: [:filename, :url]}, :links => {methods: [:gist?, :gist_id]} ], methods: :rating)
     ) 
   end

@@ -1,0 +1,31 @@
+<tr class="comment" item-id="{{comment.id}}">
+  <td>
+    <span class="comment_body">{{comment.body}}</span>
+    <span class="comment_author"> - {{comment.author.email}}</span>
+    
+{{#if current_user_id }}
+  {{#if (areEqual current_user_id comment.author.id) }}
+    <form class="form_inline" style="display: none" action="/comments/57" accept-charset="UTF-8" data-remote="true" method="post">
+      <input type="hidden" name="_method" value="patch">
+      <textarea name="comment[body]" id="comment_body">{{comment.body}}</textarea>
+      <input type="submit" name="commit" value="Update Comment" data-disable-with="Update Comment">
+    </form>
+  {{/if}}
+{{/if}}
+
+  </td>
+
+{{#if current_user_id }}
+  {{#if (areEqual current_user_id comment.author.id) }}
+  
+  <td>
+    <a class="form_inline_link" href="/comments/{{comment.id}}">Edit</a>
+  </td>
+  <td>
+    <a data-confirm="Are you sure?" class="delete_comment" data-remote="true" rel="nofollow" data-method="delete" href="/comments/{{comment.id}}">Delete</a>
+  </td>
+
+  {{/if}}
+{{/if}}
+
+</tr>
