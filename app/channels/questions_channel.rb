@@ -1,5 +1,9 @@
 class QuestionsChannel < ApplicationCable::Channel
   def subscribed
+    stream_from "questions"
+  end
+  
+  def follow
     stop_all_streams
     stream_from "questions"
   end

@@ -6,6 +6,10 @@ function ready() {
   if (questionsList.length > 0) {
 
     consumer.subscriptions.create({ channel: "QuestionsChannel" }, {
+      connected() {
+        this.perform("follow")
+      },
+
       received(data) {
         appendQuestion(questionsList, data);
       }
