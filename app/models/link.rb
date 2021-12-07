@@ -7,7 +7,7 @@ class Link < ApplicationRecord
   belongs_to :linkable, polymorphic: true
 
   validates :title, :url, presence: true
-  validate :validate_url
+  validate  :validate_url
 
   def gist?
     uri = URI.parse(url)

@@ -19,7 +19,8 @@ class Question < ApplicationRecord
   def publish_question
     ActionCable.server.broadcast(
       "questions",
-      to_json(include: :author, methods: :rating)
+      to_json(include: :author, 
+              methods: :rating)
     ) 
   end
 end

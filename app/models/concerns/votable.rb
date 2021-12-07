@@ -5,7 +5,7 @@ module Votable
     has_many :votes, as: :votable, dependent: :destroy
 
     def accept_vote(preference:, author:)
-      raise ArgumentError, "Can't be voted by author" if author_id == author.id
+      raise ArgumentError, "Can't be voted by author" if author.author_of?(self)
 
       vote = votes.find_or_initialize_by(author: author)
 

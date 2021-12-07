@@ -1,11 +1,11 @@
 class Comment < ApplicationRecord
   include Authorable
   
+  default_scope { order(created_at: :asc) }
+
   belongs_to :commentable, polymorphic: true
 
   validates :body, presence: true
-
-  default_scope { order(created_at: :asc) }
 
   after_create_commit :publish_comment
 

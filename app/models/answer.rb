@@ -2,7 +2,9 @@ class Answer < ApplicationRecord
   include Authorable
   include Commentable
   include Votable
-  
+
+  default_scope { order(best: :desc, created_at: :asc) }
+
   belongs_to :question
   has_many :links, as: :linkable, dependent: :destroy
   has_many_attached :files
@@ -11,8 +13,6 @@ class Answer < ApplicationRecord
   validates :body, uniqueness: { scope: :question_id, message: "already exists for question." }
 
   accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
-  
-  default_scope { order(best: :desc, created_at: :asc) }
 
   after_create_commit :publish_answer
 
@@ -27,7 +27,11 @@ class Answer < ApplicationRecord
   def publish_answer
     ActionCable.server.broadcast(
       "questions/#{question.id}/answers",
-      to_json(include: [:author, :question, :files => {methods: [:filename, :url]}, :links => {methods: [:gist?, :gist_id]} ], methods: :rating)
+      to_json(include: [:author, 
+                        :question, 
+                        :files   => { methods: [:filename, :url] }, 
+                        :links   => { methods: [:gist?, :gist_id] } ], 
+              methods: :rating)
     ) 
   end
 end

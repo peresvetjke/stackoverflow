@@ -5,9 +5,10 @@ feature 'User can post comment', %q{
 } do
 
   given(:question) { create(:question) }
+  given(:user)     { create(:user) }
+  given(:answer)   { create(:answer, question: question) }
 
   feature "being unauthorized", js: true do
-
     scenario "tries to create comment" do
       visit question_path(question)
       expect(page).to have_no_button("Create Comment")
@@ -15,9 +16,6 @@ feature 'User can post comment', %q{
   end
 
   feature "being authorized", js: true do
-    given(:user)       { create(:user) }
-    given(:answer)     { create(:answer, question: question) }
-
     background {
       sign_in(user)
       visit question_path(question)
@@ -30,7 +28,6 @@ feature 'User can post comment', %q{
     end
 
     scenario "creates comment" do
-      #save_and_open_page
       fill_in "comment_body", with: "New comment"
       click_button "Create Comment"
       expect(page).to have_content("New comment")

@@ -9,10 +9,6 @@
 //= require action_cable
 //= require_tree .
 
-function importAll(r) {
-  r.keys().forEach(r);
-}
-
 import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
@@ -25,3 +21,7 @@ require("gist-embed/dist/gist-embed.min.js")
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+function importAll(r) {
+  r.keys().forEach(r);
+}

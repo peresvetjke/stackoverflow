@@ -26,7 +26,6 @@ RSpec.describe CommentsChannel, type: :channel do
 
       Capybara.using_session('guest') do
         sleep(1)
-        #save_and_open_page
         expect(page).to have_content("New comment")
       end
     end

@@ -7,47 +7,47 @@ function ready() {
 
   if (input) {
     consumer.subscriptions.create({ channel:"CommentsChannel", question_id: gon.question_id}, {
-      received(data) {
-        var comment = JSON.parse(data)
+        received(data) {
+          var comment = JSON.parse(data)
 
-        if (typeof(gon.current_user) !== 'undefined') {
-          var current_user_id = gon.current_user.id
+          if (typeof(gon.current_user) !== 'undefined') {
+            var current_user_id = gon.current_user.id
+          }
+          
+          if (typeof(gon.current_user) == 'undefined' || gon.current_user.id !== comment.author.id ) {
+            appendComment(comment)
+          }
         }
-        
-        if (typeof(gon.current_user) == 'undefined' || gon.current_user.id !== comment.author.id ) {
-          appendComment(comment)
-        }
-      }
-    })
+      })
 
     $(document).on('ajax:before', ".comment_form", function(e) {  
-      resetErrors()
-    }) .on('ajax:success', ".comment_form", function(e) {  
-      var comment = e.detail[0]
-      appendComment(comment)
-    }) .on('ajax:error', ".comment_form", function(e) {
-      var form = $(e.target)
-      var messages = e.detail[0]      
-      appendErrors(form, messages)
-    })
+        resetErrors()
+      }) .on('ajax:success', ".comment_form", function(e) {  
+        var comment = e.detail[0]
+        appendComment(comment)
+      }) .on('ajax:error', ".comment_form", function(e) {
+        var form = $(e.target)
+        var messages = e.detail[0]      
+        appendErrors(form, messages)
+      })
 
     $(document).on('ajax:success', ".delete_comment", function(e) {  
-      $(e.target).closest('.comment').remove()
-      alert(e.detail[0].message)
-    })
+        $(e.target).closest('.comment').remove()
+        alert(e.detail[0].message)
+      })
 
     $(document).on('click', ".form_inline_link", formIlineLinkHandler)
 
     $(document).on('ajax:before', ".form_inline", function(e) {  
-      resetErrors()
-    }) .on('ajax:success', ".form_inline", function(e) {  
-      var comment = e.detail[0]
-      updateComment(comment)
-    }) .on('ajax:error', ".form_inline", function(e) {
-      var form = $(e.target)
-      var messages = e.detail[0]      
-      appendErrors(form, messages)
-    })
+        resetErrors()
+      }) .on('ajax:success', ".form_inline", function(e) {  
+        var comment = e.detail[0]
+        updateComment(comment)
+      }) .on('ajax:error', ".form_inline", function(e) {
+        var form = $(e.target)
+        var messages = e.detail[0]      
+        appendErrors(form, messages)
+      })
   }
 }
 
