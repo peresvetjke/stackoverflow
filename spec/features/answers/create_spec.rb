@@ -61,7 +61,7 @@ feature 'User can post answer', %q{
         fill_in "Title", :with => "Google"
         fill_in "Url", :with => "https://www.google.com/"
       end
-      click_button "Create"
+      click_button "Create Answer"
       expect(page).to have_link("Google", href: "https://www.google.com/")
     end
   end

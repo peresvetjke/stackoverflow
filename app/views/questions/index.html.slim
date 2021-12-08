@@ -1,12 +1,14 @@
 h2 All questions
 = button_to "Ask question", new_question_path, method: :get
 br
-table.table
-  tr
-    th  Title
-    th  Author
-  - if questions.present?
-    = render partial: questions
-  - else
+table.table#questions
+  thead
     tr
-      td No questions yet.
+      th  Title
+      th  Author
+  tbody
+    - if questions.present?
+      = render partial: questions
+    - else
+      tr
+        td No questions yet.

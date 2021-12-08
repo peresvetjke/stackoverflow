@@ -10,8 +10,11 @@
     "gh3": "https://github.com/k33g/gh3",
     "gist-client": "^1.1.1",
     "gist-embed": "https://github.com/bvanderhoof/gist-embed",
+    "handlebars": "^4.7.7",
+    "handlebars-loader": "^1.7.1",
     "jquery": "^3.6.0",
     "turbolinks": "^5.2.0",
+    "underscore": "^1.13.1",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12"
   },

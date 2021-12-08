@@ -42,4 +42,16 @@ tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
           td
             = button_to('Edit answer', edit_answer_path(answer), method: :get)
             = button_to('Delete answer', answer_path(answer), method: :delete, remote: true, data: { confirm: "Are you sure?" })
+
+      tr
+        td
+          table
+            tr
+              td 
+                table.table.bordered.comments
+                  - if answer.comments.present?
+                    = render partial: 'comments/comment', collection: answer.comments
+            tr
+              - if current_user.present?
+                = render partial: "comments/form", locals: {commentable: answer}
     

@@ -3,11 +3,14 @@ html
   head
     title Stackoverflow
     meta content="width=device-width,initial-scale=1" name="viewport"
+      = Gon::Base.render_data
+      = include_gon
       = csrf_meta_tags
       = csp_meta_tag
     
       = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
       = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+      = action_cable_meta_tag
   
   body
     .nav.justify-content-center
@@ -16,4 +19,6 @@ html
     p.alert = alert
     .container 
       .row.justify-content-md-center.block
-        .content = yield
+        .content 
+          #errors
+          = yield

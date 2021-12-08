@@ -6,14 +6,14 @@
 //= require popper
 //= require bootstrap-sprockets
 //= require turbolinks
+//= require action_cable
 //= require_tree .
 
 import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
-import "../../assets/javascripts/direct_uploads.js"
-import "../../assets/javascripts/votes.js"
+importAll(require.context("../../assets/javascripts/", true, /\.js$/))
 require("jquery")
 require("@nathanvda/cocoon")
 require("gist-embed/dist/gist-embed.min.js")
@@ -21,3 +21,7 @@ require("gist-embed/dist/gist-embed.min.js")
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+function importAll(r) {
+  r.keys().forEach(r);
+}

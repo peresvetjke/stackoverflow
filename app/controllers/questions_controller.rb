@@ -1,16 +1,18 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, only: %i[new create edit update destroy]
-  expose :question, find:   ->{ Question.with_attached_files.find(params[:id]) }
-  expose :questions,        -> {Question.with_attached_files}
-  expose :answers,          -> { question.answers.with_attached_files }
+  expose :question, find:   -> { Question.with_attached_files.includes([:author, :votes, :links, comments: :author]).find(params[:id]) }
+  expose :questions,        -> { Question.with_attached_files.includes([:author]) }
+  expose :answers,          -> { question.answers.with_attached_files.includes([:author, :votes, :links, comments: :author]) }
   expose :answer,           -> { question.answers.new }
+  expose :comments,         -> { question.comments }
+  expose :comment,          -> { question.comments.new }
 
   def index
     
   end
 
   def show
-
+    gon.question_id = question.id
   end
 
   def new
