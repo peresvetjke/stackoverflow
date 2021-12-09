@@ -36,12 +36,13 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
+  config.include OmniauthMacros
 
   Capybara.javascript_driver = :selenium_chrome_headless
   Capybara.default_max_wait_time = 2
 
-
   # cleaner
+=begin
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
@@ -52,7 +53,7 @@ RSpec.configure do |config|
       example.run
     end
   end
-
+=end
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -97,3 +98,4 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+OmniAuth.config.test_mode = true

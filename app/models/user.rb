@@ -2,17 +2,32 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :confirmable, :omniauthable, omniauth_providers: %i[facebook github]
          
   has_many :questions, foreign_key: "author_id"
   has_many :answers, foreign_key: "author_id"
   has_many :awardings
+  has_many :authentifications, dependent: :destroy 
 
-  validates :email, :password, presence: true
-  validates :email, uniqueness: true
-  validates :email, format: /@/
+  validates :password, presence: true #:email, 
+  # validates :email, uniqueness: true
+  # validates :email, format: /@/
+  # validate  :validate_authentification
+
+  def self.from_omniauth(auth)
+    Omni::AuthFinder.new(auth).call
+  end
 
   def author_of?(object)
     object.author_id == id
   end
+
+  #def email_required?
+  #  has_authentification? ? false : super
+  #end
+
+  #def has_authentification?
+  #  authentications.present?
+  #end
 end

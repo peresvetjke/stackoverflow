@@ -12,6 +12,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:questions) }
     it { is_expected.to have_many(:answers) }
     it { is_expected.to have_many(:awardings) }
+    it { is_expected.to have_many(:authentications).dependent(:destroy) }
   end
 
   describe "#author_of?" do
@@ -47,6 +48,41 @@ RSpec.describe User, type: :model do
         it "returns false" do
           expect(user.author_of?(other_answer)).to be false
         end
+      end
+    end
+  end
+
+  describe "#validate authentification" do
+    let(:user)             { build(:user, email: nil) }
+    let(:authentification) { create(:authentification, provider: 'twitter', uid: '123456', user: user) }
+
+    context 'user has been authentificated via provider'
+  end
+
+  describe ".from_omniauth" do
+    let!(:user)   { create(:user) }
+    let(:auth)    { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
+    let(:service) { double('OmniAuthFinder') }
+
+    it 'calls OmniAuthFinder' do
+      expect(OmniAuthFinder).to receive(:new).with(auth).and_return(service)
+      expect(service).to receive(:call)
+      User.find_for_oauth(auth)
+    end
+
+    context 'auth has email' do
+      it 'saves email' do
+      end
+
+      it 'sets email confirmed' do
+      end
+    end
+    
+    context "auth doesn't have email" do
+      it 'keeps email blank' do
+      end
+
+      it 'keeps email unconfirmed' do
       end
     end
   end
