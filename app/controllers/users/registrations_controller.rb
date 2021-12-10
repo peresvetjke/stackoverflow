@@ -3,8 +3,8 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
-  before_action :generate_password,       only: :create, if: -> { omni_authed? }
-  after_action  :create_authentification, only: :create, if: -> { omni_authed? && resource.persisted? }
+  before_action :generate_password,     only: :create, if: -> { omni_authed? }
+  after_action  -> { create_authentication resource }, only: :create, if: -> { omni_authed? && resource.persisted? }
 
   # GET /resource/sign_up
   # def new
@@ -12,9 +12,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    email = params[:user][:email]
+    user = User.find_by(email: email)
+    if user
+      create_authentication resource
+      return sign_in_and_redirect user, event: :authentication
+    end
+    
+    super
+  end
 
   # GET /resource/edit
   # def edit
@@ -72,8 +79,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     params[:user][:password] = Devise.friendly_token[0, 20]
   end
 
-  def create_authentification
-    resource.authentifications.create!(provider: session["oauth.provider"], uid: session["oauth.uid"])
+  def create_authentication
+    resource.create_authentication(provider: session["oauth.provider"], uid: session["oauth.uid"])
     clear_oauth_session
   end
 

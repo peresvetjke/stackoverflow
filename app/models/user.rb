@@ -8,14 +8,14 @@ class User < ApplicationRecord
   has_many :questions, foreign_key: "author_id"
   has_many :answers, foreign_key: "author_id"
   has_many :awardings
-  has_many :authentifications, dependent: :destroy 
+  has_many :authentications, dependent: :destroy 
 
   validates :password, presence: true #:email, 
-  # validates :email, uniqueness: true
-  # validates :email, format: /@/
-  # validate  :validate_authentification
+  validates :email, uniqueness: true
+  validates :email, format: /@/
 
-  def self.from_omniauth(auth)
+
+  def self.find_for_oauth(auth)
     Omni::AuthFinder.new(auth).call
   end
 
@@ -23,11 +23,14 @@ class User < ApplicationRecord
     object.author_id == id
   end
 
+  def create_authentication(provider:, uid:)
+    authentications.create!(provider: provider, uid: uid)
+  end
   #def email_required?
-  #  has_authentification? ? false : super
+  #  has_authentication? ? false : super
   #end
 
-  #def has_authentification?
+  #def has_authentication?
   #  authentications.present?
   #end
 end

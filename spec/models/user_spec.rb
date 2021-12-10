@@ -52,11 +52,11 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "#validate authentification" do
+  describe "#validate authentication" do
     let(:user)             { build(:user, email: nil) }
-    let(:authentification) { create(:authentification, provider: 'twitter', uid: '123456', user: user) }
+    let(:authentication)   { create(:authentication, provider: 'twitter', uid: '123456', user: user) }
 
-    context 'user has been authentificated via provider'
+    context 'user has been authenticated via provider'
   end
 
   describe ".from_omniauth" do

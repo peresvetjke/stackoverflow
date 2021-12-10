@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :authentification do
+  factory :authentication do
     association :user, factory: :user
     provider { "facebook" }
     uid { "12345" }

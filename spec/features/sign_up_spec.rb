@@ -123,18 +123,5 @@ feature 'User can register', %q{
         expect(page).to have_text("Your email address has been successfully confirmed")
       end
     end
-
-
-    feature "with email from provider" do
-      background do 
-        mock_auth_hash(provider: 'facebook')
-        visit new_user_registration_path
-        click_link('Sign in with Facebook')
-      end
-
-      it "authenticates user" do
-        expect(page).to have_text("Successfully authenticated from Facebook account")
-      end
-    end
   end
 end

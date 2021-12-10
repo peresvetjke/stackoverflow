@@ -1,6 +1,6 @@
-class CreateAuthentifications < ActiveRecord::Migration[6.1]
+class CreateAuthentications < ActiveRecord::Migration[6.1]
   def change
-    create_table :authentifications do |t|
+    create_table :authentications do |t|
       t.references :user, null: false, foreign_key: true
       t.text :provider
       t.text :uid

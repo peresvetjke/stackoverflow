@@ -4,7 +4,7 @@ module OmniauthHelpers
     # authentication hashes to return during integration testing.
     OmniAuth.config.mock_auth[provider.to_sym] = OmniAuth::AuthHash.new({
         :provider => provider,
-        :uid => '123545',
+        :uid => '12345677',
         :info => {
           :email => email
         }

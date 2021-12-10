@@ -1,5 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
+require 'devise'
+
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
@@ -34,6 +36,14 @@ end
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::ControllerHelpers, type: :controller
+  #config.include Devise::TestHelpers, type: :controller
+  #config.include Rails.application.routes.url_helpers
+  #config.include Capybara::DSL
+  #config.include Warden::Test::Helpers
+
+  config.use_transactional_fixtures = true
+
+  config.infer_base_class_for_anonymous_controllers = false
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
   config.include OmniauthHelpers
@@ -90,6 +100,7 @@ RSpec.configure do |config|
   config.after(:all) do
     FileUtils.rm_rf("#{Rails.root}/tmp/storage")
   end
+
 end
 
 Shoulda::Matchers.configure do |config|
@@ -104,3 +115,4 @@ end
 #end
 
 OmniAuth.config.test_mode = true
+
