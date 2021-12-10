@@ -6,7 +6,7 @@ require File.expand_path('../config/environment', __dir__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
-
+require 'capybara/email/rspec'
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -36,11 +36,12 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
-  config.include OmniauthMacros
+  config.include OmniauthHelpers
 
   Capybara.javascript_driver = :selenium_chrome_headless
   Capybara.default_max_wait_time = 2
-
+  Capybara.server_port = 3001
+  Capybara.app_host = 'http://localhost:3001'
   # cleaner
 =begin
   config.before(:suite) do
@@ -97,5 +98,9 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+#ActionDispatch::IntegrationTest do
+
+#end
 
 OmniAuth.config.test_mode = true

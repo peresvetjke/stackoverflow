@@ -59,5 +59,22 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
-  config.action_mailer.default_url_options = { host: "dev.yourhost.com" }
+  config.action_mailer.default_url_options = { host: 'localhost', 
+                                             port: 3001 }
+
+  # OmniAuth.config.test_mode = true
+=begin
+  OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new({
+    'provider' => 'github',
+    'uid' => '222333444',
+    'info' => {
+      #'email' => 'user@example.com',
+      'phone' => '87778885522'
+    },
+    'credentials' => {
+      'token' => 'mock_token',
+      'secret' => 'mock_secret'
+    }
+  })
+=end
 end

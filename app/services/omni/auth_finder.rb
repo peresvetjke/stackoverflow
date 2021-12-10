@@ -9,7 +9,6 @@ class Omni::AuthFinder
 
 
   def call
-    byebug
     authentification = Authentification.find_or_initialize_by(provider: provider, uid: uid)
     user = authentification.user if authentification.persisted?
     

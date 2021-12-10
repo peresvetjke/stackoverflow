@@ -4,7 +4,7 @@ feature 'User can sign in', %q{
   In order to ask questions or post answers
 } do
 
-  given(:user) { create(:user) }
+  given(:user) { create(:user, :confirmed) }
   background { 
     visit questions_path
     click_link "Sign in"
@@ -38,4 +38,15 @@ feature 'User can sign in', %q{
     expect(page).to have_text("Signed in successfully")
   end
 
+  feature "signs in with Facebook account" do
+    background do 
+      mock_auth_hash(provider: 'facebook')
+      visit new_user_registration_path
+      click_link('Sign in with Facebook')
+    end
+
+    it "authenticates user" do
+      expect(page).to have_text("Successfully authenticated from Facebook account")
+    end
+  end
 end

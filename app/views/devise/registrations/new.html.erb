@@ -1,6 +1,8 @@
 <h2>Sign up</h2>
 
-<% if omni_authed? %>
+<% omni_authed = session["oauth.uid"].present? && session["oauth.provider"].present? %>
+
+<% if omni_authed %>
   <h4>Please fill in your email to finish registration.</h2>
 <% end %>
 
@@ -12,7 +14,7 @@
     <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
   </div>
 
-  <% unless omni_authed? %>
+  <% unless omni_authed %>
     <div class="field">
       <%= f.label :password %>
       <% if @minimum_password_length %>

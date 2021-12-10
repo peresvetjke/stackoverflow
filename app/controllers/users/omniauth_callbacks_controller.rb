@@ -1,6 +1,7 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # See https://github.com/omniauth/omniauth/wiki/FAQ#rails-session-is-clobbered-after-callback-on-developer-strategy
   skip_before_action :verify_authenticity_token, only: %i[facebook github]
+  before_action :request_email, if: -> { email_blank? }
 
   def facebook
     # You need to implement the method below in your model (e.g. app/models/user.rb)
@@ -17,14 +18,14 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def github
     # You need to implement the method below in your model (e.g. app/models/user.rb)
-
+=begin
     if request.env["omniauth.auth"].info.email.blank?
       session["oauth.uid"] = request.env["omniauth.auth"].uid
       session["oauth.provider"] = request.env["omniauth.auth"].provider
       return redirect_to new_user_registration_url
        # be sure to include an return if there is code after this otherwise it will be executed
     end
-
+=end
     @user = User.from_omniauth(request.env["omniauth.auth"])
 
     if @user.persisted?
@@ -37,7 +38,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def request_email
+    session["oauth.uid"] = request.env["omniauth.auth"].uid
+    session["oauth.provider"] = request.env["omniauth.auth"].provider
+    return redirect_to new_user_registration_url
+  end
 
+  def email_blank?
+    request.env["omniauth.auth"].info.email.blank?
   end
 
   def failure
