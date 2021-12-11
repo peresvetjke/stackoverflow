@@ -61,8 +61,5 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: 'localhost:3000' }
 
-  # config.action_mailer.default_url_options = { host: 'http://www.localhost', port: 3001 }
-  # config.action_mailer.default_url_options = { :host => "yourhost" }
-
   # OmniAuth.config.test_mode = true
 end

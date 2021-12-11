@@ -49,7 +49,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_up_params
   #   devise_parameter_sanitizer.permit(:sign_up, keys: [:attribute])
@@ -61,19 +60,19 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # The path used after sign up.
-  #def after_sign_up_path_for(resource)
+  # def after_sign_up_path_for(resource)
   # super(resource)
-  #end
+  # end
 
-  #The path used after sign up for inactive accounts.
-  #def after_inactive_sign_up_path_for(resource)
-    #super(resource)
-  #end
+  # The path used after sign up for inactive accounts.
+  # def after_inactive_sign_up_path_for(resource)
+  # super(resource)
+  # end
 
   private
 
   def omni_authed?
-    session["oauth.uid"].present? && session["oauth.provider"].present?
+    session['oauth.uid'].present? && session['oauth.provider'].present?
   end
 
   def generate_password
@@ -81,13 +80,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def create_authentication(user)
-    user.create_authentication(provider: session["oauth.provider"], uid: session["oauth.uid"])
+    user.create_authentication(provider: session['oauth.provider'], uid: session['oauth.uid'])
     clear_oauth_session
   end
 
   def clear_oauth_session
-    session.delete("oauth.uid")
-    session.delete("oauth.provider")
+    session.delete('oauth.uid')
+    session.delete('oauth.provider')
   end
 
   def redirect_existing_user(user)

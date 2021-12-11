@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Omni::AuthFinder
   attr_reader :provider, :uid, :email
 
@@ -6,7 +8,6 @@ class Omni::AuthFinder
     @uid = auth.uid
     @email = auth.info&.email
   end
-
 
   def call
     authentication = Authentication.find_by(provider: provider, uid: uid)

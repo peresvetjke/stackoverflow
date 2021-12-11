@@ -15,7 +15,6 @@ RSpec.describe AnswersChannel, type: :channel do
       end
 
       Capybara.using_session('guest') do
-        # sign_in(user)
         visit question_path(question)
       end
 

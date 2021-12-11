@@ -6,7 +6,9 @@ RSpec.describe Users::RegistrationsController, :type => :controller do
   describe "POST create" do
     context 'default registration' do
       let(:user) { build(:user) }
+
       subject { post :create, params: { user: { email: user.email, password: "xxxxxxxx"} } }
+
       it "creates new user" do
         expect { subject }.to change(User, :count).by(1)
       end
