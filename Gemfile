@@ -36,18 +36,10 @@ gem "aws-sdk-s3", require: false
 gem "cocoon"
 gem 'image_processing'
 gem "octicons_helper"
-<<<<<<< HEAD
 gem 'gon'
 gem 'omniauth-facebook'
 gem 'omniauth-github', github: 'omniauth/omniauth-github', branch: 'master'
 gem 'omniauth-rails_csrf_protection'
-=======
-gem 'omniauth-rails_csrf_protection'
-# https://github.com/omniauth/omniauth/wiki/List-of-Strategies
-gem 'omniauth-twitter'
-gem 'omniauth-github', github: 'omniauth/omniauth-github', branch: 'master'
-
->>>>>>> 7767ced5827a08916c2c8f562403c5f84e013ed1
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

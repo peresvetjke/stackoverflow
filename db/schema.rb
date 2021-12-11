@@ -57,7 +57,6 @@ ActiveRecord::Schema.define(version: 2021_12_08_042147) do
     t.index ["question_id"], name: "index_answers_on_question_id"
   end
 
-<<<<<<< HEAD
   create_table "authentications", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.text "provider"
@@ -65,15 +64,6 @@ ActiveRecord::Schema.define(version: 2021_12_08_042147) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_authentications_on_user_id"
-=======
-  create_table "authorizations", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "provider"
-    t.string "uid"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_authorizations_on_user_id"
->>>>>>> 7767ced5827a08916c2c8f562403c5f84e013ed1
   end
 
   create_table "awardings", force: :cascade do |t|
