@@ -62,7 +62,6 @@ feature 'User can register', %q{
       end
 
       it "doesn't ask for a password" do
-        save_and_open_page
         expect(page).to have_no_content("Password")
         expect(page).to have_button("Sign up")
       end

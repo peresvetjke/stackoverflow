@@ -6,9 +6,6 @@ FactoryBot.define do
   factory :user do
     email
     password { "xxxxxxxx" }
-  end
-
-  trait :confirmed do
     confirmed_at { Time.now }
   end
 

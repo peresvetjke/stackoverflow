@@ -7,11 +7,11 @@ RSpec.describe Users::OmniauthCallbacksController, :type => :controller do
 
   before do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    allow(request.env).to receive(:[]).and_call_original
   end
 
   context 'user exists' do
     before do
+      allow(request.env).to receive(:[]).and_call_original
       allow(request.env).to receive(:[]).with('omniauth.auth').and_return(oauth_data_without_email)
       allow(User).to receive(:find_for_oauth).and_call_original
       allow(User).to receive(:find_for_oauth).and_return(user)
@@ -36,6 +36,7 @@ RSpec.describe Users::OmniauthCallbacksController, :type => :controller do
   context 'user does not exist' do
     context 'with email provided' do
       before do
+        allow(request.env).to receive(:[]).and_call_original
         allow(request.env).to receive(:[]).with('omniauth.auth').and_return(oauth_data_with_email)
         allow(User).to receive(:find_for_oauth).and_call_original
         allow(User).to receive(:find_for_oauth).and_return(user)
@@ -59,6 +60,7 @@ RSpec.describe Users::OmniauthCallbacksController, :type => :controller do
 
     context 'without provided email' do
       before do
+        allow(request.env).to receive(:[]).and_call_original
         allow(request.env).to receive(:[]).with('omniauth.auth').and_return(oauth_data_without_email)
         allow(User).to receive(:find_for_oauth)
         get :github

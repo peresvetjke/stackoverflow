@@ -33,13 +33,18 @@ rescue ActiveRecord::PendingMigrationError => e
   puts e.to_s.strip
   exit 1
 end
+
 RSpec.configure do |config|
+  #config.before(:each) do
+  #  ActiveStorage::Current.host = "https://example.com"
+  #end
+  # ActiveStorage::Current.url_options = { host: 'http://www.localhost.com', port: 3001 }
+
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::ControllerHelpers, type: :controller
-  #config.include Devise::TestHelpers, type: :controller
-  #config.include Rails.application.routes.url_helpers
-  #config.include Capybara::DSL
-  #config.include Warden::Test::Helpers
+  config.include Rails.application.routes.url_helpers
+  config.include Capybara::DSL
+  config.include Warden::Test::Helpers
 
   config.use_transactional_fixtures = true
 
@@ -50,8 +55,7 @@ RSpec.configure do |config|
 
   Capybara.javascript_driver = :selenium_chrome_headless
   Capybara.default_max_wait_time = 2
-  Capybara.server_port = 3001
-  Capybara.app_host = 'http://localhost:3001'
+
   # cleaner
 =begin
   config.before(:suite) do
@@ -100,7 +104,6 @@ RSpec.configure do |config|
   config.after(:all) do
     FileUtils.rm_rf("#{Rails.root}/tmp/storage")
   end
-
 end
 
 Shoulda::Matchers.configure do |config|
@@ -109,10 +112,6 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
-
-#ActionDispatch::IntegrationTest do
-
-#end
 
 OmniAuth.config.test_mode = true
 

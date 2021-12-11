@@ -4,7 +4,7 @@ feature 'User can sign in', %q{
   In order to ask questions or post answers
 } do
 
-  given(:user) { create(:user, :confirmed) }
+  given(:user) { create(:user) }
   background { 
     visit questions_path
     click_link "Sign in"

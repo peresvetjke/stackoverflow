@@ -2,7 +2,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   
   # See https://github.com/omniauth/omniauth/wiki/FAQ#rails-session-is-clobbered-after-callback-on-developer-strategy
   skip_before_action :verify_authenticity_token, only: %i[facebook github]
-  #before_action :request_email, unless: -> { email_provided? }
 
   def facebook
     provider('Facebook')
@@ -30,8 +29,4 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     session["oauth.uid"] = request.env["omniauth.auth"].uid.to_s
     session["oauth.provider"] = request.env["omniauth.auth"].provider
   end
-
-  #def email_provided?
-  #  request.env["omniauth.auth"].info&.email&.present?
-  #end
 end                                                                                                                                               

@@ -13,7 +13,7 @@ class Omni::AuthFinder
     user = authentication&.user
     return user if user
 
-    if email
+    if email&.present?
       user = User.find_by(email: email) || create_user
       user.create_authentication(provider: provider, uid: uid) unless authentication
     end
