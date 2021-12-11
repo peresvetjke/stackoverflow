@@ -1,15 +1,34 @@
 import consumer from "./consumer"
+var answer_template = require("../../assets/templates/partials/answer.hbs")
 
-consumer.subscriptions.create("AnswersChannel", {
-  connected() {
-    // Called when the subscription is ready for use on the server
-  },
+function ready() {
+  var answersList = $("table.answers > tbody")
+  if (answersList.length > 0) {
 
-  disconnected() {
-    // Called when the subscription has been terminated by the server
-  },
+    consumer.subscriptions.create({ channel:"AnswersChannel", question_id: gon.question_id}, {
+      connected() {
+        this.perform("follow", { question_id: gon.question_id } )
+      },
 
-  received(data) {
-    // Called when there's incoming data on the websocket for this channel
+      received(data) {
+        appendAnswer(answersList, data);
+      }
+    })
+  }  
+}
+
+function appendAnswer(answersList, data) {
+  var answer = JSON.parse(data)
+  
+  if (typeof(gon.current_user) !== 'undefined') {
+    var current_user_id = gon.current_user.id
   }
-});
+  
+  if (typeof(gon.current_user) == 'undefined' || gon.current_user.id !== answer.author.id ) {
+    answersList.append(answer_template({answer: answer, current_user_id: current_user_id}))
+  }
+}
+
+document.addEventListener('turbolinks:load', ready)
+document.addEventListener('page:load', ready)
+document.addEventListener('page:update', ready)
