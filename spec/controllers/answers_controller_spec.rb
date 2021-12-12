@@ -166,7 +166,6 @@ RSpec.describe AnswersController, :type => :controller do
         context 'marks best answer' do
           it "marks as best" do
             post :mark_best, params: { id: answer }, format: :js
-            # expect(question.reload.answers.reload.select {|q| a.best }.count).to eq(1)
             expect(answer.reload.best).to be true
           end
         end

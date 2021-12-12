@@ -10,7 +10,7 @@ class Answer < ApplicationRecord
   has_many_attached :files
 
   validates :body, presence: true
-  validates :body, uniqueness: { scope: :question_id, message: "already exists for question." }
+  validates :body, uniqueness: { scope: :question_id, message: 'already exists for question.' }
 
   accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
@@ -27,11 +27,11 @@ class Answer < ApplicationRecord
   def publish_answer
     ActionCable.server.broadcast(
       "questions/#{question.id}/answers",
-      to_json(include: [:author, 
-                        :question, 
-                        :files   => { methods: [:filename, :url] }, 
-                        :links   => { methods: [:gist?, :gist_id] } ], 
+      to_json(include: [:author,
+                        :question,
+                        { files: { methods: %i[filename url] },
+                          links: { methods: %i[gist? gist_id] } }],
               methods: :rating)
-    ) 
+    )
   end
 end
