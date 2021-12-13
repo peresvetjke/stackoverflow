@@ -4,6 +4,8 @@ class VotesController < ApplicationController
   before_action :authenticate_user!, only: :accept
   before_action :set_votable, only: :accept
 
+  respond_to :json
+
   def accept
     respond_to do |format|
       if current_user.author_of?(@votable)

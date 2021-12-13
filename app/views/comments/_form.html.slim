@@ -1,4 +1,4 @@
-td.comment_form = form_with model: [commentable, comment], local: false do |f|
+td.comment_form = form_with model: [commentable, commentable.comments.new], local: false, data: {type: :json} do |f|
   = f.text_area :body
   br
   = f.submit

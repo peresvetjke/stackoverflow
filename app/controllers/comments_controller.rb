@@ -1,19 +1,13 @@
 class CommentsController < ApplicationController
+  before_action :load_commentable, only: :create
+  before_action :load_comment, only: %i[update destroy]
+
   authorize_resource
-  
-  before_action :set_commentable, only: :create
-  before_action :find_comment, only: %i[update destroy]
+
+  respond_to :json
 
   def create
-    @comment = @commentable.comments.new(comments_params.merge(author: current_user))
-
-    respond_to do |format|
-      if @comment.save
-        format.json { render json: @comment, include: :author }
-      else
-        format.json { render json: @comment.errors.full_messages, status: :unprocessable_entity }
-      end
-    end
+    respond_with(@commentable.comments.create(comments_params.merge(author: current_user)), include: :author)
   end
 
   def update
@@ -33,11 +27,11 @@ class CommentsController < ApplicationController
 
   private
 
-  def find_comment
+  def load_comment
     @comment = Comment.find(params[:id])
   end
 
-  def set_commentable
+  def load_commentable
     @commentable = commentable_name.classify.constantize.find(params["#{commentable_name.singularize}_id"])
   end
 

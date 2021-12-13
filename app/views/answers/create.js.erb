@@ -1,10 +1,10 @@
-<% if answer.persisted? %>
-  $(".answers > tbody").append('<%= j render answer %>');
+<% if @answer.persisted? %>
+  $(".answers > tbody").append('<%= j render "answer", answer: @answer %>');
 <% end %>
 
 $(".errors").empty();
-<% if answer.errors.present? %>
-  $(".errors").append('<%= j render "shared/errors", resource: answer %>');
+<% if @answer.errors.present? %>
+  $(".errors").append('<%= j render "shared/errors", resource: @answer %>');
 <% else %>
   $("#direct_upload_form input[type=hidden][name='answer[files][]']").remove()
   $("#direct_upload_form")[0].reset()

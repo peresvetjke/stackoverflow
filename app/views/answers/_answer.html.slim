@@ -4,7 +4,7 @@ tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
 
   td
     table
-      - if current_user&.author_of?(question) 
+      - if current_user&.author_of?(answer.question) 
         tr 
           td = button_to('Mark best', mark_best_answer_path(answer), remote: true, class: (answer.best? ? "mark_best hide" : "mark_best"))
       

@@ -7,8 +7,8 @@ table.table#questions
       th  Title
       th  Author
   tbody
-    - if questions.present?
-      = render partial: questions
+    - if @questions.present?
+      = render partial: @questions
     - else
       tr
         td No questions yet.

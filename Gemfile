@@ -41,6 +41,7 @@ gem 'omniauth-facebook'
 gem 'omniauth-github', github: 'omniauth/omniauth-github', branch: 'master'
 gem 'omniauth-rails_csrf_protection'
 gem 'cancancan'
+gem "responders"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -1,50 +1,36 @@
 class AnswersController < ApplicationController
-  authorize_resource
-  
   before_action :authenticate_user!, only: %i[create destroy mark_best]
+  before_action :load_question, only: :create
+  before_action :load_answer,   except: :create
 
-  expose :question
-  exposure_config :answer_find, find:   -> { Answer.with_attached_files.find(params[:id]) }
-  exposure_config :answer_build, build: -> { question.answers.new(answer_params) }
-  expose :answer, with: [:answer_find, :answer_build]
-  expose :answers,                      -> { question.answers.with_attached_files.select{|a| a.persisted?} }
-  expose :comment,                      -> { answer.comments.new }
+  authorize_resource
+
+  respond_to :html, only: %i[edit update]
+  respond_to :js, only: %i[create destroy mark_best]
+
+  def show
+    respond_with(@answer)
+  end
 
   def edit
-    redirect_to answer.question, notice: "The answer can be edited only by its author" unless current_user&.author_of?(answer)
   end
 
   def update
-    unless current_user&.author_of?(answer)
-      return redirect_to answer.question, notice: "The answer can be edited only by its author"
-    end
-
-    if answer.update(answer_params)
-      redirect_to answer.question, notice: "Answer has been successfully updated."
-    else
-      render :edit
-    end  
+    @answer.update(answer_params)
+    respond_with @answer, location: -> { @answer.question }
   end
 
   def create
-    answer.author = current_user
-    answer.save
+    respond_with(@answer = @question.answers.create(answer_params.merge(author_id: current_user.id)))
   end
 
   def destroy
-    if current_user&.author_of?(answer)
-      answer.destroy
-    else 
-      redirect_to answer.question, notice: "The answer can be deleted only by its author"
-    end
+    respond_with(@answer)
   end
 
   def mark_best
-    if current_user&.author_of?(answer.question)
-      answer.mark_best!  
-    else 
-      redirect_to answer.question, notice: "The answer can be edited only by its author"
-    end
+    @answer.mark_best!
+    respond_with(@answer)
   end
 
   private
@@ -52,5 +38,13 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:question_id, :body, 
                                       files: [], links_attributes: [:id, :title, :url, :_destroy])
+  end
+
+  def load_answer
+    @answer = Answer.with_attached_files.find(params[:id])
+  end
+
+  def load_question
+    @question = Question.find(params[:question_id])
   end
 end

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe AttachmentsController, :type => :controller do
+RSpec.describe ActiveStorage::AttachmentsController, :type => :controller do
   
   describe "DELETE delete_attachment" do
     let (:user)     { create(:user) }
@@ -15,9 +15,9 @@ RSpec.describe AttachmentsController, :type => :controller do
         expect { delete :destroy, params: { id: question.files.first.id }, format: :js }.not_to change(ActiveStorage::Attachment, :count)
       end
 
-      it "returns unauthorized status (401)" do
+      it "redirects to root path" do
         delete :destroy, params: { id: question.files.first.id }, format: :js
-        expect(response).to have_http_status(401)
+        expect(response).to redirect_to root_path
       end   
     end   
 

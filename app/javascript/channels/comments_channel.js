@@ -17,7 +17,7 @@ function ready() {
             var current_user_id = gon.current_user.id
           }
           
-          if (typeof(gon.current_user) == 'undefined' || gon.current_user.id !== comment.author.id ) {
+          if (typeof(gon.current_user) == 'undefined' || gon.current_user.id !== comment.author_id ) {
             appendComment(comment)
           }
         }

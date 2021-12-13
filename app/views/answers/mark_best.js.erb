@@ -1,6 +1,6 @@
-$(".answers > tbody > tr[item-id='<%= answer.id %>']").prependTo(".answers > tbody");
+$(".answers > tbody > tr[item-id='<%= @answer.id %>']").prependTo(".answers > tbody");
 
 $(".answers > tbody > tr").removeClass('best')
 $(".answers > tbody > tr .mark_best").removeClass('hide')
-$(".answers > tbody > tr[item-id='<%= answer.id %>']").addClass('best')
-$(".answers > tbody > tr[item-id='<%= answer.id %>'] .mark_best").addClass('hide')
+$(".answers > tbody > tr[item-id='<%= @answer.id %>']").addClass('best')
+$(".answers > tbody > tr[item-id='<%= @answer.id %>'] .mark_best").addClass('hide')

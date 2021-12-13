@@ -78,7 +78,7 @@ function appendComment(comment) {
 
   commentsList.append(comment_template({comment: comment, current_user_id: current_user_id}))
   
-  if (typeof(gon.current_user) !== 'undefined' && gon.current_user.id == comment.author.id ) {
+  if (typeof(gon.current_user) !== 'undefined' && gon.current_user.id == comment.author_id ) {
     comment_form.reset()
   }
 }

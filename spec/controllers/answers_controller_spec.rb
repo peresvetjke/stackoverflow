@@ -7,14 +7,14 @@ RSpec.describe AnswersController, :type => :controller do
   let(:answer)   { create(:answer, author: user, question: question) }
 
   describe "POST create" do
-    context "when unauthorized" do
-      it "redirects to root path" do
+    context "when unauthenticated" do
+      it "returns unauthorized status" do
         post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js} 
-        expect(response).to redirect_to root_path
+        expect(response).to have_http_status(401)
       end 
     end
 
-    context "when authorized" do
+    context "when authenticated" do
       before { login(user) }
 
       context 'with invalid params' do
@@ -40,26 +40,14 @@ RSpec.describe AnswersController, :type => :controller do
   end
 
   describe "GET edit" do
-    context "when unauthorized" do
-      it "redirects to root path" do
+    context "when unauthenticated" do
+      it "redirect to root path" do
         get :edit, params: { id: answer }
         expect(response).to redirect_to root_path
       end      
     end
 
-    context "when authorized" do           # being an author - and not
-      context "being not an author of answer" do
-        before { 
-          other_user = create(:user)
-          login(other_user)
-        }
-
-        it "redirects to show question" do
-          get :edit, params: { id: answer }
-          expect(response).to redirect_to question
-        end
-      end
-
+    context "when authenticated" do
       context "being an author of question" do
         before { login(user) }
 
@@ -72,20 +60,20 @@ RSpec.describe AnswersController, :type => :controller do
   end
 
   describe "PATCH update" do    
-    context "when unauthorized" do
+    context "when unauthenticated" do
       it "keeps unchanged" do
         patch :update, params: { id: answer, answer: attributes_for(:answer, body: "corrections") }
         answer.reload
         expect(answer.body).to eq(answer.body)
       end
 
-      it "redirects to root path" do
+      it "returns unauthorized status" do
         patch :update, params: { id: answer, answer: attributes_for(:answer, body: "corrections") }
-        expect(response).to redirect_to root_path
+        expect(response).to have_http_status(401)
       end
     end
 
-    context "when authorized" do
+    context "when authenticated" do
       context "being not an author of answer" do
         before {
           other_user = create(:user)
