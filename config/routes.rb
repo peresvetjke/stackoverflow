@@ -16,7 +16,10 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :attachments, only: :destroy
+  scope :active_storage, module: :active_storage, as: :active_storage do
+      resources :attachments, only: :destroy
+  end
+
   resources :awardings, only: :index
 
   mount ActionCable.server => '/cable'

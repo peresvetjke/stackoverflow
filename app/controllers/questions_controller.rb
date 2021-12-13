@@ -1,5 +1,8 @@
 class QuestionsController < ApplicationController
+  authorize_resource
+  
   before_action :authenticate_user!, only: %i[new create edit update destroy]
+
   expose :question, find:   -> { Question.with_attached_files.find(params[:id]) }
   expose :questions,        -> { Question.with_attached_files }
   expose :answers,          -> { question.answers.with_attached_files }

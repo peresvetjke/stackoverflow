@@ -8,9 +8,9 @@ RSpec.describe AnswersController, :type => :controller do
 
   describe "POST create" do
     context "when unauthorized" do
-      it "returns 401 unauthorized status" do
+      it "redirects to root path" do
         post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js} 
-        expect(response).to have_http_status(401)
+        expect(response).to redirect_to root_path
       end 
     end
 
@@ -41,9 +41,9 @@ RSpec.describe AnswersController, :type => :controller do
 
   describe "GET edit" do
     context "when unauthorized" do
-      it "renders question show template" do
+      it "redirects to root path" do
         get :edit, params: { id: answer }
-        expect(response).to redirect_to(answer.question)
+        expect(response).to redirect_to root_path
       end      
     end
 
@@ -79,9 +79,9 @@ RSpec.describe AnswersController, :type => :controller do
         expect(answer.body).to eq(answer.body)
       end
 
-      it "renders question show template" do 
+      it "redirects to root path" do
         patch :update, params: { id: answer, answer: attributes_for(:answer, body: "corrections") }
-        expect(response).to redirect_to question
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -180,9 +180,9 @@ RSpec.describe AnswersController, :type => :controller do
         expect { delete :destroy, params: { id: answer }, format: :js }.not_to change(Answer, :count)
       end
 
-      it "returns 401 unauthorized status" do
+      it "redirects to root path" do
         delete :destroy, params: { id: answer }, format: :js
-        expect(response).to have_http_status(401)
+        expect(response).to redirect_to root_path
       end
     end
 

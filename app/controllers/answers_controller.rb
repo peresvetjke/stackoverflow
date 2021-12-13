@@ -1,4 +1,6 @@
 class AnswersController < ApplicationController
+  authorize_resource
+  
   before_action :authenticate_user!, only: %i[create destroy mark_best]
 
   expose :question

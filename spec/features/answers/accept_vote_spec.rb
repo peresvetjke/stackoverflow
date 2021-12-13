@@ -15,8 +15,7 @@ feature 'User can vote for an answer', %q{
       answer
       visit question_path(question)
       within(page.first(".answers > tbody > tr .vote .up")) { click_button }
-      accept_alert { }
-      expect(page.first(".answers > tbody > tr .vote .rating")).to have_text("0")
+      expect(page).to have_text('You are not authorized')
     end
   end
 

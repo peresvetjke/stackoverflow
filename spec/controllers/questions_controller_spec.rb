@@ -14,10 +14,11 @@ RSpec.describe QuestionsController, :type => :controller do
 
   describe "GET new" do
     context "when unauthorized" do
-      it "renders log_in template" do
+      it "redirects to root path" do
         get :new
-        expect(response).to redirect_to(new_user_session_path)
-      end      
+        expect(response).to redirect_to root_path
+      end
+
     end
 
     context "when authorized" do
@@ -36,9 +37,9 @@ RSpec.describe QuestionsController, :type => :controller do
         expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(0)
       end
 
-      it "renders log_in template" do 
+      it "redirects to root path" do
         post :create, params: { question: attributes_for(:question) }
-        expect(response).to redirect_to(new_user_session_path)
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -74,10 +75,10 @@ RSpec.describe QuestionsController, :type => :controller do
 
   describe "GET edit" do
     context "when unauthorized" do
-      it "renders log_in template" do
+      it "redirects to root path" do
         get :edit, params: { id: question }
-        expect(response).to redirect_to(new_user_session_path)
-      end      
+        expect(response).to redirect_to root_path
+      end
     end
 
     context "when authorized" do
@@ -112,9 +113,9 @@ RSpec.describe QuestionsController, :type => :controller do
         expect(question.body).to eq(question.body)
       end
 
-      it "renders log_in template" do 
+      it "redirects to root path" do 
         patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") }
-        expect(response).to redirect_to(new_user_session_path)
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -181,9 +182,9 @@ RSpec.describe QuestionsController, :type => :controller do
         expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(0)
       end
 
-      it "renders question show template" do
+      it "redirect to root_path" do
         delete :destroy, params: { id: question }
-        expect(response).to redirect_to new_user_session_path
+        expect(response).to redirect_to root_path
       end   
     end
 

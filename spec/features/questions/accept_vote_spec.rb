@@ -6,7 +6,6 @@ feature 'User can vote for an answer', %q{
 
   given(:user)           { create(:user) }
   given(:question)       { create(:question, author: user) }
-  # given(:answer)         { create(:answer, question: question, author: user) }
   given(:other_user)     { create(:user) }
   given(:other_question) { create(:question, author: other_user) }
 
@@ -14,8 +13,7 @@ feature 'User can vote for an answer', %q{
     scenario "tries to vote for a question" do
       visit question_path(question)
       within(".question .vote .up") { click_button }
-      accept_alert { }
-      expect(page.find('.question .vote .rating')).to have_text("0")
+      expect(page).to have_text('You are not authorized')
     end
   end
 

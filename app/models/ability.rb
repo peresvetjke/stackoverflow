@@ -4,7 +4,16 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    
+    @user = user
+
+    if user&.admin?
+      admin_abilities
+    elsif user
+      user_abilities
+    else
+      guest_abilities
+    end
+
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
@@ -36,11 +45,21 @@ class Ability
   private
 
   def guest_abilities
+    can :read, [Question, Answer, Comment]
   end
 
   def user_abilities
+    can :manage, [Question, Answer, Comment], author_id: @user.id
+    can :index, Awarding
+    can :accept, Vote
+    can :destroy, ActiveStorage::Attachment, record: { author_id: @user.id }
   end
 
   def admin_abilities
-  end  
+    can :manage, [Question, Answer, Comment]
+  end
+
+  #def record(attachment)
+  #  instance_eval("#{attachment.record_type}.find(#{attachment.record_id})")
+  #end
 end

@@ -1,4 +1,6 @@
 class CommentsController < ApplicationController
+  authorize_resource
+  
   before_action :set_commentable, only: :create
   before_action :find_comment, only: %i[update destroy]
 

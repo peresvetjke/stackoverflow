@@ -1,4 +1,6 @@
 class VotesController < ApplicationController
+  authorize_resource
+  
   before_action :authenticate_user!, only: :accept
   before_action :set_votable, only: :accept
 

@@ -1,7 +1,12 @@
-class AttachmentsController < ApplicationController
+class ActiveStorage::AttachmentsController < ApplicationController
+  authorize_resource# :class => false
+  
   before_action :authenticate_user!, :find_attachment, :find_record
 
   def destroy
+    #byebug
+    # authorize! :destroy, @attachment
+
     unless current_user.author_of?(@record)
       return redirect_to @record, notice: "The attachment can be edited only by its author"
     end
@@ -18,5 +23,4 @@ class AttachmentsController < ApplicationController
   def find_record
     @record = instance_eval("#{@attachment.record_type}.find(#{@attachment.record_id})")
   end
-  
 end

@@ -8,7 +8,7 @@ feature 'User can create a question', %q{
     scenario "tries to create question" do
       visit questions_path
       click_button "Ask question"
-      expect(page).to have_content("You need to sign in or sign up before continuing")
+      expect(page).to have_content("You are not authorized")
     end    
   end
 
