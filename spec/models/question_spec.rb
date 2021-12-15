@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Question, type: :model do
+  include_examples "authorable"
   include_examples "votable"
   include_examples "commentable"
   

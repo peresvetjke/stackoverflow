@@ -1,5 +1,10 @@
 h2 All questions
-= button_to "Ask question", new_question_path, method: :get
+- if can? :create, Question
+  = button_to "Ask question", new_question_path, method: :get
+- else 
+  = link_to "Sign in", new_user_session_path, method: :get    
+  |  to ask questions
+
 br
 table.table#questions
   thead

@@ -5,47 +5,47 @@ feature 'User can vote for an answer', %q{
 } do
 
   given(:user)           { create(:user) }
-  given(:question)       { create(:question, author: user) }
-  given(:other_user)     { create(:user) }
-  given(:other_question) { create(:question, author: other_user) }
+  given!(:question)       { create(:question, author: user) }
 
-  feature "when unauthorized", js: true do
-    scenario "tries to vote for a question" do
-      visit question_path(question)
-      within(".question .vote .up") { click_button }
+  shared_examples "guest", js: true do
+    before { visit question_path(question) }
+
+    scenario "doesn't allow to vote" do
+      find(".question .vote .up .accept_vote").click
       expect(page).to have_text('You are not authorized')
     end
   end
 
-  feature "vote for a question", js: true do
-    feature "tries to vote for own record" do
-      background { 
-        sign_in(user)
-        visit question_path(question)
-      }
+  shared_examples "not an author of question", js: true do
+    before { visit question_path(question) }
 
-      scenario "doesn't change rating" do
-        within(".question .vote .up") { click_button }
-        accept_alert { }
-        expect(page.find('.question .vote .rating')).to have_text("0")
-      end
+    scenario "gets rating up" do
+      find(".question .vote .up .accept_vote").click
+      expect(page.find('.question .vote .rating')).to have_text("1")
     end
 
-    feature "vote for other's answer" do
-      background { 
-        sign_in(user)
-        visit question_path(other_question)
-      }
-
-      scenario "gets rating up" do
-        within(".question .vote .up") { click_button }
-        expect(page.find('.question .vote .rating')).to have_text("1")
-      end
-
-      scenario "gets rating down" do
-        within(".question .vote .down") { click_button }
-        expect(page.find('.question .vote .rating')).to have_text("-1")
-      end
+    scenario "gets rating down" do
+      find(".question .vote .down .accept_vote").click
+      expect(page.find('.question .vote .rating')).to have_text("-1")
     end
+  end
+
+  feature "being a guest" do
+    it_behaves_like "guest"
+  end
+
+  feature "being an author of question" do
+    before { sign_in(user) }
+    it_behaves_like "guest"
+  end
+
+  feature "being not an author of question" do
+    before { sign_in(create(:user)) }
+    it_behaves_like "not an author of question"
+  end
+
+  feature "being an admin" do
+    before { sign_in(create(:user, admin: true)) }
+    it_behaves_like "not an author of question"
   end
 end

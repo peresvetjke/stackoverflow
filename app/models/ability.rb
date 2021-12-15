@@ -22,11 +22,33 @@ class Ability
   end
 
   def user_abilities
-    cannot :mark_best, Answer, question: { author_id: @user.id }
-    can :read, [Question, Answer, Comment]
-    can :manage, [Question, Answer, Comment], author_id: @user.id
-    #can :index, Awarding
-    #can :accept, Vote,
+    can %i[read create], [Question, Answer, Comment]
+    can %i[update destroy], [Question, Answer, Comment], author_id: @user.id
+    can :read, Awarding, user_id: @user.id
+    can :mark_best, Answer, question: { author_id: @user.id }
+    can :accept_vote, Votable do |votable|
+      votable.author_id != @user.id
+    end
+    #[Answer, Question].each do |votable_class|
+    #  can :accept_vote, votable_class do |votable| 
+    #    votable.author_id != @user.id
+    #  end
+    #end
+    
+    can :destroy, ActiveStorage::Attachment, record: { author_id: @user.id }
+    
+    #can :accept_vote, Votable, {|votable| votable.author_id != @user.id}
+
+    #read: [:index, :show]
+    #create: [:new, :create]
+    #update: [:edit, :update]
+    #destroy: [:destroy]
+    #manage: ALL!
+  end
+
+  def admin_abilities
+    can :manage, [Question, Answer, Comment, ActiveStorage::Attachment]
+    #can :destroy, ActiveStorage::Attachment
   end
     #can :destroy, ActiveStorage::Attachment, record: { author_id: @user.id }
     
@@ -36,8 +58,6 @@ class Ability
     #end    
 
 
-  def admin_abilities
-    can :manage, [Question, Answer, Comment]
-  end
+
 
 end

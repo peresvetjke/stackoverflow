@@ -23,8 +23,9 @@ table.question *{'item-id': @question.id}
                 br
                 = image_tag(@question.awarding.image.variant(resize_to_limit: [100, 100]))
 
-            - if current_user&.author_of?(@question)
+            - if can? :update, @question
               = button_to "Edit Question", edit_question_path(@question), method: :get, local: true
+            - if can? :destroy, @question
               = button_to "Delete Question", question_path(@question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
             - if @question.files.attached?
@@ -59,12 +60,12 @@ table.question *{'item-id': @question.id}
 h3 Answers
 table.answers
   tbody
-    - if @question.answers.present?
+    - if @answers.present?
       = render partial: @answers
 
 div.errors
 
-- if current_user.present?
+- if can? :create, Answer
   br
   = form_with url: question_answers_path(@question), model: @question.answers.new, local: false, id: "direct_upload_form" do |f|
     h4 = f.label :body, "Your answer"

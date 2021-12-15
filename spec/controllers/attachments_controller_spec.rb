@@ -6,50 +6,51 @@ RSpec.describe ActiveStorage::AttachmentsController, :type => :controller do
     let (:user)     { create(:user) }
     let (:question) { create(:question, author: user) }
 
-    before { 
-      question.files.attach(create_file_blob)
-    }
+    before  { question.files.attach(create_file_blob) }
+    subject { delete :destroy, params: {id: question.files.first.id}, format: :js }
 
-    context "when unauthorized" do
+    shared_examples 'guest' do
       it "doesn't delete attachment" do
-        expect { delete :destroy, params: { id: question.files.first.id }, format: :js }.not_to change(ActiveStorage::Attachment, :count)
+        expect{subject}.not_to change(ActiveStorage::Attachment, :count)
       end
 
       it "redirects to root path" do
-        delete :destroy, params: { id: question.files.first.id }, format: :js
+        subject
         expect(response).to redirect_to root_path
-      end   
-    end   
+      end
+    end
 
-    context "when authorized" do
-      context "being not an author of question" do
-        before {
-          other_user = create(:user)
-          login(other_user)
-        }
-
-        it "doesn't delete attachment" do
-          expect {delete :destroy, params: { id: question.files.first.id }, format: :js}.not_to change(question.files, :count)
-        end
-
-        it "renders question show template" do
-          delete :destroy, params: { id: question.files.first.id }, format: :js
-          expect(response).to redirect_to question
-        end        
+    shared_examples 'author of attachable' do
+      it "deletes attachment from db" do
+        expect{subject}.to change(question.files, :count).by(-1)
       end
 
-      context "being an author of question" do
-        before { login(user) }
+      it "renders questions destroy template" do
+        subject
+        expect(response).to render_template(:destroy)
+      end
+    end
 
-        it "deletes attachment from db" do
-          expect {delete :destroy, params: { id: question.files.first.id }, format: :js}.to change(question.files, :count).by(-1)
-        end
+    context 'being a guest' do
+      it_behaves_like 'guest'
+    end
 
-        it "renders questions destroy template" do
-          delete :destroy, params: { id: question.files.first.id }, format: :js
-          expect(response).to render_template(:destroy)
-        end
-      end      
+    context 'being not an author of attachable' do
+      before { login(create(:user)) }
+
+      it_behaves_like 'guest'
+    end
+
+    context 'being an author of attachable' do
+      before { login(user) }
+
+      it_behaves_like 'author of attachable'
+    end
+
+    context 'being an admin' do
+      before { login(create(:user, admin: true)) }
+
+      it_behaves_like 'author of attachable'
     end
   end
 end

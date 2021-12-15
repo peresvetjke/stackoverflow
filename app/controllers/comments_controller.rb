@@ -7,13 +7,21 @@ class CommentsController < ApplicationController
   respond_to :json
 
   def create
-    respond_with(@commentable.comments.create(comments_params.merge(author: current_user)), include: :author)
+    @comment = @commentable.comments.new(comments_params.merge(author: current_user))
+    
+    respond_to do |format|
+      if @comment.save
+        format.json { render json: @comment, include: :author }
+      else
+        format.json { render json: @comment.errors.full_messages, status: :unprocessable_entity }
+      end
+    end
   end
 
   def update
     respond_to do |format|
       if @comment.update(comments_params)
-        format.json { render json: @comment, include: :author }
+        format.json { render json: @comment }
       else
         format.json { render json: @comment.errors.full_messages, status: :unprocessable_entity }
       end

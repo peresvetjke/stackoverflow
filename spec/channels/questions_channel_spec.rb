@@ -21,7 +21,7 @@ RSpec.describe QuestionsChannel, type: :channel do
         fill_in "Title", :with => "New question"
         fill_in "Body", :with => "Body body body"
         click_button "Create Question"
-        expect(page).to have_text("Question has been successfully created")
+        expect(page).to have_text("Question was successfully created")
         expect(page).to have_content("New question")
       end
 

@@ -7,7 +7,6 @@ feature 'User can post answer', %q{
   given(:question) { create(:question) }
 
   feature "being unauthorized" do
-
     scenario "tries to create answer" do
       visit question_path(question)
       expect(page).to have_no_button("Create Answer")

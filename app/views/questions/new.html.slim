@@ -1,8 +1,8 @@
 - question = Question.new
 
 h2 Create new question
-- if question.errors.present?
-  = render "shared/errors", resource: question
+- if @question&.errors.present?
+  = render "shared/errors", resource: @question
 
 = render "form", question: question
 

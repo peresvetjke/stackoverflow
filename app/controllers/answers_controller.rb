@@ -1,9 +1,8 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: %i[create destroy mark_best]
   before_action :load_question, only: :create
   before_action :load_answer,   except: :create
-
   authorize_resource
+  before_action :authenticate_user!, only: %i[create destroy mark_best]
 
   respond_to :html, only: %i[edit update]
   respond_to :js, only: %i[create destroy mark_best]
@@ -25,12 +24,12 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    respond_with(@answer)
+    respond_with(@answer.destroy)
   end
 
   def mark_best
     @answer.mark_best!
-    respond_with(@answer)
+    #respond_with(@answer)
   end
 
   private

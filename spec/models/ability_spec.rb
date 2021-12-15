@@ -7,33 +7,67 @@ describe Ability do
   context 'when is a guest' do
     let(:user) { nil }
     
-    it { is_expected.not_to be_able_to(:manage, Question.new) }
-    it { is_expected.to be_able_to(:read, Question.new) }
-    it { is_expected.to be_able_to(:read, Answer.new) }
-    it { is_expected.to be_able_to(:read, Comment.new) }
+    [Question, Answer, Comment].each do |klass|
+      it { is_expected.to be_able_to(:read, klass.new) }
+      it { is_expected.not_to be_able_to(:update, klass.new) }
+      it { is_expected.not_to be_able_to(:destroy, klass.new) }
+    end
+    it { is_expected.not_to be_able_to(:read, Awarding.new(user: create(:user))) }
+    it { is_expected.not_to be_able_to(:accept_vote, Question.new) }
+    it { is_expected.not_to be_able_to(:accept_vote, Answer.new) }
+    it { is_expected.not_to be_able_to(:destroy, ActiveStorage::Attachment.new) }
   end
 
   context 'when logged in but not an author' do
     let(:user) { create(:user) }
 
-    it { is_expected.not_to be_able_to(:manage, Question.new(author: create(:user))) }
-    it { is_expected.not_to be_able_to(:manage, Answer.new(author: create(:user))) }
-    it { is_expected.not_to be_able_to(:manage, Comment.new(author: create(:user))) }
+    [Question, Answer, Comment].each do |klass|
+      it { is_expected.not_to be_able_to(:update, klass.new(author: create(:user))) }
+      it { is_expected.not_to be_able_to(:destroy, klass.new(author: create(:user))) }
+    end
+
+    [Question, Answer, Comment].each do |klass|
+      it { is_expected.not_to be_able_to(:update, klass.new(author: create(:user))) }
+      it { is_expected.not_to be_able_to(:destroy, klass.new(author: create(:user))) }
+    end
+
+    [Question, Answer].each do |klass|
+      it { is_expected.to be_able_to(:accept_vote, klass.new(author: create(:user))) }
+    end
+
+    it { is_expected.not_to be_able_to(:read, Awarding.new(user: create(:user))) }
+    it { is_expected.not_to be_able_to(:destroy, ActiveStorage::Attachment.new(record: create(:question, author: create(:user)))) }
+    it { is_expected.not_to be_able_to(:mark_best, Answer.new(author: user, question: create(:question, author: create(:user)))) }
   end
 
   context 'when logged in as an author' do
     let(:user) { create(:user) }
 
-    it { is_expected.to be_able_to(:manage, Question.new(author: user)) }
-    it { is_expected.to be_able_to(:manage, Answer.new(author: user)) }
-    it { is_expected.to be_able_to(:manage, Comment.new(author: user)) }
+    [Question, Answer, Comment].each do |klass|
+      it { is_expected.to be_able_to(:create, klass.new(author: user)) }
+      it { is_expected.to be_able_to(:update, klass.new(author: user)) }
+      it { is_expected.to be_able_to(:destroy, klass.new(author: user)) }
+    end
+
+    [Question, Answer, Comment].each do |klass|
+      it { is_expected.to be_able_to(:update, klass.new(author: user)) }
+      it { is_expected.to be_able_to(:destroy, klass.new(author: user)) }
+    end
+
+    [Question, Answer].each do |klass|
+      it { is_expected.not_to be_able_to(:accept_vote, klass.new(author: user)) }
+    end
+
+    it { is_expected.to be_able_to(:read, Awarding.new(user: user)) }
+    it { is_expected.to be_able_to(:destroy, ActiveStorage::Attachment.new(record: create(:question, author: user))) }
+    it { is_expected.to be_able_to(:mark_best, Answer.new(author: user, question: create(:question, author: user))) }
   end
 
   context 'when is admin' do
     let(:user) { create(:user, admin: true) }
 
-    it { is_expected.to be_able_to(:manage, Question.new) }
-    it { is_expected.to be_able_to(:manage, Answer.new) }
-    it { is_expected.to be_able_to(:manage, Comment.new) }
+    [Question, Answer, Comment, ActiveStorage::Attachment].each do |klass|
+      it { is_expected.to be_able_to(:manage, klass.new) }
+    end
   end
 end
