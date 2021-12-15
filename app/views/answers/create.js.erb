@@ -1,5 +1,5 @@
 <% if @answer.persisted? %>
-  $(".answers > tbody").append('<%= j render "answer", answer: @answer %>');
+  $(".answers > tbody").append('<%= j render @answer %>');
 <% end %>
 
 $(".errors").empty();
@@ -9,5 +9,3 @@ $(".errors").empty();
   $("#direct_upload_form input[type=hidden][name='answer[files][]']").remove()
   $("#direct_upload_form")[0].reset()
 <% end %>
-
-// window.GistEmbed.init()

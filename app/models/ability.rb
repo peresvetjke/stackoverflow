@@ -26,38 +26,13 @@ class Ability
     can %i[update destroy], [Question, Answer, Comment], author_id: @user.id
     can :read, Awarding, user_id: @user.id
     can :mark_best, Answer, question: { author_id: @user.id }
+    can :destroy, ActiveStorage::Attachment, record: { author_id: @user.id }
     can :accept_vote, Votable do |votable|
       votable.author_id != @user.id
-    end
-    #[Answer, Question].each do |votable_class|
-    #  can :accept_vote, votable_class do |votable| 
-    #    votable.author_id != @user.id
-    #  end
-    #end
-    
-    can :destroy, ActiveStorage::Attachment, record: { author_id: @user.id }
-    
-    #can :accept_vote, Votable, {|votable| votable.author_id != @user.id}
-
-    #read: [:index, :show]
-    #create: [:new, :create]
-    #update: [:edit, :update]
-    #destroy: [:destroy]
-    #manage: ALL!
+    end    
   end
 
   def admin_abilities
     can :manage, [Question, Answer, Comment, ActiveStorage::Attachment]
-    #can :destroy, ActiveStorage::Attachment
   end
-    #can :destroy, ActiveStorage::Attachment, record: { author_id: @user.id }
-    
-    #answers#mark_best
-    #unless current_user&.author_of?(@answer.question)
-    #  redirect_to @answer.question, notice: "The answer can be edited only by its author"
-    #end    
-
-
-
-
 end

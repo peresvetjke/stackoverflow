@@ -6,11 +6,11 @@ Rails.application.routes.draw do
 
   resources :questions, shallow: true do
     post :accept_vote, to: "votes#accept", on: :member, defaults: { votable: 'questions' }
-    resources :comments, defaults: { commentable: 'questions' }, only: %i[create update destroy]
+    resources :comments, only: %i[create update destroy], defaults: { commentable: 'questions' }
 
-    resources :answers, shallow: true do#only: %i[create edit update destroy] do
+    resources :answers, shallow: true, except: :index do
       post :accept_vote, to: "votes#accept", on: :member, defaults: { votable: 'answers' }
-      resources :comments, defaults: { commentable: 'answers' }, only: %i[create update destroy]
+      resources :comments, only: %i[create update destroy], defaults: { commentable: 'answers' }
     
       post :mark_best, on: :member
     end

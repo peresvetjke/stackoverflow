@@ -29,7 +29,6 @@ class AnswersController < ApplicationController
 
   def mark_best
     @answer.mark_best!
-    #respond_with(@answer)
   end
 
   private

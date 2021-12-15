@@ -5,7 +5,7 @@ RSpec.describe CommentsController, :type => :controller do
   let(:user)     { create(:user) }
   let(:question) { create(:question, author: user) }
 
-  shared_examples 'commentable' do
+  shared_examples 'commented' do
     describe "POST create" do
       subject { post :create, params: {comment: attributes_for(:comment)}.merge(commentable_params), format: :json } 
       
@@ -137,7 +137,7 @@ RSpec.describe CommentsController, :type => :controller do
   end
 
   context 'commenting question' do
-    it_behaves_like 'commentable' do 
+    it_behaves_like 'commented' do 
       let!(:commentable)       { question }
       let(:comment)            { build(:comment, commentable: commentable, author: user)}
       let(:commentable_params) { {commentable: 'questions', question_id: commentable} }
@@ -145,7 +145,7 @@ RSpec.describe CommentsController, :type => :controller do
   end
 
   context 'commenting answer' do
-    it_behaves_like 'commentable' do 
+    it_behaves_like 'commented' do 
       let!(:commentable)       { create(:answer, question: question, author: user) }
       let(:comment)            { build(:comment, commentable: commentable, author: user)}
       let(:commentable_params) { {commentable: 'answers', answer_id: commentable} }
