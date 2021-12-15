@@ -1,56 +1,68 @@
 require "rails_helper"
 
 RSpec.describe ActiveStorage::AttachmentsController, :type => :controller do
-  
-  describe "DELETE delete_attachment" do
-    let (:user)     { create(:user) }
-    let (:question) { create(:question, author: user) }
 
-    before  { question.files.attach(create_file_blob) }
-    subject { delete :destroy, params: {id: question.files.first.id}, format: :js }
+  shared_examples 'attached' do  
+    describe "DELETE delete_attachment" do
+      let (:user)     { create(:user) }
+      before  { attachable.files.attach(create_file_blob) }
+      subject { delete :destroy, params: {id: attachable.files.first.id}, format: :js }
 
-    shared_examples 'guest' do
-      it "doesn't delete attachment" do
-        expect{subject}.not_to change(ActiveStorage::Attachment, :count)
+      shared_examples 'guest' do
+        it "doesn't delete attachment" do
+          expect{subject}.not_to change(ActiveStorage::Attachment, :count)
+        end
+
+        it "redirects to root path" do
+          subject
+          expect(response).to redirect_to root_path
+        end
       end
 
-      it "redirects to root path" do
-        subject
-        expect(response).to redirect_to root_path
+      shared_examples 'author of attachable' do
+        it "deletes attachment from db" do
+          expect{subject}.to change(attachable.files, :count).by(-1)
+        end
+
+        it "renders questions destroy template" do
+          subject
+          expect(response).to render_template(:destroy)
+        end
       end
-    end
 
-    shared_examples 'author of attachable' do
-      it "deletes attachment from db" do
-        expect{subject}.to change(question.files, :count).by(-1)
+      context 'being a guest' do
+        it_behaves_like 'guest'
       end
 
-      it "renders questions destroy template" do
-        subject
-        expect(response).to render_template(:destroy)
+      context 'being not an author of attachable' do
+        before { login(create(:user)) }
+
+        it_behaves_like 'guest'
       end
-    end
 
-    context 'being a guest' do
-      it_behaves_like 'guest'
-    end
+      context 'being an author of attachable' do
+        before { login(user) }
 
-    context 'being not an author of attachable' do
-      before { login(create(:user)) }
+        it_behaves_like 'author of attachable'
+      end
 
-      it_behaves_like 'guest'
-    end
+      context 'being an admin' do
+        before { login(create(:user, admin: true)) }
 
-    context 'being an author of attachable' do
-      before { login(user) }
-
-      it_behaves_like 'author of attachable'
-    end
-
-    context 'being an admin' do
-      before { login(create(:user, admin: true)) }
-
-      it_behaves_like 'author of attachable'
+        it_behaves_like 'author of attachable'
+      end
     end
   end
+
+  context 'deleting attachments of question' do
+    it_behaves_like 'attached' do 
+      let!(:attachable) { create(:question, author: user) }
+    end
+  end
+
+  context 'deleting attachments of answer' do
+    it_behaves_like 'attached' do 
+      let!(:attachable) { create(:answer, question: create(:question), author: user) }
+    end
+  end  
 end
