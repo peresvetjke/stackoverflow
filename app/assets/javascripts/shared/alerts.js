@@ -1,5 +1,4 @@
 function ready() {
-  console.log('In not_authorized!')
   
   $(document).on('ajax:error', "form[data-remote='true'], a[data-remote='true']", function(e) {
     let error_status_list = [401, 403]

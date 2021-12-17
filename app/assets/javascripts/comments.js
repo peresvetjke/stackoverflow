@@ -13,7 +13,6 @@ function ready() {
         appendComment(comment)
       }) .on('ajax:error', ".comment_form", function(e) {
         var form = $(e.target)
-        var messages = e.detail[1]      
         var messages = e.detail[0]      
         appendErrors(form, messages)
       })

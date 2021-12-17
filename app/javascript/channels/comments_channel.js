@@ -26,6 +26,7 @@ function ready() {
 }
 
 function appendComment(comment) {
+  console.log("Hi from appentComment ( channel )")
   var commentsList = $(`.${comment.commentable_type.toLowerCase()}[item-id='${comment.commentable_id}'] .comments`)
   var comment_form = $(`.${comment.commentable_type.toLowerCase()}[item-id='${comment.commentable_id}'] .comment_form form`)[0]
 
