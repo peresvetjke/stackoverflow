@@ -13,6 +13,7 @@ function ready() {
         appendComment(comment)
       }) .on('ajax:error', ".comment_form", function(e) {
         var form = $(e.target)
+        var messages = e.detail[1]      
         var messages = e.detail[0]      
         appendErrors(form, messages)
       })
@@ -29,11 +30,12 @@ function ready() {
       }) .on('ajax:success', ".form_inline", function(e) {  
         var comment = e.detail[0]
         updateComment(comment)
-      }) .on('ajax:error', ".form_inline", function(e) {
+      }) .on('ajax:error', ".form_inline", function(e,data) {
         var form = $(e.target)
         var messages = e.detail[0]      
         appendErrors(form, messages)
       })
+
   }
 }
 

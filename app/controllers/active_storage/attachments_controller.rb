@@ -1,7 +1,7 @@
 class ActiveStorage::AttachmentsController < ApplicationController
+  before_action :authenticate_user!
   before_action :find_attachment
   authorize_resource
-  before_action :authenticate_user!
     
   respond_to :js
 

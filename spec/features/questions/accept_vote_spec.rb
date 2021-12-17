@@ -12,7 +12,16 @@ feature 'User can vote for an answer', %q{
 
     scenario "doesn't allow to vote" do
       find(".question .vote .up .accept_vote").click
-      expect(page).to have_text('You are not authorized')
+      expect(accept_confirm{}).to eq "You need to sign in or sign up before continuing."
+    end
+  end
+
+  shared_examples "author of votable", js: true do
+    before { visit question_path(question) }
+
+    scenario "doesn't allow to vote" do
+      find(".question .vote .up .accept_vote").click
+      expect(accept_confirm{}).to eq "Sorry, can't vote for your own record."
     end
   end
 
@@ -36,7 +45,7 @@ feature 'User can vote for an answer', %q{
 
   feature "being an author of question" do
     before { sign_in(user) }
-    it_behaves_like "guest"
+    it_behaves_like "author of votable"
   end
 
   feature "being not an author of question" do

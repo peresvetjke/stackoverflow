@@ -13,9 +13,20 @@ RSpec.describe ActiveStorage::AttachmentsController, :type => :controller do
           expect{subject}.not_to change(ActiveStorage::Attachment, :count)
         end
 
-        it "redirects to root path" do
+        it "returns unauthorized status" do
           subject
-          expect(response).to redirect_to root_path
+          expect(response).to have_http_status 401
+        end
+      end
+
+      shared_examples 'not an author of attachable' do
+        it "doesn't delete attachment" do
+          expect{subject}.not_to change(ActiveStorage::Attachment, :count)
+        end
+
+        it "returns forbidden status" do
+          subject
+          expect(response).to have_http_status 403
         end
       end
 
@@ -37,7 +48,7 @@ RSpec.describe ActiveStorage::AttachmentsController, :type => :controller do
       context 'being not an author of attachable' do
         before { login(create(:user)) }
 
-        it_behaves_like 'guest'
+        it_behaves_like 'not an author of attachable'
       end
 
       context 'being an author of attachable' do

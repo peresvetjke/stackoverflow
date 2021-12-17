@@ -12,11 +12,11 @@ RSpec.describe CommentsController, :type => :controller do
       shared_examples 'guest' do
         it 'keeps count unchanged' do
           expect{subject}.not_to change(Comment, :count)
-        end        
+        end
         
-        it 'redirects to root path' do
+        it 'returns unauthorized status' do
           subject
-          expect(response).to redirect_to root_path
+          expect(response).to have_http_status 401
         end
       end
 
@@ -51,9 +51,21 @@ RSpec.describe CommentsController, :type => :controller do
           expect(comment.reload.body).to eq(comment.body)
         end
 
-        it "redirects to root path" do
+        it 'returns unauthorized status' do
           subject
-          expect(response).to redirect_to root_path
+          expect(response).to have_http_status 401
+        end
+      end
+
+      shared_examples 'not an author of comment' do
+        it "doesn't update record" do
+          subject
+          expect(comment.reload.body).to eq(comment.body)
+        end
+
+        it 'returns forbidden status' do
+          subject
+          expect(response).to have_http_status 403
         end
       end
 
@@ -75,7 +87,7 @@ RSpec.describe CommentsController, :type => :controller do
 
       context 'being not an author of comment' do
         before { login(create(:user)) }
-        it_behaves_like 'guest'
+        it_behaves_like 'not an author of comment'
       end
 
       context 'being an author of comment' do
@@ -93,23 +105,39 @@ RSpec.describe CommentsController, :type => :controller do
       before { comment.save! }
       subject{ delete :destroy, params: {commentable: commentable.class.to_s.downcase.pluralize, id: comment, format: :json} }
 
-      it "assigns the comment to @comment" do
-        subject
-        expect(assigns(:comment)).to eq comment
-      end
-
       shared_examples 'guest' do
         it "doesn't delete comment" do
           expect{subject}.not_to change(Comment, :count)
         end
 
-        it "redirects to root path" do
+        it 'returns unauthorized status' do
           subject
-          expect(response).to redirect_to root_path
+          expect(response).to have_http_status 401
+        end
+      end
+
+      shared_examples 'not an author of comment' do
+        it "assigns the comment to @comment" do
+          subject
+          expect(assigns(:comment)).to eq comment
+        end
+
+        it "doesn't delete comment" do
+          expect{subject}.not_to change(Comment, :count)
+        end
+
+        it 'returns forbidden status' do
+          subject
+          expect(response).to have_http_status 403
         end
       end
 
       shared_examples 'author of comment' do
+        it "assigns the comment to @comment" do
+          subject
+          expect(assigns(:comment)).to eq comment
+        end
+
         it "deletes comment" do
           expect{subject}.to change(Comment, :count).by(-1)
         end
@@ -121,7 +149,7 @@ RSpec.describe CommentsController, :type => :controller do
 
       context "being not an author of comment" do
         before { login(create(:user)) }
-        it_behaves_like "guest"
+        it_behaves_like "not an author of comment"
       end
 
       context "being an author of comment" do

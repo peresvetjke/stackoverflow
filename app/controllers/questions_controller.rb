@@ -1,10 +1,10 @@
 class QuestionsController < ApplicationController
+  before_action :authenticate_user!, except: %i[show index]
   before_action :load_questions, only: :index
   before_action :load_question,  except: %i[index new create]
   before_action :load_answers,  only: :show
   before_action :load_comments, only: :show
   authorize_resource
-  before_action :authenticate_user!, except: %i[show index]
 
   respond_to :html
 

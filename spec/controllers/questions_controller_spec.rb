@@ -48,9 +48,9 @@ RSpec.describe QuestionsController, :type => :controller do
     subject { get :new }
 
     context "being a guest" do
-      it "redirects to root path" do
+      it "redirects to new_user_session path" do
         subject
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to new_user_session_path
       end
     end
 
@@ -72,9 +72,9 @@ RSpec.describe QuestionsController, :type => :controller do
         expect{subject}.to change(Question, :count).by(0)
       end
 
-      it "redirects to root path" do
+      it "redirects to new_user_session path" do
         subject
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to new_user_session_path
       end
     end
 
@@ -113,6 +113,18 @@ RSpec.describe QuestionsController, :type => :controller do
     subject { get :edit, params: {id: question} }
 
     shared_examples 'guest' do
+      it "redirects to new_user_session path" do
+        subject
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+    shared_examples 'not an author of question' do
+      it "assigns the requested question to @question" do
+        subject  
+        expect(assigns(:question)).to eq question
+      end
+
       it "redirects to root path" do
         subject
         expect(response).to redirect_to root_path
@@ -137,7 +149,7 @@ RSpec.describe QuestionsController, :type => :controller do
 
     context "being not an author of question" do
       before { login(create(:user)) }
-      it_behaves_like 'guest'
+      it_behaves_like 'not an author of question'
     end
     
     context "being an author of question" do
@@ -152,11 +164,6 @@ RSpec.describe QuestionsController, :type => :controller do
   end
 
   describe "PATCH update" do    
-    it "assigns the requested question to @question" do
-      patch :update, params: {id: question, question: attributes_for(:question, body: "corrections")}
-      expect(assigns(:question)).to eq(question)
-    end
-
     shared_examples 'guest' do
       subject { patch :update, params: {id: question, question: attributes_for(:question, body: "corrections")} }
 
@@ -166,9 +173,28 @@ RSpec.describe QuestionsController, :type => :controller do
         expect(question.body).to eq(question.body)
       end
 
-      it "redirects to root path" do 
+      it "redirects to new_user_session path" do
         subject
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+    shared_examples 'not an author of question' do
+      subject { patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") } }
+      
+      it "assigns the requested question to @question" do
+        subject
+        expect(assigns(:question)).to eq(question)
+      end
+
+      it "doesn't update question in db" do
+        subject
+        expect(question.reload.body).to eq(question.body)
+      end
+
+      it "rendirects to root path" do 
+        subject
+        expect(response).to redirect_to(root_path)
       end
     end
 
@@ -176,6 +202,11 @@ RSpec.describe QuestionsController, :type => :controller do
       context 'with invalid params' do
         subject { patch :update, params: {id: question, question: attributes_for(:question, body: "")} }
         
+        it "assigns the requested question to @question" do
+          subject
+          expect(assigns(:question)).to eq(question)
+        end
+
         it "keeps unchanged" do
           subject
           expect(question.reload.body).to eq(question.body)
@@ -215,7 +246,7 @@ RSpec.describe QuestionsController, :type => :controller do
 
     context "being not an author of question" do
       before { login(create(:user)) }
-      it_behaves_like 'guest'
+      it_behaves_like 'not an author of question'
     end
 
     context "being an author of question" do
@@ -232,24 +263,41 @@ RSpec.describe QuestionsController, :type => :controller do
   describe "DELETE destroy" do
     subject { delete :destroy, params: {id: question} }
 
-    it "assigns the requested question to @question" do
-      subject
-      expect(assigns(:question)).to eq question
-    end
-
     shared_examples 'guest' do  
       it "doesn't delete question" do
         question
         expect{subject}.to change(Question, :count).by(0)
       end
 
-      it "redirect to root path" do
+      it "redirects to new_user_session path" do
+        subject
+        expect(response).to redirect_to new_user_session_path
+      end  
+    end
+
+    shared_examples 'not author of question' do
+      it "assigns the requested question to @question" do
+        subject
+        expect(assigns(:question)).to eq question
+      end
+
+      it "doesn't delete question" do
+        question
+        expect{subject}.to change(Question, :count).by(0)
+      end
+
+      it "redirects to root path" do
         subject
         expect(response).to redirect_to root_path
-      end   
+      end
     end
 
     shared_examples 'author of question' do
+      it "assigns the requested question to @question" do
+        subject
+        expect(assigns(:question)).to eq question
+      end
+
       it "deletes question from db" do
         question
         expect{subject}.to change(Question, :count).by(-1)
@@ -267,7 +315,7 @@ RSpec.describe QuestionsController, :type => :controller do
 
     context "being not an author of question" do
       before { login(create(:user)) }
-      it_behaves_like 'guest'
+      it_behaves_like 'not author of question'
     end
 
     context "being an author of question" do

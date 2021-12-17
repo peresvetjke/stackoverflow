@@ -12,9 +12,25 @@ RSpec.describe VotesController, :type => :controller do
         it "keeps unchanged" do
           expect{subject}.not_to change(votable, :rating)
         end
+
+        it "returns unauthorized status" do
+          subject
+          expect(response).to have_http_status 401
+        end
       end
-      
-      shared_examples 'other user' do
+
+      shared_examples 'author of votable' do
+        it "keeps unchanged" do
+          expect{subject}.not_to change(votable, :rating)
+        end
+
+        it "returns forbidden status" do
+          subject
+          expect(response).to have_http_status 403
+        end
+      end
+
+      shared_examples 'not an author of votable' do
         context 'single vote' do
           it "saves vote in db" do
             subject
@@ -39,19 +55,19 @@ RSpec.describe VotesController, :type => :controller do
       context 'being an author of votable' do
         before { login(user) }
 
-        it_behaves_like 'guest'
+        it_behaves_like 'author of votable'
       end
 
       context 'being not an author of votable' do
         before { login(create(:user)) }
 
-        it_behaves_like 'other user'
+        it_behaves_like 'not an author of votable'
       end
 
       context 'being an admin' do
         before { login(create(:user, admin: true)) }
 
-        it_behaves_like 'other user'
+        it_behaves_like 'not an author of votable'
       end
     end
   end

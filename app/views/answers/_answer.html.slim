@@ -4,9 +4,9 @@ tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
 
   td
     table
-      - if can? :mark_best, answer
-        tr 
-          td 
+      tr 
+        td 
+          - if can? :mark_best, answer
             = button_to('Mark best', mark_best_answer_path(answer), remote: true, data: { type: :js }, class: (answer.best? ? "mark_best hide" : "mark_best"))
       
       tr 
@@ -43,7 +43,7 @@ tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
           - if can? :update, answer
             = button_to('Edit answer', edit_answer_path(answer), method: :get)
           - if can? :destroy, answer
-            = button_to('Delete answer', answer_path(answer), method: :delete, remote: true, data: { confirm: "Are you sure?" })
+            = button_to('Delete answer', answer_path(answer), method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: "delete_answer")
 
       tr
         td

@@ -12,10 +12,18 @@ feature 'User can vote for an answer', %q{
     scenario "tries to vote for an answer" do
       visit question_path(question)
       within(page.first(".answers > tbody > tr .vote .up")) { click_button }
-      expect(page).to have_text('You are not authorized')
+      expect(accept_confirm{}).to eq "You need to sign in or sign up before continuing."
     end
   end
 
+  shared_examples "author of answer", js: true do
+    scenario "tries to vote for an answer" do
+      visit question_path(question)
+      within(page.first(".answers > tbody > tr .vote .up")) { click_button }
+      expect(accept_confirm{}).to eq "Sorry, can't vote for your own record."
+    end
+  end
+  
   shared_examples "not an author of answer", js: true do
     feature "vote for other's answer" do
       background { visit question_path(question) }
@@ -38,7 +46,7 @@ feature 'User can vote for an answer', %q{
 
   feature "being an author of answer" do
     before { sign_in(user) }
-    it_behaves_like "guest"
+    it_behaves_like "author of answer"
   end
 
   feature "being not an author of answer" do

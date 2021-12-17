@@ -1,7 +1,7 @@
 class VotesController < ApplicationController
+  before_action :authenticate_user!, only: :accept
   before_action :set_votable, only: :accept
   before_action :authorize_resource, only: :accept
-  before_action :authenticate_user!, only: :accept
 
   respond_to :json
 
@@ -15,7 +15,7 @@ class VotesController < ApplicationController
   private
 
   def authorize_resource
-    authorize! :accept_vote, @votable
+    authorize! :accept_vote, @votable, :message => "Sorry, can't vote for your own record."
   end
 
   def set_votable

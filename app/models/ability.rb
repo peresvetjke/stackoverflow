@@ -28,7 +28,7 @@ class Ability
     can :mark_best, Answer, question: { author_id: @user.id }
     can :destroy, ActiveStorage::Attachment, record: { author_id: @user.id }
     can :accept_vote, Votable do |votable|
-      votable.author_id != @user.id
+      !@user.author_of?(votable)
     end    
   end
 

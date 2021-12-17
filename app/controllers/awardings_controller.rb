@@ -1,6 +1,6 @@
 class AwardingsController < ApplicationController
+  before_action :authenticate_user!
   before_action :load_awardings, only: :index
-  
   authorize_resource
   
   respond_to :html
