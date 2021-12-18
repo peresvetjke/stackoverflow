@@ -22,6 +22,7 @@ class Ability
   end
 
   def user_abilities
+    can :read, User
     can %i[read create], [Question, Answer, Comment]
     can %i[update destroy], [Question, Answer, Comment], author_id: @user.id
     can :read, Awarding, user_id: @user.id
@@ -33,6 +34,6 @@ class Ability
   end
 
   def admin_abilities
-    can :manage, [Question, Answer, Comment, ActiveStorage::Attachment]
+    can :manage, [User, Question, Answer, Comment, ActiveStorage::Attachment]
   end
 end

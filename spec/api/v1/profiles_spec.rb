@@ -21,9 +21,8 @@ describe "Profiles API", type: :request do
       let(:access_token) { create(:access_token) }
 
       it "returns 200 status" do
-        
         get "/api/v1/profiles/me", params: { access_token: access_token.token }, headers: headers
-        expect(response).to be_successful
+        expect(response.status).to eq 200
       end
     end    
   end

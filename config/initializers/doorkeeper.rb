@@ -232,7 +232,7 @@ Doorkeeper.configure do
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
   
-  default_scopes  :public
+  default_scopes :public
   
   # optional_scopes :write, :update
 
