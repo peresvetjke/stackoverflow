@@ -5,6 +5,14 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks' }
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: [] do
+        get :me, on: :collection
+      end
+    end
+  end
+
   resources :questions, shallow: true do
     post :accept_vote, to: "votes#accept", on: :member, defaults: { votable: 'questions' }
     resources :comments, only: %i[create update destroy], defaults: { commentable: 'questions' }
