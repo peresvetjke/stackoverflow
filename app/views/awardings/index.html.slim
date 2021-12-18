@@ -1,8 +1,8 @@
 h1 Your awardings
-- if awardings.present?
+- if @awardings.present?
   table#awardings
     tbody
-      - awardings.each do |a|
+      - @awardings.each do |a|
         tr
           td 
             = a.title

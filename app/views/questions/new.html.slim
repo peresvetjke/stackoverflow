@@ -1,7 +1,9 @@
-h2 Create new question
-- if question.errors.present?
-  = render "shared/errors", resource: question
+- @question ||= Question.new
 
-= render "form"
+h2 Create new question
+- if @question&.errors.present?
+  = render "shared/errors", resource: @question
+
+= render "form", question: @question
 
 = link_to "Back to questions", questions_path

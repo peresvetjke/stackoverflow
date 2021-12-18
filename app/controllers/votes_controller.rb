@@ -1,19 +1,22 @@
 class VotesController < ApplicationController
   before_action :authenticate_user!, only: :accept
   before_action :set_votable, only: :accept
+  before_action :authorize_resource, only: :accept
+
+  respond_to :json
 
   def accept
     respond_to do |format|
-      if current_user.author_of?(@votable)
-        format.json { render json: "You can't vote for your own record.", status: :unprocessable_entity }
-      else
-        @votable.accept_vote(preference: params[:preference], author: current_user)
-        format.json { render json: @votable.with_rating }
-      end
+      @votable.accept_vote(preference: params[:preference], author: current_user)
+      format.json { render json: @votable.with_rating }
     end
   end
 
   private
+
+  def authorize_resource
+    authorize! :accept_vote, @votable, :message => "Sorry, can't vote for your own record."
+  end
 
   def set_votable
     @votable = votable_name.classify.constantize.find(params[:id])

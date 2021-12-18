@@ -1,8 +1,16 @@
 class AwardingsController < ApplicationController
-
-  expose :awardings, -> { current_user.awardings }
+  before_action :authenticate_user!
+  before_action :load_awardings, only: :index
+  authorize_resource
   
-  def index
+  respond_to :html
 
+  def index
+  end
+
+  private
+
+  def load_awardings
+    @awardings = current_user.awardings
   end
 end

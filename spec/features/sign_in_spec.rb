@@ -7,7 +7,7 @@ feature 'User can sign in', %q{
   given(:user) { create(:user) }
   background { 
     visit questions_path
-    click_link "Sign in"
+    find('#sign_in').click
   }
 
   scenario "tries to sign in with blank email" do

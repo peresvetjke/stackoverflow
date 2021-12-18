@@ -29,11 +29,12 @@ function ready() {
       }) .on('ajax:success', ".form_inline", function(e) {  
         var comment = e.detail[0]
         updateComment(comment)
-      }) .on('ajax:error', ".form_inline", function(e) {
+      }) .on('ajax:error', ".form_inline", function(e,data) {
         var form = $(e.target)
         var messages = e.detail[0]      
         appendErrors(form, messages)
       })
+
   }
 }
 
@@ -78,7 +79,7 @@ function appendComment(comment) {
 
   commentsList.append(comment_template({comment: comment, current_user_id: current_user_id}))
   
-  if (typeof(gon.current_user) !== 'undefined' && gon.current_user.id == comment.author.id ) {
+  if (typeof(gon.current_user) !== 'undefined' && gon.current_user.id == comment.author_id ) {
     comment_form.reset()
   }
 }

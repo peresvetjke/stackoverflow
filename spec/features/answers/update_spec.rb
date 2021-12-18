@@ -4,34 +4,22 @@ feature 'User can edit an answer', %q{
   In order to correct or update it
 } do
 
-  given(:user)         { create(:user) }
-  given(:question)     { create(:question, author: user) }
-  given(:answer)       { create(:answer, question: question, author: user) }
-  given(:other_user)   { create(:user) }
-  given(:other_answer) { create(:answer, question: question, author: other_user) }
+  given!(:user)         { create(:user) }
+  given!(:question)     { create(:question, author: user) }
+  given!(:answer)       { create(:answer, question: question, author: user) }
 
-  feature "when unauthorized" do
+  shared_examples "guest" do
     scenario "tries to edit answer" do
-      answer
       visit question_path(question)
-      expect(find(:xpath, "//*[contains(text(), '#{answer.body}')]/parent::tr")).to have_no_button("Edit answer")
+      expect(find(".answers table", text: answer.body)).to have_no_button("Edit answer")
     end
   end
 
-  feature "being authorized" do
+  shared_examples "author of answer" do
     feature "without attachments" do
-      background { sign_in(user) }
-      
-      scenario "tries to edit other's answer" do
-        other_answer
-        visit question_path(question)
-        expect(find(".answers table", text: other_answer.body)).to have_no_button("Edit answer")
-      end
-
       scenario "edits own answer" do
-        answer
         visit question_path(question)
-        within(".answers table", text: answer.body) { click_button("Edit answer") }
+        within(".answers table", text: answer.body) { click_button("Edit") }
         fill_in "Body", :with => "my corrections"
         page.click_button("Update Answer")
         expect(page).to have_content("my corrections")
@@ -40,11 +28,10 @@ feature 'User can edit an answer', %q{
     end
 
     feature "with attachments" do
-      background { 
-        sign_in(user)
+      background {
         answer.files.attach(create_file_blob)
         visit question_path(question)
-        within(".answers table", text: answer.body) { click_button("Edit answer") }
+        within(".answers table", text: answer.body) { click_button("Edit") }
       }  
 
       scenario "adds new attachment" do
@@ -67,17 +54,33 @@ feature 'User can edit an answer', %q{
 
     feature "with links", js: true do
       given!(:answer_with_link) { create(:answer, :with_link, question: question, author: user) }
-      background { 
-        sign_in(user)
-      }  
-
+      
       scenario "removes existing link" do
         visit question_path(question)
-        page.first("table.answers > tbody > tr", text: answer_with_link.body).click_button("Edit answer")
+        page.first("table.answers > tbody > tr", text: answer_with_link.body).click_button("Edit")
         within("#links") { click_link "remove link" }
         click_button "Update Answer"
         expect(page).to have_no_link("Stackoverflow", href: "https://stackoverflow.com/")
       end
     end
+  end
+
+  feature "being guest" do
+    it_behaves_like "guest"
+  end
+
+  feature "being not an author of answer" do
+    background { sign_in(create(:user)) }
+    it_behaves_like "guest"
+  end
+
+  feature "being author of answer" do
+    background { sign_in(user) }
+    it_behaves_like "author of answer"
+  end
+
+  feature "being admin" do
+    background { sign_in(create(:user, admin: true)) }
+    it_behaves_like "author of answer"
   end
 end

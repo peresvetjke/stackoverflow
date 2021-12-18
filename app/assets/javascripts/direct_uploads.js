@@ -5,7 +5,7 @@ function ready () {
   
   const input = document.querySelector('input[type=file]')
 
-  if (input) { 
+  if (input) {
     // Bind to normal file selection
     $(document).on('change', 'input[type=file]', function(event) {
     

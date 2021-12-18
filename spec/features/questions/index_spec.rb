@@ -4,9 +4,6 @@ feature 'User can index all questions list', %q{
   In order to find the one he interested in
 } do
 
-  given(:user){ create(:user) }
-  background { sign_in(user) }
-
   scenario "without questions" do
     visit questions_path
     expect(page).to have_text("No questions yet")

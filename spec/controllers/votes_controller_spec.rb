@@ -2,22 +2,85 @@ require "rails_helper"
 
 RSpec.describe VotesController, :type => :controller do
 
-  let(:user)    { create(:user) }
-  let(:votable) { create(:question) }
+  let(:user) { create(:user) }
+  
+  shared_examples 'voted' do
+    describe "POST accept_vote" do
+      subject { post :accept, params: {votable: "#{votable.class.to_s.downcase.pluralize}", id: votable.id, preference: 1, format: :json} }
 
-  describe "POST accept_vote" do
-    context "when unauthorized" do
-      it "keeps unchanged" do
-        expect{post :accept, params: { votable: 'questions', id: votable.id, preference: 1, format: :json }}.not_to change(votable, :rating)
+      shared_examples 'guest' do
+        it "keeps unchanged" do
+          expect{subject}.not_to change(votable, :rating)
+        end
+
+        it "returns unauthorized status" do
+          subject
+          expect(response).to have_http_status 401
+        end
+      end
+
+      shared_examples 'author of votable' do
+        it "keeps unchanged" do
+          expect{subject}.not_to change(votable, :rating)
+        end
+
+        it "returns forbidden status" do
+          subject
+          expect(response).to have_http_status 403
+        end
+      end
+
+      shared_examples 'not an author of votable' do
+        context 'single vote' do
+          it "saves vote in db" do
+            subject
+            expect(votable.reload.rating).to eq(1)
+          end
+        end
+
+        context 'repeating vote' do
+          let!(:vote) { create(:vote, votable: votable, preference: 1, author: controller.current_user) }
+          
+          it "cancels previous vote when repeated" do
+            subject
+            expect(votable.reload.rating).to eq(0)
+          end
+        end
+      end
+
+      context "being a guest" do
+        it_behaves_like 'guest'
+      end
+
+      context 'being an author of votable' do
+        before { login(user) }
+
+        it_behaves_like 'author of votable'
+      end
+
+      context 'being not an author of votable' do
+        before { login(create(:user)) }
+
+        it_behaves_like 'not an author of votable'
+      end
+
+      context 'being an admin' do
+        before { login(create(:user, admin: true)) }
+
+        it_behaves_like 'not an author of votable'
       end
     end
-
-    context "when authorized" do
-      before { login(user) }
-      it "saves vote in db" do
-        post :accept, params: { votable: 'questions', id: votable.id, preference: 1, format: :json }
-        expect(votable.reload.rating).to eq(1)
-      end
-    end    
   end
+
+  context 'voting question' do
+    it_behaves_like 'voted' do 
+      let!(:votable) { create(:question, author: user) }
+    end
+  end
+
+  context 'voting answer' do
+    it_behaves_like 'voted' do 
+      let!(:votable) { create(:answer, author: user) }
+    end
+  end  
 end

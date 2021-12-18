@@ -1,7 +1,7 @@
 h2 Edit question
-- if question.errors.present?
-  = render "shared/errors", resource: question
+- if @question.errors.present?
+  = render "shared/errors", resource: @question
 
-= render "form"
+= render "form", question: @question
 
 = link_to "Back to questions", questions_path

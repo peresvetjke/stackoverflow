@@ -6,10 +6,6 @@ function ready() {
 
       $(`.${klass}[item-id=${id}] .vote .rating`)[0].textContent = rating
     })
-      .on('ajax:error', ".vote form", function(e, data) {
-        var error = e.detail[0]
-        window.alert(error)
-    })
 }
 
 document.addEventListener('turbolinks:load', ready)

@@ -7,28 +7,38 @@ feature 'User can destroy question', %q{
   given(:user)     { create(:user) }
   given(:question) { create(:question, author: user) }
 
-  feature "being unauthorized" do
+  shared_examples "guest" do
     scenario "tries to delete question" do
       visit question_path(question)
       expect(page).to have_no_button("Delete Question")
     end
   end
 
-  feature "being authorized" do
-    given(:other_user)     { create(:user) }
-    given(:other_question) { create(:question, author: other_user) }
-    background { sign_in(user) }
-
-    scenario "tries to delete other's question" do
-      visit question_path(other_question)
-      expect(page).to have_no_button("Delete Question")
-    end
-
+  shared_examples "author of question" do
     scenario "deletes own question" do
       visit question_path(question)
       click_button "Delete Question"
-      expect(page).to have_content("Your question has been deleted")
+      expect(page).to have_content("Question was successfully destroyed")
       expect(page).to have_no_content(question.title)
     end
+  end
+
+  feature "being a guest" do
+    it_behaves_like "guest"
+  end
+
+  feature "being not an author of question" do
+    before { sign_in(create(:user)) }
+    it_behaves_like "guest"
+  end
+
+  feature "being an author of question" do
+    before { sign_in(user) }
+    it_behaves_like "author of question"
+  end
+  
+  feature "being an admin" do
+    before { sign_in(create(:user, admin: true)) }
+    it_behaves_like "author of question"
   end
 end

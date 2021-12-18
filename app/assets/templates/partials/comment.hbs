@@ -5,7 +5,7 @@
     
 {{#if current_user_id }}
   {{#if (areEqual current_user_id comment.author.id) }}
-    <form class="form_inline" style="display: none" action="/comments/57" accept-charset="UTF-8" data-remote="true" method="post">
+    <form class="form_inline" style="display: none" action="/comments/{{comment.id}}" accept-charset="UTF-8" data-remote="true" method="post">
       <input type="hidden" name="_method" value="patch">
       <textarea name="comment[body]" id="comment_body">{{comment.body}}</textarea>
       <input type="submit" name="commit" value="Update Comment" data-disable-with="Update Comment">
