@@ -63,4 +63,31 @@ describe "Questions API", type: :request do
       end
     end
   end
+
+  describe "GET /api/v1/questions" do
+    let!(:questions)         { create_list(:question, 5) }
+    let(:questions_response) { json["questions"] }
+    let(:path)              { "/api/v1/questions" }
+
+    it_behaves_like "API Authorizable" do
+      let(:api_method) { method }
+      let(:api_path)   { path }
+    end
+
+    context "when authorized" do
+      before do
+        do_request("get", path, params: { access_token: access_token.token }, headers: headers) 
+      end
+
+      it "returns 200 status" do
+        expect(response.status).to eq 200
+      end
+
+      it "returns all neccessary fields" do
+        %w[id title body created_at updated_at].each do |attr|
+          expect(questions_response.first[attr]).to eq questions.first.send(attr).as_json
+        end
+      end
+    end
+  end
 end
