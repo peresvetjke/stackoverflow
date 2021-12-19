@@ -1,28 +1,49 @@
 require "rails_helper"
 
 describe "Questions API", type: :request do
-  let(:headers)         {{ "CONTENT_TYPE" => "application/json",
-                           "ACCEPT"       => "application/json" }}
-  let!(:resource_owner) { create(:user) }
-  let(:access_token)    { create(:access_token, resource_owner_id: resource_owner.id) }
-  let(:method)          { "get" }
+  let(:headers)           { { "ACCEPT"       => "application/json" } }
+  let!(:resource_owner)   { create(:user) }
+  let(:access_token)      { create(:access_token, resource_owner_id: resource_owner.id) }
+  let!(:question)         { create(:question, author: resource_owner) }
+  let(:question_response) { json["question"] }
+
+  %i[validatable authorizable commentable linkable attachable].each do |able|
+    let(able) { question }
+  end
+
+  describe "GET /api/v1/questions" do
+    let(:method)              { "get" }
+    let!(:questions)          { create_list(:question, 5) }
+    let(:questions_response)  { json["questions"] }
+    let(:path)                { "/api/v1/questions" }
+
+    it_behaves_like "API Authenticable"
+
+    context "when authenticated" do
+      before { do_request("get", path, params: { access_token: access_token.token }, headers: headers) }
+
+      it "returns 200 status" do
+        expect(response.status).to eq 200
+      end
+
+      it "returns all neccessary fields" do
+        %w[id title body created_at updated_at].each do |attr|
+          expect(questions_response.last[attr]).to eq questions.last.send(attr).as_json
+        end
+      end
+    end
+  end
 
   describe "GET /api/v1/questions/:id" do
-    let!(:question)         { create(:question, :with_link, :with_comments) }
-    let(:question_response) { json["question"] }
-    let(:path)              { "/api/v1/questions/#{question.id}" }
+    let(:method)    { "get" }
+    let!(:question) { create(:question, :with_link, :with_comments) }
+    let(:path)      { "/api/v1/questions/#{question.id}" }
+    before          { attach_files_to(question, 2) }
 
-    before                  { attach_files_to(question, 2) }
+    it_behaves_like "API Authenticable"
 
-    it_behaves_like "API Authorizable" do
-      let(:api_method) { method }
-      let(:api_path)   { path }
-    end
-
-    context "when authorized" do
-      before do
-        do_request("get", path, params: { access_token: access_token.token }, headers: headers) 
-      end
+    context "when authenticated" do
+      before { do_request("get", path, params: { access_token: access_token.token }, headers: headers) }
 
       it "returns 200 status" do
         expect(response.status).to eq 200
@@ -33,61 +54,70 @@ describe "Questions API", type: :request do
           expect(question_response[attr]).to eq question.send(attr).as_json
         end
       end
-      
-      it "returns all associated comments" do
-        expect(question_response['comments'].map{ |c| c['id'] }.sort).to eq question.comments.ids.sort
-      end
 
-      it "returns neccessary fields for comments" do
-        %w[id body author_id created_at updated_at].each do |attr|
-          expect(question_response['comments'].first[attr]).to eq question.comments.first.send(attr).as_json
-        end
-      end
-
-      it "returns all associated links" do
-        expect(question_response['links'].count).to eq question.links.count
-      end
-
-      it "returns neccessary fields for links" do
-        %w[title url].each do |attr|
-          expect(question_response['links'].first[attr]).to eq question.links.first.send(attr).as_json
-        end
-      end
-
-      it "returns all associated attachments" do
-        expect(question_response['attachments'].count).to eq question.files.count
-      end
-
-      it "returns neccessary fields for attachments" do
-        expect(question_response['attachments']).to match_array(question.files.map{ |file| url_for(file) })
-      end
+      it_behaves_like "API Commentable"      
+      it_behaves_like "API Linkable"      
+      it_behaves_like "API Attachable"
     end
   end
 
-  describe "GET /api/v1/questions" do
-    let!(:questions)         { create_list(:question, 5) }
-    let(:questions_response) { json["questions"] }
-    let(:path)              { "/api/v1/questions" }
+  describe "POST /api/v1/questions" do
+    let(:method)    { "post" }
+    let(:path)      { "/api/v1/questions" }
 
-    it_behaves_like "API Authorizable" do
-      let(:api_method) { method }
-      let(:api_path)   { path }
-    end
+    it_behaves_like "API Authenticable"
+    it_behaves_like "API Validatable"
 
-    context "when authorized" do
-      before do
-        do_request("get", path, params: { access_token: access_token.token }, headers: headers) 
-      end
+    context "when authenticated" do
+      context 'with valid params' do
+        before { do_request(method, path, params: { question: attributes_for(:question), access_token: access_token.token }, headers: headers) }
 
-      it "returns 200 status" do
-        expect(response.status).to eq 200
-      end
+        it "return status 'created'" do
+          expect(response.status).to eq 201
+        end
 
-      it "returns all neccessary fields" do
-        %w[id title body created_at updated_at].each do |attr|
-          expect(questions_response.first[attr]).to eq questions.first.send(attr).as_json
+        it "returns all neccessary fields of created question" do
+          %w[id title body created_at updated_at].each do |attr|
+            expect(question_response[attr]).to eq assigns(:question).send(attr).as_json
+          end
         end
       end
+    end
+  end
+  
+  describe "PATCH /api/v1/questions/:id" do
+  let!(:resource_owner)   { create(:user) }
+  let(:access_token)      { create(:access_token, resource_owner_id: resource_owner.id) }
+  let!(:question)         { create(:question, author: resource_owner) }
+  let(:question_response) { json["question"] }
+    let!(:question)         { create(:question, author: resource_owner) }
+  let(:headers)         {{ "CONTENT_TYPE" => "application/json" }}
+    let(:method)    { "patch" }
+    let(:path)      { "/api/v1/questions/#{question.id}" }
+
+
+    # context "when authenticated" do
+      # context "when authorized" do
+        context 'with valid params' do
+          # before { do_request(method, path, params: { id: question.id, question: { body: "corrections" }, access_token: access_token.token }, headers: headers) }
+          before do 
+            do_request(method, path, params: {id: question, question: attributes_for(:question, body: "corrections"), access_token: access_token.token, headers: headers}) 
+          end
+
+        # subject { patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") } }
+
+          it "return successfull status" do
+            expect(response).to be_successful
+          end
+
+          it "returns all neccessary fields of updated question" do
+            expect(question_response['body']).to eq assigns(:question).reload.body
+            %w[id title body created_at updated_at].each do |attr|
+              expect(question_response[attr]).to eq assigns(:question).send(attr).as_json
+            end
+          end
+        # end
+      # end
     end
   end
 end
