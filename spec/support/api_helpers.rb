@@ -8,7 +8,6 @@ module ApiHelpers
   end
 end
 
-
 RSpec.configure do |config|
   config.include ApiHelpers
 end
