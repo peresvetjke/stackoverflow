@@ -1,6 +1,6 @@
 class Api::V1::BaseController < ApplicationController
   before_action -> { doorkeeper_authorize! :public }
-  
+
   protected
 
   def current_resource_owner
