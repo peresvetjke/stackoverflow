@@ -59,7 +59,12 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
-  config.action_mailer.default_url_options = { host: 'localhost:3000' }
+  # config.action_mailer.default_url_options = { host: 'localhost:3000' }
+  # config.action_mailer.default_url_options = { :host => "test.yourhost.com" }
 
   # OmniAuth.config.test_mode = true
+
+  # routes.default_url_options[:host]= 'localhost:3000' 
 end
+
+Rails.application.routes.default_url_options[:host]= "www.example.com"
