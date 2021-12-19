@@ -5,11 +5,11 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   respond_to :json
 
   def index
-    respond_with Question.all
+    respond_with Question.all, each_serializer: Api::V1::QuestionsSerializer
   end
 
   def show
-    respond_with @question
+    respond_with @question, serializer: Api::V1::QuestionSerializer
   end
 
   private
