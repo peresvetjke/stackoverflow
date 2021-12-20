@@ -1,11 +1,8 @@
 shared_examples_for 'API Authorizable' do
   let(:authorizable_to_sym) { authorizable.class.name.downcase.to_sym }
+  let(:params) { { authorizable_to_sym  => attributes_for(authorizable_to_sym), :access_token => create(:access_token, resource_owner_id: user.id).token } }
   
-  before { do_request(method, path,  params: { 
-                                                authorizable_to_sym  => attributes_for(authorizable_to_sym), 
-                                                :access_token       => create(:access_token, resource_owner_id: user.id).token 
-                                              }, 
-                                      headers: headers) }
+  before { do_request(method, path,  params: params, headers: headers) }
 
   context 'not an author of record' do
     let(:user) { create(:user) }

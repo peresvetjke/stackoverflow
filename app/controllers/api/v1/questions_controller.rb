@@ -1,7 +1,6 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
-  #before_action :authorize
   authorize_resource only: %i[index show create]
-  before_action :load_question, only: %i[show update]
+  before_action :load_question, only: %i[show update destroy]
 
   respond_to :json
 
@@ -15,21 +14,31 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def create
     authorize! :create, Question
+
     respond_with @question = Question.create(question_params.merge(author_id: current_resource_owner.id)), serializer: Api::V1::QuestionSerializer
   end
 
   def update
     authorize! :update, @question
-    @question.update(question_params)
-    render json: @question, serializer: Api::V1::QuestionSerializer
-    # respond_with @question, serializer: Api::V1::QuestionSerializer
+
+    if @question.update(question_params)
+      respond_to do |format|
+        format.json { render json: @question, serializer: Api::V1::QuestionSerializer }
+      end
+    else
+      respond_to do |format|
+        format.json { render json: { "errors": @question.errors }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+    authorize! :destroy, @question
+    
+    respond_with(@question.destroy)
   end
 
   private
-
-  def authorize
-    authorize! :read, Question
-  end
 
   def load_question
     @question = Question.find(params[:id])

@@ -1,22 +1,19 @@
 require "rails_helper"
 
 describe "Profiles API", type: :request do
-  let(:headers)      {{ "CONTENT_TYPE" => "application/json",
-                        "ACCEPT"        => "application/json" }}
-  let!(:me)          { create(:user) }
-  let(:me_response)  { json["user"] }
-  let(:access_token) { create(:access_token, resource_owner_id: me.id) }
-  let(:method)       { "get" }
+  let(:headers)         {{ "ACCEPT" => "application/json" }}
+  let!(:me)             { create(:user) }
+  let(:me_response)     { json["user"] }
+  let(:users_response)  { json["users"] }
+  let(:access_token)    { create(:access_token, resource_owner_id: me.id) }
+  let(:method)          { "get" }
 
   describe "GET /api/v1/profiles/me" do
     let(:path)         { "/api/v1/profiles/me" }
     
-    it_behaves_like "API Authorizable" do
-      let(:api_method) { method }
-      let(:api_path)   { path }
-    end
+    it_behaves_like "API Authenticable"
 
-    context "when authorized" do
+    context "when authenticated" do
       before { do_request("get", path, params: { access_token: access_token.token }, headers: headers) }
 
       it "returns 200 status" do
@@ -38,16 +35,12 @@ describe "Profiles API", type: :request do
   end
 
   describe "GET /api/v1/profiles" do
-    let(:path)            { "/api/v1/profiles" }
-    let!(:users)          { create_list(:user, 4) }
-    let(:users_response)  { json["users"] }
+    let(:path)    { "/api/v1/profiles" }
+    let!(:users)  { create_list(:user, 4) }
 
-    it_behaves_like "API Authorizable" do
-      let(:api_method) { method }
-      let(:api_path)   { path }
-    end
+    it_behaves_like "API Authenticable"
 
-    context "when authorized" do
+    context "when authenticated" do
       before { do_request("get", path, params: { access_token: access_token.token }, headers: headers) }
 
       it "returns 200 status" do

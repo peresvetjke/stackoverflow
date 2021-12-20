@@ -86,25 +86,17 @@ describe "Questions API", type: :request do
   end
   
   describe "PATCH /api/v1/questions/:id" do
-  let!(:resource_owner)   { create(:user) }
-  let(:access_token)      { create(:access_token, resource_owner_id: resource_owner.id) }
-  let!(:question)         { create(:question, author: resource_owner) }
-  let(:question_response) { json["question"] }
-    let!(:question)         { create(:question, author: resource_owner) }
-  let(:headers)         {{ "CONTENT_TYPE" => "application/json" }}
     let(:method)    { "patch" }
     let(:path)      { "/api/v1/questions/#{question.id}" }
 
+    it_behaves_like "API Authenticable"
+    it_behaves_like "API Authorizable"
+    it_behaves_like "API Validatable"
 
-    # context "when authenticated" do
-      # context "when authorized" do
+    context "when authenticated" do
+      context "when authorized" do
         context 'with valid params' do
-          # before { do_request(method, path, params: { id: question.id, question: { body: "corrections" }, access_token: access_token.token }, headers: headers) }
-          before do 
-            do_request(method, path, params: {id: question, question: attributes_for(:question, body: "corrections"), access_token: access_token.token, headers: headers}) 
-          end
-
-        # subject { patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") } }
+          before { do_request(method, path, params: { id: question, question: attributes_for(:question, body: "corrections"), access_token: access_token.token }, headers: headers) }
 
           it "return successfull status" do
             expect(response).to be_successful
@@ -116,8 +108,30 @@ describe "Questions API", type: :request do
               expect(question_response[attr]).to eq assigns(:question).send(attr).as_json
             end
           end
-        # end
-      # end
+        end
+      end
+    end
+  end
+
+  describe "DELETE /api/v1/questions/:id" do
+    let(:method)    { "delete" }
+    let(:path)      { "/api/v1/questions/#{question.id}" }
+
+    it_behaves_like "API Authenticable"
+    it_behaves_like "API Authorizable"
+
+    context "when authenticated" do
+      context "when authorized" do
+        before { do_request(method, path, params: { id: question, access_token: access_token.token }, headers: headers) }
+
+        it "return successfull status" do
+          expect(response).to be_successful
+        end
+
+        it "deletes record" do
+          expect(assigns(:question).persisted?).to be_falsey
+        end
+      end
     end
   end
 end

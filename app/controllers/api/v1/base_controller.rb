@@ -1,5 +1,6 @@
 class Api::V1::BaseController < ApplicationController
   before_action -> { doorkeeper_authorize! :public }
+  skip_before_action :verify_authenticity_token
 
   protected
 
