@@ -26,4 +26,23 @@ RSpec.describe Question, type: :model do
   it "have many attached files" do 
     expect(Question.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
   end
+
+  describe "#subscribe!" do
+    let(:user)     { create(:user) }
+    let(:question) { create(:question) }
+
+    context "when unsubscribed" do
+      it "creates subscription" do
+        expect { question.subscribe!(user) } .to change(Subscription, :count).by(1)
+      end
+    end
+
+    context "when subscribed" do
+      let!(:subscription) { create(:subscription, question: question, user: user) }
+
+      it "destroys subscription" do
+        expect { question.subscribe!(user) } .to change(Subscription, :count).by(-1)
+      end
+    end
+  end
 end

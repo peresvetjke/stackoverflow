@@ -253,4 +253,22 @@ RSpec.describe QuestionsController, :type => :controller do
       it_behaves_like 'author of question'
     end
   end
+
+  describe "POST subscribe" do
+    subject { post :subscribe, params: {id: question}, format: :js }
+
+    it_behaves_like "Authenticable", :js
+
+    context "not subscribed" do
+      it "creates subscription" do
+        expect { subject } .to change(Subscription, :count).by(1)
+      end
+    end
+    
+    context "subscribed" do
+      it "destroys subscription" do
+        expect { subject } .to change(Subscription, :count).by(-1)
+      end
+    end
+  end
 end

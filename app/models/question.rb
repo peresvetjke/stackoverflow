@@ -25,4 +25,10 @@ class Question < ApplicationRecord
               methods: :rating)
     ) 
   end
+
+  def subscribe!(user)
+    subscription = subscriptions.find_or_initialize_by(user: user)
+    return subscription.destroy if subscription.persisted?
+    subscription.save
+  end
 end
