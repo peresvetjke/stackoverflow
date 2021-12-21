@@ -18,25 +18,29 @@ feature 'User subscribe on a question', %q{
     
     background { sign_in(user) }
 
-    scenario "when unsubscribed" do
-      visit question_path(question)
-      expect(page).to have_no_button("Unubscribe")
-      find(".subscribe").click
-      msg = accept_confirm{}
-      expect(msg).to eq "You have been successfully subscribed to question!"
-      expect(page).to have_button("Subscribe")
+    feature "being unsubscribed" do
+      scenario "subscribes" do
+        visit question_path(question)
+        expect(page).to have_no_button("Unubscribe")
+        find(".subscribe").click
+        msg = accept_confirm{}
+        expect(msg).to eq "You have been successfully subscribed to question."
+        expect(page).to have_button("Unsubscribe")
+      end
     end
 
-    background { subscription }
-
-    scenario "when subscribed" do
-      visit question_path(question)
-      expect(page).to have_no_button("Subscribe")
-      visit question_path(question)
-      find(".unsubscribe").click
-      msg = accept_confirm{}
-      expect(msg).to eq "You have been successfully unsubscribed to question!"
-      expect(page).to have_button("Unsubscribe")
+    feature "being unsubscribed" do
+      background { subscription }
+      
+      scenario "subscribes" do
+        visit question_path(question)
+        expect(page).to have_no_button("Subscribe")
+        visit question_path(question)
+        find(".subscribe").click
+        msg = accept_confirm{}
+        expect(msg).to eq "You have been successfully unsubscribed from question."
+        expect(page).to have_button("Subscribe")
+      end
     end
   end
 end

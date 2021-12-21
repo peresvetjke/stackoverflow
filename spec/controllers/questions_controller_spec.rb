@@ -255,22 +255,14 @@ RSpec.describe QuestionsController, :type => :controller do
   end
 
   describe "POST subscribe" do
-    subject { post :subscribe, params: {id: question} }, format: :js }
+    subject { post :subscribe, params: {id: question}, format: :js }
 
-    it_behaves_like "Authenticable", :js
-
-    # context "being a guest" do
-    #   it "creates subscription" do
-    #     subject
-    #     expect(response).to have_http_status 401
-    #   end
-    # end
+    context "being a guest" do
+      include_examples "it_returns_status", 401      
+    end
 
     context "being authenticated" do
-      before {
-        login(user)
-        # subject 
-      }
+      before { login(user) }
 
       include_examples "it_renders", :subscribe
 

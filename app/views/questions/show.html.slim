@@ -11,8 +11,9 @@ table.question *{'item-id': @question.id}
           td
             h2 = "Title: #{@question.title}"
             
-            - subscribe_button = @question.followers.include?(current_user) ? 'Unsubscribe' : 'Subscribe'
-            = button_to "#{subscribe_button}", subscribe_question_path(@question), remote: true, data: { type: :js }, class: "subscribe"
+            - if can? :subscribe, Question
+              - subscribe_button = @question.followers.include?(current_user) ? 'Unsubscribe' : 'Subscribe'
+              = button_to "#{subscribe_button}", subscribe_question_path(@question), remote: true, data: { type: :js }, class: "subscribe"
 
             strong Body: 
             = @question.body

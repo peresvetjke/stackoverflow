@@ -1,5 +1,9 @@
-if ($(".subscribe").attr("value") == "Subscribe") {
-  $(".subscribe").attr("value", "Unsubscribe")
+let button = $(".subscribe")
+
+if (button.attr("value") == "Subscribe") {
+  button.attr("value", "Unsubscribe")
+  window.alert("You have been successfully subscribed to question.")
 } else {
-  $(".subscribe").attr("value", "Subscribe")
+  button.attr("value", "Subscribe")
+  window.alert("You have been successfully unsubscribed from question.")
 }
