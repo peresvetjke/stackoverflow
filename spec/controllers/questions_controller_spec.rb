@@ -8,13 +8,12 @@ RSpec.describe QuestionsController, :type => :controller do
 
   describe "GET index" do
     let(:questions) { create_list(:question, 5) }
-    before { get :index }
+    subject { get :index }
     
-    it "renders index template" do
-      expect(response).to render_template(:index)
-    end
+    include_examples "it_renders", :index
 
     it "assigns the all questions to @questions" do
+      subject
       expect(assigns(:questions)).to match_array(questions)
     end
   end
@@ -22,9 +21,7 @@ RSpec.describe QuestionsController, :type => :controller do
   describe "GET show" do
     before { get :show, params: { id: question } }
     
-    it "renders show template" do
-      expect(response).to render_template(:show)
-    end
+    include_examples "it_renders", :show
 
     it "assigns the requested question to @question" do
       expect(assigns(:question)).to eq question
@@ -47,10 +44,7 @@ RSpec.describe QuestionsController, :type => :controller do
     context "being authenticated" do
       before { login(user) }
 
-      it "renders new template" do
-        subject
-        expect(response).to render_template(:new)
-      end
+    include_examples "it_renders", :new
     end
   end
 
@@ -68,11 +62,8 @@ RSpec.describe QuestionsController, :type => :controller do
         it "keeps count unchanged" do
           expect{subject}.not_to change(Question, :count)
         end
-       
-        it "renders new template" do
-          subject
-          expect(response).to render_template :new
-        end
+        
+        include_examples "it_renders", :new
       end
 
       context 'with valid params' do
@@ -113,10 +104,7 @@ RSpec.describe QuestionsController, :type => :controller do
         expect(assigns(:question)).to eq question
       end
 
-      it "renders edit template" do
-        subject
-        expect(response).to render_template(:edit)
-      end
+        include_examples "it_renders", :edit
     end
 
     context "being not an author of question" do
@@ -170,10 +158,7 @@ RSpec.describe QuestionsController, :type => :controller do
           expect(question.reload.body).to eq(question.body)
         end
        
-        it "renders edit template" do
-          subject
-          expect(response).to render_template(:edit)
-        end
+        include_examples "it_renders", :edit
       end
 
       context 'with valid params' do

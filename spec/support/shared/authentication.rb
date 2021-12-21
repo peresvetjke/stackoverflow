@@ -13,20 +13,13 @@ shared_examples_for 'API Authenticable' do
 end
 
 shared_examples_for 'Authenticable' do |format|
-  shared_examples "unauthorized" do
-    it "returns unauthorized status" do
-      subject
-      expect(response).to have_http_status 401
-    end
-  end
-
   context 'being a guest' do
     shared_examples_for "js" do
-      include_examples "unauthorized" 
+      include_examples "it_returns_status", 401
     end
 
     shared_examples_for "json" do
-      include_examples "unauthorized" 
+      include_examples "it_returns_status", 401
     end
 
     shared_examples_for "html" do

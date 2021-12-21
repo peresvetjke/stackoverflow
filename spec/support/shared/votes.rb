@@ -9,10 +9,7 @@ shared_examples 'voted' do
         expect{subject}.not_to change(votable, :rating)
       end
 
-      it "returns forbidden status" do
-        subject
-        expect(response).to have_http_status 403
-      end
+        include_examples "it_returns_status", 403
     end
 
     shared_examples 'not an author of votable' do

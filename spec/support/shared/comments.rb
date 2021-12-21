@@ -32,10 +32,7 @@ shared_examples 'commented' do
           expect{subject}.not_to change(Comment, :count)
         end
 
-        it "returns unprocessable entity status" do
-          subject
-          expect(response.status).to eq 422
-        end
+        include_examples "it_returns_status", 422
       end
 
       context "with valid params" do
@@ -68,10 +65,7 @@ shared_examples 'commented' do
         expect(comment.reload.body).to eq(comment.body)
       end
 
-      it 'returns forbidden status' do
-        subject
-        expect(response).to have_http_status 403
-      end
+        include_examples "it_returns_status", 403
     end
 
     shared_examples 'author of comment' do
@@ -88,10 +82,7 @@ shared_examples 'commented' do
           expect(comment.reload).to eq comment
         end
 
-        it "returns unprocessable entity status" do
-          subject
-          expect(response.status).to eq 422
-        end
+        include_examples "it_returns_status", 422
       end
 
       context "with valid params" do
@@ -139,10 +130,7 @@ shared_examples 'commented' do
         expect{subject}.not_to change(Comment, :count)
       end
 
-      it 'returns forbidden status' do
-        subject
-        expect(response).to have_http_status 403
-      end
+        include_examples "it_returns_status", 403
     end
 
     shared_examples 'author of comment' do

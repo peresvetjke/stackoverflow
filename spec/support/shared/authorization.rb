@@ -7,9 +7,7 @@ shared_examples_for 'API Authorizable' do
   context 'not an author of record' do
     let(:user) { create(:user) }
 
-    it "returns status 'forbidden'" do
-      expect(response.status).to eq 403
-    end
+    include_examples "it_returns_status", 403
   end
 
   context 'an admin' do
