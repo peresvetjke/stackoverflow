@@ -13,6 +13,8 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:answers) }
     it { is_expected.to have_many(:awardings) }
     it { is_expected.to have_many(:authentications).dependent(:destroy) }
+    it { is_expected.to have_many(:subscriptions).dependent(:destroy) }
+    it { is_expected.to have_many(:followed_questions).class_name("Question") }
   end
 
   describe ".from_omniauth" do

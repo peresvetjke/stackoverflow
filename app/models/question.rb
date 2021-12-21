@@ -5,6 +5,8 @@ class Question < ApplicationRecord
 
   has_many :answers, dependent: :destroy
   has_many :links, as: :linkable, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+  has_many :followers, through: :subscriptions, source: :user
   has_one :awarding
   has_many_attached :files
 
