@@ -9,5 +9,9 @@ FactoryBot.define do
     body { "MyText" }
     commentable { nil }
     association :author, factory: :user
+
+    trait :invalid do
+      body { nil }
+    end
   end
 end

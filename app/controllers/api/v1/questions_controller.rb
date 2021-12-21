@@ -21,12 +21,10 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   def update
     authorize! :update, @question
 
-    if @question.update(question_params)
-      respond_to do |format|
+    respond_to do |format|
+      if @question.update(question_params)
         format.json { render json: @question, serializer: Api::V1::QuestionSerializer }
-      end
-    else
-      respond_to do |format|
+      else
         format.json { render json: { "errors": @question.errors }, status: :unprocessable_entity }
       end
     end

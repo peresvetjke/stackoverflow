@@ -4,42 +4,37 @@ RSpec.describe QuestionsController, :type => :controller do
 
   let (:user)         { create(:user) }
   let (:question)     { create(:question, author: user) }
+  let(:authenticable) { question }
 
   describe "GET index" do
     let(:questions) { create_list(:question, 5) }
-    subject { get :index }
+    before { get :index }
     
     it "renders index template" do
-      subject
       expect(response).to render_template(:index)
     end
 
     it "assigns the all questions to @questions" do
-      subject
       expect(assigns(:questions)).to match_array(questions)
     end
   end
 
   describe "GET show" do
-    subject { get :show, params: { id: question } }
+    before { get :show, params: { id: question } }
     
     it "renders show template" do
-      subject
       expect(response).to render_template(:show)
     end
 
     it "assigns the requested question to @question" do
-      subject
       expect(assigns(:question)).to eq question
     end
 
     it "assigns the answers of requested question to @answers" do
-      subject
       expect(assigns(:answers)).to eq question.answers
     end
 
     it "assigns the comments of requested question to @comments" do
-      subject
       expect(assigns(:comments)).to eq question.comments
     end
   end
@@ -47,12 +42,7 @@ RSpec.describe QuestionsController, :type => :controller do
   describe "GET new" do
     subject { get :new }
 
-    context "being a guest" do
-      it "redirects to new_user_session path" do
-        subject
-        expect(response).to redirect_to new_user_session_path
-      end
-    end
+    it_behaves_like "Authenticable", :html
 
     context "being authenticated" do
       before { login(user) }
@@ -67,16 +57,7 @@ RSpec.describe QuestionsController, :type => :controller do
   describe "POST create" do    
     subject { post :create, params: {question: attributes_for(:question)} }
 
-    context "being a guest" do
-      it "keeps count unchanged" do
-        expect{subject}.to change(Question, :count).by(0)
-      end
-
-      it "redirects to new_user_session path" do
-        subject
-        expect(response).to redirect_to new_user_session_path
-      end
-    end
+    it_behaves_like "Authenticable", :html
 
     context "being authenticated" do
       before { login(create(:user)) }
@@ -85,7 +66,7 @@ RSpec.describe QuestionsController, :type => :controller do
         subject { post :create, params: {question: attributes_for(:question, :invalid)} }
 
         it "keeps count unchanged" do
-          expect{subject}.to change(Question, :count).by(0)
+          expect{subject}.not_to change(Question, :count)
         end
        
         it "renders new template" do
@@ -112,12 +93,7 @@ RSpec.describe QuestionsController, :type => :controller do
   describe "GET edit" do
     subject { get :edit, params: {id: question} }
 
-    shared_examples 'guest' do
-      it "redirects to new_user_session path" do
-        subject
-        expect(response).to redirect_to new_user_session_path
-      end
-    end
+    it_behaves_like "Authenticable", :html
 
     shared_examples 'not an author of question' do
       it "assigns the requested question to @question" do
@@ -143,10 +119,6 @@ RSpec.describe QuestionsController, :type => :controller do
       end
     end
 
-    context "being a guest" do
-      it_behaves_like 'guest'
-    end
-
     context "being not an author of question" do
       before { login(create(:user)) }
       it_behaves_like 'not an author of question'
@@ -164,43 +136,29 @@ RSpec.describe QuestionsController, :type => :controller do
   end
 
   describe "PATCH update" do    
-    shared_examples 'guest' do
-      subject { patch :update, params: {id: question, question: attributes_for(:question, body: "corrections")} }
+    subject { patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") } }
 
-      it "keeps unchanged" do
-        subject
-        question.reload
-        expect(question.body).to eq(question.body)
-      end
-
-      it "redirects to new_user_session path" do
-        subject
-        expect(response).to redirect_to new_user_session_path
-      end
-    end
+    it_behaves_like "Authenticable", :html
 
     shared_examples 'not an author of question' do
-      subject { patch :update, params: { id: question, question: attributes_for(:question, body: "corrections") } }
+      before { subject }
       
       it "assigns the requested question to @question" do
-        subject
         expect(assigns(:question)).to eq(question)
       end
 
       it "doesn't update question in db" do
-        subject
         expect(question.reload.body).to eq(question.body)
       end
 
-      it "rendirects to root path" do 
-        subject
+      it "rendirects to root path" do
         expect(response).to redirect_to(root_path)
       end
     end
 
     shared_examples 'author of question' do
       context 'with invalid params' do
-        subject { patch :update, params: {id: question, question: attributes_for(:question, body: "")} }
+        subject { patch :update, params: {id: question, question: attributes_for(:question, :invalid)} }
         
         it "assigns the requested question to @question" do
           subject
@@ -240,10 +198,6 @@ RSpec.describe QuestionsController, :type => :controller do
       end
     end
 
-    context "being a guest" do
-      it_behaves_like 'guest'
-    end
-
     context "being not an author of question" do
       before { login(create(:user)) }
       it_behaves_like 'not an author of question'
@@ -263,17 +217,7 @@ RSpec.describe QuestionsController, :type => :controller do
   describe "DELETE destroy" do
     subject { delete :destroy, params: {id: question} }
 
-    shared_examples 'guest' do  
-      it "doesn't delete question" do
-        question
-        expect{subject}.to change(Question, :count).by(0)
-      end
-
-      it "redirects to new_user_session path" do
-        subject
-        expect(response).to redirect_to new_user_session_path
-      end  
-    end
+    it_behaves_like "Authenticable", :html
 
     shared_examples 'not author of question' do
       it "assigns the requested question to @question" do
@@ -283,7 +227,7 @@ RSpec.describe QuestionsController, :type => :controller do
 
       it "doesn't delete question" do
         question
-        expect{subject}.to change(Question, :count).by(0)
+        expect{subject}.not_to change(Question, :count)
       end
 
       it "redirects to root path" do
@@ -307,10 +251,6 @@ RSpec.describe QuestionsController, :type => :controller do
         subject
         expect(response).to redirect_to questions_path
       end
-    end
-
-    context "being a guest" do
-      it_behaves_like 'guest'
     end
 
     context "being not an author of question" do

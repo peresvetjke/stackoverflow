@@ -2,19 +2,16 @@ require "rails_helper"
 
 RSpec.describe AnswersController, :type => :controller do
   
-  let(:user)     { create(:user) }
-  let(:question) { create(:question, author: user) }
-  let(:answer)   { create(:answer, author: user, question: question) }
+  let(:user)          { create(:user) }
+  let(:question)      { create(:question, author: user) }
+  let(:answer)        { create(:answer, author: user, question: question) }
+  let(:authenticable) { answer }
+  let(:format)        { :js }
 
   describe "GET edit" do
     subject { get :edit, params: {id: answer} }
 
-    shared_examples "guest" do
-      it "redirect to new_user_session path" do
-        subject    
-        expect(response).to redirect_to new_user_session_path
-      end
-    end
+    it_behaves_like "Authenticable", :html
 
     shared_examples "not author of answer" do
       it "assigns the answer to @answer" do
@@ -40,10 +37,6 @@ RSpec.describe AnswersController, :type => :controller do
       end
     end
 
-    context "being a guest" do
-      it_behaves_like 'guest'      
-    end
-
     context "being not an author" do
       before { login(create(:user)) }
       it_behaves_like 'not author of answer'      
@@ -61,18 +54,9 @@ RSpec.describe AnswersController, :type => :controller do
   end
 
   describe "POST create" do
-    shared_examples "guest" do
-      subject { post :create, params: {answer: attributes_for(:answer), question_id: question, format: :js} }
+    subject { post :create, params: {answer: attributes_for(:answer), question_id: question, format: :js} }
 
-      it "keeps count unchanged" do
-        expect{ subject }.not_to change(Answer, :count)
-      end
-
-      it "returns unauthorized status" do
-        subject
-        expect(response).to have_http_status 401
-      end
-    end
+    it_behaves_like "Authenticable", :js
 
     shared_examples "authenticated" do
       it "assigns the question to @question" do
@@ -86,6 +70,7 @@ RSpec.describe AnswersController, :type => :controller do
         it "keeps count unchanged" do
           expect{ subject }.not_to change(question.answers, :count)
         end
+
         it "renders create" do
           subject
           expect(response).to render_template :create
@@ -106,9 +91,6 @@ RSpec.describe AnswersController, :type => :controller do
       end
     end
 
-    context "being a guest" do
-      it_behaves_like 'guest'
-    end
 
     context "being authenticated" do
       before { login(user) }

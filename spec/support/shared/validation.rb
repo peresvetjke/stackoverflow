@@ -1,6 +1,6 @@
 shared_examples_for 'API Validatable' do
   let(:validatable_to_sym) { validatable.class.name.downcase.to_sym }
-  let(:id) { validatable.id }
+  # let(:id) { validatable.id }
   let(:params) { { validatable_to_sym  => attributes_for(validatable_to_sym, :invalid), :access_token=> access_token.token } }
 
   context 'with invalid params' do
