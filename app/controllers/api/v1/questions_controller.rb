@@ -13,8 +13,6 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def create
-    authorize! :create, Question
-
     respond_with @question = Question.create(question_params.merge(author_id: current_resource_owner.id)), serializer: Api::V1::QuestionSerializer
   end
 
