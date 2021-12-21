@@ -255,19 +255,37 @@ RSpec.describe QuestionsController, :type => :controller do
   end
 
   describe "POST subscribe" do
-    subject { post :subscribe, params: {id: question}, format: :js }
+    subject { post :subscribe, params: {id: question} }, format: :js }
 
     it_behaves_like "Authenticable", :js
 
-    context "not subscribed" do
-      it "creates subscription" do
-        expect { subject } .to change(Subscription, :count).by(1)
+    # context "being a guest" do
+    #   it "creates subscription" do
+    #     subject
+    #     expect(response).to have_http_status 401
+    #   end
+    # end
+
+    context "being authenticated" do
+      before {
+        login(user)
+        # subject 
+      }
+
+      include_examples "it_renders", :subscribe
+
+      context "not subscribed" do
+        it "creates subscription" do
+          expect { subject } .to change(Subscription, :count).by(1)
+        end
       end
-    end
-    
-    context "subscribed" do
-      it "destroys subscription" do
-        expect { subject } .to change(Subscription, :count).by(-1)
+      
+      context "subscribed" do
+        let!(:subscription) { create(:subscription, question: question, user: user) }
+
+        it "destroys subscription" do
+          expect { subject } .to change(Subscription, :count).by(-1)
+        end
       end
     end
   end
