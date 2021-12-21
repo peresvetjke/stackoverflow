@@ -2,19 +2,16 @@ require "rails_helper"
 
 RSpec.describe AnswersController, :type => :controller do
   
-  let(:user)     { create(:user) }
-  let(:question) { create(:question, author: user) }
-  let(:answer)   { create(:answer, author: user, question: question) }
+  let(:user)          { create(:user) }
+  let(:question)      { create(:question, author: user) }
+  let(:answer)        { create(:answer, author: user, question: question) }
+  let(:authenticable) { answer }
+  let(:format)        { :js }
 
   describe "GET edit" do
     subject { get :edit, params: {id: answer} }
 
-    shared_examples "guest" do
-      it "redirect to new_user_session path" do
-        subject    
-        expect(response).to redirect_to new_user_session_path
-      end
-    end
+    it_behaves_like "Authenticable", :html
 
     shared_examples "not author of answer" do
       it "assigns the answer to @answer" do
@@ -34,14 +31,7 @@ RSpec.describe AnswersController, :type => :controller do
         expect(assigns(:answer)).to eq answer
       end
 
-      it "renders edit template" do
-        subject
-        expect(response).to render_template(:edit)
-      end
-    end
-
-    context "being a guest" do
-      it_behaves_like 'guest'      
+      include_examples "it_renders", :edit
     end
 
     context "being not an author" do
@@ -61,18 +51,9 @@ RSpec.describe AnswersController, :type => :controller do
   end
 
   describe "POST create" do
-    shared_examples "guest" do
-      subject { post :create, params: {answer: attributes_for(:answer), question_id: question, format: :js} }
+    subject { post :create, params: {answer: attributes_for(:answer), question_id: question, format: :js} }
 
-      it "keeps count unchanged" do
-        expect{ subject }.not_to change(Answer, :count)
-      end
-
-      it "returns unauthorized status" do
-        subject
-        expect(response).to have_http_status 401
-      end
-    end
+    it_behaves_like "Authenticable", :js
 
     shared_examples "authenticated" do
       it "assigns the question to @question" do
@@ -86,10 +67,8 @@ RSpec.describe AnswersController, :type => :controller do
         it "keeps count unchanged" do
           expect{ subject }.not_to change(question.answers, :count)
         end
-        it "renders create" do
-          subject
-          expect(response).to render_template :create
-        end
+
+        include_examples "it_renders", :create
       end
 
       context 'with valid params' do
@@ -99,16 +78,10 @@ RSpec.describe AnswersController, :type => :controller do
           expect{subject}.to change(question.answers, :count).by(1)
         end     
 
-        it "renders create" do
-          subject
-          expect(response).to render_template :create
-        end
+        include_examples "it_renders", :create
       end
     end
 
-    context "being a guest" do
-      it_behaves_like 'guest'
-    end
 
     context "being authenticated" do
       before { login(user) }
@@ -148,11 +121,8 @@ RSpec.describe AnswersController, :type => :controller do
           subject
           expect(answer.reload.body).to eq(answer.body)
         end
-       
-        it "returns :ok status" do
-          subject
-          expect(response).to have_http_status(200)
-        end
+        
+        include_examples "it_returns_status", 200
       end
 
       context 'with valid params' do
@@ -219,10 +189,7 @@ RSpec.describe AnswersController, :type => :controller do
         expect(question.answers.select {|q| q.best }.count).to eq(0)
       end
 
-      it "returns unauthorized status" do
-        subject
-        expect(response).to have_http_status 403
-      end
+      include_examples "it_returns_status", 403
     end
 
     shared_examples 'author of question' do
@@ -266,10 +233,7 @@ RSpec.describe AnswersController, :type => :controller do
         expect{subject}.not_to change(Answer, :count)
       end
 
-      it "returns unauthorized status" do
-        subject
-        expect(response).to have_http_status 401
-      end
+      include_examples "it_returns_status", 401
     end
 
     shared_examples 'not an author of answer' do
@@ -283,10 +247,7 @@ RSpec.describe AnswersController, :type => :controller do
         expect{subject}.not_to change(Answer, :count)
       end
 
-      it "returns forbidden status" do
-        subject
-        expect(response).to have_http_status 403
-      end
+      include_examples "it_returns_status", 403
     end
 
     shared_examples 'author of answer' do
