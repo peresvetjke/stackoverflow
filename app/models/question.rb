@@ -17,6 +17,7 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :awarding, reject_if: :all_blank, allow_destroy: true
   
   after_create_commit :publish_question
+  after_create_commit { |question| subscribe!(question.author) }
 
   def publish_question
     ActionCable.server.broadcast(
