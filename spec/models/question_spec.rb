@@ -28,8 +28,8 @@ RSpec.describe Question, type: :model do
   end
 
   describe "#subscribe!" do
-    let(:user)     { create(:user) }
-    let(:question) { create(:question) }
+    let!(:user)     { create(:user) }
+    let!(:question) { create(:question) }
 
     context "when unsubscribed" do
       it "creates subscription" do

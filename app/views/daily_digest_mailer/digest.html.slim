@@ -2,14 +2,30 @@ h1 QNA Daily digest
 
 p Hi, user!
 
-br
-p Please check the updates:
-br
+p These are recent updates on questions and answers:
 
-- @updated.each do |question, answers|
-	h3 = link_to "#{question.title}", question_url(question)
-  	h4 = question.body
-	
-	- answers.each do |answer|
-		p = answer.body
-		br
+h2 New questions
+
+- if @new_questions.present?
+	- @new_questions.each do |question|
+		h4 = link_to "#{question.title}", question_url(question)
+  		p = question.body
+  		br
+
+- else
+	p No new posts
+
+h2 New answers
+
+- if @new_answers.present?
+
+	- @new_answers.each do |question, answers|
+		h3 = link_to "#{question.title}", question_url(question)
+	  	h4 = question.body
+		
+		- answers.each do |answer|
+			p = answer.body
+			br
+
+- else
+	p No new posts

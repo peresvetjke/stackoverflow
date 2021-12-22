@@ -17,5 +17,11 @@ FactoryBot.define do
         2.times { create(:answer, question: question) }
       end
     end
+
+    trait :unsubscribed do
+      after(:create) do |question|
+        question.subscribe!(question.author)
+      end
+    end
   end
 end

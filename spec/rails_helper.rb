@@ -57,7 +57,6 @@ RSpec.configure do |config|
   Capybara.default_max_wait_time = 2
 
   # cleaner
-=begin
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
@@ -68,7 +67,6 @@ RSpec.configure do |config|
       example.run
     end
   end
-=end
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

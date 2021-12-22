@@ -6,10 +6,23 @@
 
 ' Hi, user!
 
-' Please check the updates:
+' These are recent updates on questions and answers:
 br
 
-- @updated.each do |question, answers|
+' New questions
+
+- if @new_questions.present?
+	- @new_questions.each do |question|
+		= link_to "#{question.title}", question_url(question)
+  		= question.body
+  		br
+
+- else
+	' No new posts
+
+' New answers
+
+- @new_answers.each do |question, answers|
 	= link_to "#{question.title}", question_url(question)
   	= question.body
   		

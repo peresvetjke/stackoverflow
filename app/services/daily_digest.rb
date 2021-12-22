@@ -1,14 +1,12 @@
 class DailyDigest
-  def send_digest
-    User.find_each(batch_size: 500) do |user|
-      new_answers = []
-      
-      user.followed_questions.each do |question| 
-        answers = question.answers.where(created_at: (Time.now - 1.day)..Time.now).to_a
-        new_answers += answers if answers.present?
-      end
+  TIME_RANGE = (Time.now - 1.day)..Time.now
 
-      DailyDigestMailer.digest(user, new_answers).deliver_later unless new_answers.empty?
+  def send_digest
+    new_questions = Question.where(created_at: TIME_RANGE).to_a
+
+    User.find_each(batch_size: 500) do |user| 
+      new_answers = Answer.recent_answers_for_follower(user).to_a
+      DailyDigestMailer.digest(user, new_questions, new_answers).deliver_now
     end
   end
 end

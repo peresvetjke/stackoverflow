@@ -255,7 +255,9 @@ RSpec.describe QuestionsController, :type => :controller do
   end
 
   describe "POST subscribe" do
-    subject { post :subscribe, params: {id: question}, format: :js }
+    let!(:question) { create(:question) }
+
+    subject { post :subscribe, params: { id: question }, format: :js }
 
     context "being a guest" do
       include_examples "it_returns_status", 401      

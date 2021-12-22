@@ -17,7 +17,9 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :awarding, reject_if: :all_blank, allow_destroy: true
   
   after_create_commit :publish_question
-  after_create_commit { |question| subscribe!(question.author_id) }
+  after_create_commit { |question| subscribe!(question.author) }
+
+  # scope :subscribed, -> { joins(:subscriptions) }
 
   def publish_question
     ActionCable.server.broadcast(
@@ -27,8 +29,8 @@ class Question < ApplicationRecord
     ) 
   end
 
-  def subscribe!(user_id)
-    subscription = subscriptions.find_or_initialize_by(user_id: user_id)
+  def subscribe!(user)
+    subscription = subscriptions.find_or_initialize_by(user_id: user.id)
     return subscription.destroy if subscription.persisted?
     subscription.save
   end
