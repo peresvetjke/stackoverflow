@@ -1,0 +1,15 @@
+h1 QNA Daily digest
+
+p Hi, user!
+
+br
+p Please check the updates:
+br
+
+- @updated.each do |question, answers|
+	h3 = link_to "#{question.title}", question_url(question)
+  	h4 = question.body
+	
+	- answers.each do |answer|
+		p = answer.body
+		br

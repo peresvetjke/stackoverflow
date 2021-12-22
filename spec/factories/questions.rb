@@ -11,5 +11,11 @@ FactoryBot.define do
     trait :invalid do
       title { nil }
     end
+
+    trait :with_answers do
+      after(:create) do |question|
+        2.times { create(:answer, question: question) }
+      end
+    end
   end
 end

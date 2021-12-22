@@ -1,0 +1,18 @@
+' DailyDigest#digest
+= "\r\n" * 2
+' #{@greeting}, find me in app/views/daily_digest_mailer/digest.text.slim
+
+' QNA Daily digest
+
+' Hi, user!
+
+' Please check the updates:
+br
+
+- @updated.each do |question, answers|
+	= link_to "#{question.title}", question_url(question)
+  	= question.body
+  		
+	- answers.each do |answer|
+   		= answer.body
+		br
