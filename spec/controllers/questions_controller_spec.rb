@@ -262,7 +262,9 @@ RSpec.describe QuestionsController, :type => :controller do
     end
 
     context "being authenticated" do
-      before { login(user) }
+      let(:follower) { create(:user) }
+      
+      before { login(follower) }
 
       include_examples "it_renders", :subscribe
 
@@ -273,7 +275,7 @@ RSpec.describe QuestionsController, :type => :controller do
       end
       
       context "subscribed" do
-        let!(:subscription) { create(:subscription, question: question, user: user) }
+        let!(:subscription) { create(:subscription, question: question, user: follower) }
 
         it "destroys subscription" do
           expect { subject } .to change(Subscription, :count).by(-1)
