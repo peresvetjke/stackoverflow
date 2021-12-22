@@ -19,8 +19,6 @@ class Question < ApplicationRecord
   after_create_commit :publish_question
   after_create_commit { |question| subscribe!(question.author) }
 
-  # scope :subscribed, -> { joins(:subscriptions) }
-
   def publish_question
     ActionCable.server.broadcast(
       "questions",

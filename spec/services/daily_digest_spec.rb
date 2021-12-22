@@ -1,36 +1,43 @@
 require 'rails_helper'
 
 RSpec.describe DailyDigest do
-  let!(:questions)                 { create_list(:question, 5, :unsubscribed) }
-  let!(:users)                     { questions.map(&:author) }
-  # let(:other_user)                { create(:user) }
-  
-
-  it "sends daily digest to all users" do
-    binding.pry
-    users.each { |user| expect(DailyDigestMailer).to receive(:digest).with(user, questions.to_a, []).and_call_original }
-    subject.send_digest
-  end
-
-  # let(:question_with_new_answers) { create(:question, :with_answers, author: user) }
-  # let(:new_answers)               { question_with_new_answers.answers.to_a }
-  context "with new answers" do
-    it 'sends daily digest to subscribed users' do
-      expect(DailyDigestMailer).to receive(:digest).with(user, new_answers).and_call_original
-      subject.send_digest    
-    end
-
-    it "doesn't send digest to not subscribed users" do
-      allow(DailyDigestMailer).to receive(:digest).and_call_original
-      expect(DailyDigestMailer).not_to receive(:digest).with(other_user, new_answers)
-      subject.send_digest
-    end
-  end
-
   context "without new answers" do
-    it "doesn't send daily digest" do
-      expect(DailyDigestMailer).not_to receive(:digest)
+    let!(:questions)                 { create_list(:question, 5, :unsubscribed) }
+    let!(:users)                     { create_list(:user, 5) }
+
+    it "sends new questions to all users without answers list" do
+      stub_const("DailyDigest::TIME_RANGE", (Time.now - 1.day)..Time.now)
+      User.all.each { |user| expect(DailyDigestMailer).to receive(:digest).with(user, questions.to_a, []).and_call_original }
       subject.send_digest
+    end
+  end
+
+  context "with new answers" do
+    context "without followers" do
+      let!(:user)         { create(:user) }
+      let!(:question)     { create(:question, :unsubscribed, author: user) }
+      let!(:answers)      { create_list(:answer, 5, question: question, author: user) }
+
+      it 'sends new questions to all users without answers list' do
+        stub_const("DailyDigest::TIME_RANGE", (Time.now - 1.day)..Time.now)
+        expect(DailyDigestMailer).to receive(:digest).with(user, [question], []).and_call_original
+        subject.send_digest    
+      end
+    end
+
+    context "with followers" do
+      let!(:user)         { create(:user) }
+      let!(:question)     { create(:question, author: user) }
+      let!(:answers)      { create_list(:answer, 5, question: question, author: user) }
+      let!(:follower)     { create(:user) }
+      let!(:subscription) { create(:subscription, question: question, user: follower) }
+
+      it 'sends new answers list to subscribed users' do
+        stub_const("DailyDigest::TIME_RANGE", (Time.now - 1.day)..Time.now)
+        expect(DailyDigestMailer).to receive(:digest).with(user, [question], answers.to_a).and_call_original
+        expect(DailyDigestMailer).to receive(:digest).with(follower, [question], answers.to_a).and_call_original
+        subject.send_digest    
+      end
     end
   end
 end

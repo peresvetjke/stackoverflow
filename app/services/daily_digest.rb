@@ -6,7 +6,7 @@ class DailyDigest
 
     User.find_each(batch_size: 500) do |user| 
       new_answers = Answer.recent_answers_for_follower(user).to_a
-      DailyDigestMailer.digest(user, new_questions, new_answers).deliver_now
+      DailyDigestMailer.digest(user, new_questions, new_answers).deliver_later
     end
   end
 end
