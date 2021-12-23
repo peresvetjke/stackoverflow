@@ -4,10 +4,13 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
 
   use_doorkeeper
-  root to: "questions#index"
-
   devise_for :users, controllers: { registrations: 'users/registrations', omniauth_callbacks: 'users/omniauth_callbacks' }
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  root to: "questions#index"
+
+  get :search, to: "search#index"
+  post :search, to: "search#search"
 
   namespace :api do
     namespace :v1 do
