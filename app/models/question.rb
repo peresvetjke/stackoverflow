@@ -16,6 +16,8 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :awarding, reject_if: :all_blank, allow_destroy: true
   
+  ThinkingSphinx::Callbacks.append(self, :behaviours => [:real_time])  
+
   after_create_commit :publish_question
   after_create_commit { |question| subscribe!(question.author) }
 

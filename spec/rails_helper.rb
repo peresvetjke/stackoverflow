@@ -47,6 +47,9 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers
 
   config.use_transactional_fixtures = true
+  # config.use_transactional_fixtures = false
+
+  # ThinkingSphinx::Deltas.suspend!
 
   config.infer_base_class_for_anonymous_controllers = false
   config.include ControllerHelpers, type: :controller

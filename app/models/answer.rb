@@ -14,6 +14,7 @@ class Answer < ApplicationRecord
 
   accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
+  ThinkingSphinx::Callbacks.append(self, :behaviours => [:real_time])  
   after_create_commit :publish_answer
 
   scope :recent_answers_for_follower, ->(follower) { where(question_id: Question.joins(:subscriptions, :answers).
