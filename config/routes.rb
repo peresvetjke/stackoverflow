@@ -1,4 +1,8 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  mount Sidekiq::Web => '/sidekiq'
+
   use_doorkeeper
   root to: "questions#index"
 
@@ -18,7 +22,9 @@ Rails.application.routes.draw do
   end
 
   resources :questions, shallow: true do
+    post :subscribe, on: :member
     post :accept_vote, to: "votes#accept", on: :member, defaults: { votable: 'questions' }
+
     resources :comments, only: %i[create update destroy], defaults: { commentable: 'questions' }
 
     resources :answers, shallow: true, except: :index do

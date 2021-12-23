@@ -34,6 +34,12 @@ class QuestionsController < ApplicationController
     respond_with(@question.destroy)
   end
 
+  def subscribe
+    respond_to do |format|
+      format.js { @question.subscribe!(current_user) }
+    end
+  end
+
   private
 
   def question_params

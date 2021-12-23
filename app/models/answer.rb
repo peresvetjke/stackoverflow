@@ -16,6 +16,10 @@ class Answer < ApplicationRecord
 
   after_create_commit :publish_answer
 
+  scope :recent_answers_for_follower, ->(follower) { where(question_id: Question.joins(:subscriptions, :answers).
+                                                                        where("answers.created_at BETWEEN ? AND ? AND subscriptions.user_id = ?", 
+                                                                        DailyDigest::TIME_RANGE.first, Time.now, follower.id)) }
+
   def mark_best!
     Answer.transaction do
       question.answers.update_all(best: false)

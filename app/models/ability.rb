@@ -25,6 +25,7 @@ class Ability
     can :read, User
     can %i[read create], [Question, Answer, Comment]
     can %i[update destroy], [Question, Answer, Comment], author_id: @user.id
+    can :subscribe, Question
     can :read, Awarding, user_id: @user.id
     can :mark_best, Answer, question: { author_id: @user.id }
     can :destroy, ActiveStorage::Attachment, record: { author_id: @user.id }

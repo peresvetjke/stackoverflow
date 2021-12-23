@@ -11,6 +11,8 @@ class User < ApplicationRecord
   has_many :answers, foreign_key: 'author_id'
   has_many :awardings
   has_many :authentications, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+  has_many :followed_questions, through: :subscriptions, source: :question
 
   validates :password, :email, presence: true
   validates :email, uniqueness: true

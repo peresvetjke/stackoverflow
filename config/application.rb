@@ -26,5 +26,7 @@ module Stackoverflow
 
     config.active_storage.replace_on_assign_to_many = false
     #Bundler.require(*Rails.groups)
+    
+    config.active_job.queue_adapter = :sidekiq
   end
 end

@@ -1,0 +1,31 @@
+' DailyDigest#digest
+= "\r\n" * 2
+' #{@greeting}, find me in app/views/daily_digest_mailer/digest.text.slim
+
+' QNA Daily digest
+
+' Hi, user!
+
+' These are recent updates on questions and answers:
+br
+
+' New questions
+
+- if @new_questions.present?
+	- @new_questions.each do |question|
+		= link_to "#{question.title}", question_url(question)
+  		= question.body
+  		br
+
+- else
+	' No new posts
+
+' New answers
+
+- @new_answers.each do |question, answers|
+	= link_to "#{question.title}", question_url(question)
+  	= question.body
+  		
+	- answers.each do |answer|
+   		= answer.body
+		br

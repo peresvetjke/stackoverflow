@@ -57,4 +57,46 @@ RSpec.describe Answer, type: :model do
       end
     end
   end
+
+  describe "scopes" do
+    describe "recent_answers_for_follower" do
+      context "no recent answers" do
+        it "returns nothing" do
+          question
+          expect(Answer.recent_answers_for_follower(user)).to be_empty
+        end
+      end
+
+      context "with recent answers" do
+        let!(:answers)        { create_list(:answer, 5, question: question) } # author is auto-subscribed
+        let!(:other_question) { create(:question) }
+        let!(:other_answers)  { create_list(:answer, 5, question: other_question) }
+
+        it "returns answers" do
+          expect(Answer.recent_answers_for_follower(question.author)).not_to be_empty
+          expect(Answer.recent_answers_for_follower(question.author).count).to eq 5
+          expect(Answer.recent_answers_for_follower(question.author).to_a).to match_array(answers)
+        end
+      end
+    end
+  end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
