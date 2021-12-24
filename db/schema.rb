@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_21_145350) do
+ActiveRecord::Schema.define(version: 2021_12_24_055619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 2021_12_21_145350) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "best", default: false
+    t.index ["author_id"], name: "index_answers_on_author_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
   end
 
@@ -140,6 +141,7 @@ ActiveRecord::Schema.define(version: 2021_12_21_145350) do
     t.integer "author_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_questions_on_author_id"
   end
 
   create_table "subscriptions", force: :cascade do |t|
@@ -176,6 +178,7 @@ ActiveRecord::Schema.define(version: 2021_12_21_145350) do
     t.integer "author_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_votes_on_author_id"
     t.index ["votable_type", "votable_id"], name: "index_votes_on_votable"
   end
 

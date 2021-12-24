@@ -1,25 +1,23 @@
 class SearchController < ApplicationController
-  skip_authorization_check
-
-  # respond_to :html, :js
+  authorize_resource class: false
 
   def index
   end
 
   def search
-    @type, @text = params[:type], params[:text]
+    @type, @query = params[:type], params[:query]
 
     @result = if @type == "All"
-      ThinkingSphinx.search @text
+      ThinkingSphinx.search @query
     else
-      type_klass.search @text
+      type_klass.search @query
     end
   end
 
   private
 
   def search_params
-    params.require(:search).permit(:type, :text)
+    params.require(:search).permit(:type, :query)
   end
 
   def type_klass

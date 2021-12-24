@@ -1,9 +1,9 @@
 h2 Search
 
 = form_with url: search_path, local: false, data: {type: :js} do |f|
-  = f.label :text, "Your query:"
+  = f.label :query, "Your query:"
   br
-  = f.text_field :text
+  = f.text_field :query
   br
   = f.radio_button :type, "All", checked: true
   = f.label :type_all, "All types"
@@ -12,7 +12,7 @@ h2 Search
     = f.radio_button :type, type
     = f.label "type_#{type}".to_sym, type.capitalize
     br
-  = f.submit "Send"
+  = f.submit "Search"
 
 .result
   .questions

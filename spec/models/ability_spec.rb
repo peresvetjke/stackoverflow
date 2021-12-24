@@ -7,6 +7,8 @@ describe Ability do
   context 'when is a guest' do
     let(:user) { nil }
     
+    it { is_expected.to be_able_to(:manage, :search) }
+
     [Question, Answer, Comment].each do |klass|
       it { is_expected.to be_able_to(:read, klass.new) }
       it { is_expected.not_to be_able_to(:update, klass.new) }
@@ -21,6 +23,7 @@ describe Ability do
   context 'when logged in' do
     let(:user) { create(:user) }
 
+    it { is_expected.to be_able_to(:manage, :search) }
     it { is_expected.to be_able_to(:read, User) }
 
     context "not an author" do
@@ -58,6 +61,8 @@ describe Ability do
   context 'when is admin' do
     let(:user) { create(:user, admin: true) }
 
+    it { is_expected.to be_able_to(:manage, :search) }
+    
     [User, Question, Answer, Comment, ActiveStorage::Attachment].each do |klass|
       it { is_expected.to be_able_to(:manage, klass.new) }
     end
