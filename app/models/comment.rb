@@ -9,6 +9,7 @@ class Comment < ApplicationRecord
 
   validates :body, presence: true
 
+  ThinkingSphinx::Callbacks.append(self, :behaviours => [:real_time])  
   after_create_commit :publish_comment
 
   private

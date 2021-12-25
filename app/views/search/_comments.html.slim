@@ -1,0 +1,11 @@
+h4 Comments
+
+table.comments.table
+  thead
+    tr
+      td Body
+      td Author
+
+  tbody
+    - comments.each do |comment|
+      = render partial: "search/comment", locals: { comment: comment }

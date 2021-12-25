@@ -18,10 +18,12 @@ class Ability
   private
 
   def guest_abilities
+    can :manage, :search
     can :read, [Question, Answer, Comment]
   end
 
   def user_abilities
+    can :manage, :search
     can :read, User
     can %i[read create], [Question, Answer, Comment]
     can %i[update destroy], [Question, Answer, Comment], author_id: @user.id
@@ -35,6 +37,7 @@ class Ability
   end
 
   def admin_abilities
+    can :manage, :search
     can :manage, [User, Question, Answer, Comment, ActiveStorage::Attachment]
   end
 end

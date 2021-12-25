@@ -1,0 +1,31 @@
+var questions_list = $(".questions")
+var answers_list = $(".answers")
+var comments_list = $(".comments")
+var users_list = $(".users")
+
+clear_results()
+
+<% @result = @result.group_by(&:class) %>
+
+<% if @result[Question].present? %>
+  questions_list.append('<%= j render partial: "search/questions", locals: { questions: @result[Question] } %>')
+<% end %>
+
+<% if @result[Answer].present? %>
+  answers_list.append('<%= j render partial: "search/answers", locals: { answers: @result[Answer] } %>')
+<% end %>
+
+<% if @result[Comment].present? %>
+  comments_list.append('<%= j render partial: "search/comments", locals: { comments: @result[Comment] } %>')
+<% end %>
+
+<% if @result[User].present? %>
+  users_list.append('<%= j render partial: "search/users", locals: { users: @result[User] } %>')
+<% end %>
+
+function clear_results() {
+  questions_list.empty()
+  answers_list.empty()
+  comments_list.empty()
+  users_list.empty()
+}

@@ -46,8 +46,6 @@ RSpec.configure do |config|
   config.include Capybara::DSL
   config.include Warden::Test::Helpers
 
-  config.use_transactional_fixtures = true
-
   config.infer_base_class_for_anonymous_controllers = false
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
@@ -56,17 +54,7 @@ RSpec.configure do |config|
   Capybara.javascript_driver = :selenium_chrome_headless
   Capybara.default_max_wait_time = 2
 
-  # cleaner
-  # config.before(:suite) do
-  #   DatabaseCleaner.strategy = :transaction
-  #   DatabaseCleaner.clean_with(:truncation)
-  # end
-
-  # config.around(:each) do |example|
-  #   DatabaseCleaner.cleaning do
-  #     example.run
-  #   end
-  # end
+  config.use_transactional_fixtures = true  
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -74,7 +62,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  # config.use_transactional_fixtures = true
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
@@ -98,6 +86,10 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.before :each do |example|
+    ThinkingSphinx::Configuration.instance.settings['real_time_callbacks'] = false
+  end
 
   config.after(:all) do
     FileUtils.rm_rf("#{Rails.root}/tmp/storage")

@@ -1,0 +1,11 @@
+h4 Questions
+
+table.questions.table
+  thead
+    tr
+      td Title
+      td Author
+
+  tbody
+    - questions.each do |question|
+      = render partial: "search/question", locals: { question: question }

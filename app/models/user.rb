@@ -18,6 +18,8 @@ class User < ApplicationRecord
   validates :email, uniqueness: true
   validates :email, format: /@/
 
+  ThinkingSphinx::Callbacks.append(self, :behaviours => [:real_time])  
+  
   def self.find_for_oauth(auth)
     Omni::AuthFinder.new(auth).call
   end
