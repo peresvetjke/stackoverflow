@@ -7,11 +7,7 @@ class SearchController < ApplicationController
   def search
     @type, @query = params[:type], params[:query]
 
-    @result = if @type == "All"
-      ThinkingSphinx.search @query
-    else
-      type_klass.search @query
-    end
+    @result = @type == "All" ? ThinkingSphinx.search(@query) : type_klass.search(@query)
   end
 
   private
