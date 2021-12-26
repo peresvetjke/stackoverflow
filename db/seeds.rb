@@ -6,16 +6,13 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-5.times do |u|
-  user = User.create!(email: "user#{u+1}@mail.ru", password: "xxxxxx", confirmed_at: Time.now)
-end
+SEARCH_TAGS = ['foo', 'bar']
+
+5.times { |u| user = User.create!(email: "user#{u+1}@mail.ru", password: "xxxxxx", confirmed_at: Time.now) }
 
 10.times do |q|
-  question_author = User.all.sample
-  question = question_author.questions.create!(title: "Question ##{q+1}", body: "question body")
-
-  5.times do |a|
-    answer_author = User.where.not(id: question_author.id).sample
-    answer = question.answers.create!(body: "Answer ##{a+1} for question ##{question.id}", author_id: answer_author.id)
-  end
+  question = User.all.sample.questions.create!(title: "Question ##{q+1}", body: "question body; #{SEARCH_TAGS.sample}")
+  5.times { |a| question.answers.create!(body: "Answer ##{a+1} for question ##{question.id}; #{SEARCH_TAGS.sample}", author_id: User.all.sample.id) }
 end
+
+(Question.all + Answer.all).each { |commentable| commentable.comments.create!(body: "Comment; #{SEARCH_TAGS.sample}", author: User.all.sample) }

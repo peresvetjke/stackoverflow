@@ -53,3 +53,4 @@ namespace :deploy do
 end
 
 set :rvm_ruby_string, '2.7.4'              # use the same ruby as used locally for deployment
+set :pty, false
