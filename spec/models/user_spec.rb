@@ -9,9 +9,9 @@ RSpec.describe User, type: :model do
   end
 
   describe "associations" do
-    it { is_expected.to have_many(:questions) }
-    it { is_expected.to have_many(:answers) }
-    it { is_expected.to have_many(:awardings) }
+    it { is_expected.to have_many(:questions).dependent(:destroy) }
+    it { is_expected.to have_many(:answers).dependent(:destroy) }
+    it { is_expected.to have_many(:awardings).dependent(:destroy) }
     it { is_expected.to have_many(:authentications).dependent(:destroy) }
     it { is_expected.to have_many(:subscriptions).dependent(:destroy) }
     it { is_expected.to have_many(:followed_questions).class_name("Question") }

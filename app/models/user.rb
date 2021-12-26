@@ -7,9 +7,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :confirmable, :omniauthable, omniauth_providers: %i[facebook github]
 
-  has_many :questions, foreign_key: 'author_id'
-  has_many :answers, foreign_key: 'author_id'
-  has_many :awardings
+  has_many :questions, foreign_key: 'author_id', dependent: :destroy
+  has_many :answers, foreign_key: 'author_id', dependent: :destroy
+  has_many :awardings, dependent: :destroy
   has_many :authentications, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   has_many :followed_questions, through: :subscriptions, source: :question

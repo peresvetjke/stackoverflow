@@ -279,9 +279,11 @@ Devise.setup do |config|
     :prod
   end
 
-  config.omniauth :facebook,  Rails.application.credentials.facebook[cred_env][:app_id],  Rails.application.credentials.facebook[cred_env][:secret_id], token_params: { parse: :json }
-  config.omniauth :github,    Rails.application.credentials.github[cred_env][:app_id],    Rails.application.credentials.github[cred_env][:secret_id], scope: 'user'
-
+  unless Rails.env.test?
+    config.omniauth :facebook,  Rails.application.credentials.facebook[cred_env][:app_id],  Rails.application.credentials.facebook[cred_env][:secret_id], token_params: { parse: :json }
+    config.omniauth :github,    Rails.application.credentials.github[cred_env][:app_id],    Rails.application.credentials.github[cred_env][:secret_id], scope: 'user'
+  end
+  
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
