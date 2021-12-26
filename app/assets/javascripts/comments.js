@@ -6,7 +6,7 @@ function ready() {
   var input = $('.comments')
 
   if (input) {
-    $(document).on('ajax:before', ".comment_form", function(e) {  
+    $(document).on('ajax:before', ".comment_form", function(e) {
         resetErrors()
       }) .on('ajax:success', ".comment_form", function(e) {  
         var comment = e.detail[0]

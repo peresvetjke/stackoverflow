@@ -3,7 +3,7 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server "194.67.110.25", user: "deployer", roles: %w{app db web}, primary: true
+server "194-67-110-25.cloudvps.regruhosting.ru", user: "deployer", roles: %w{app db web}, primary: true
 set :rail_env, :production
 
 # server "example.com", user: "deploy", roles: %w{app db web}, my_property: :my_value
