@@ -10,7 +10,6 @@ Rails.application.routes.draw do
   root to: "questions#index"
 
   get :search, to: "search#index"
-  post :search, to: "search#search"
 
   namespace :api do
     namespace :v1 do

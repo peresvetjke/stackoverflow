@@ -1,21 +1,33 @@
 h2 Search
 
-= form_with url: search_path, local: false, data: {type: :js} do |f|
+.sphinx_search = form_with url: search_path, method: :get do |f|
   = f.label :query, "Your query:"
   br
-  = f.text_field :query
+  = f.text_field :query, value: @query || ""
   br
-  = f.radio_button :type, "All", checked: true
+  = f.radio_button :type, "All", checked: (@type == "All" || @type.nil?)
   = f.label :type_all, "All types"
   br
   - ["question", "answer", "comment", "user"].each do |type|
-    = f.radio_button :type, type
+    = f.radio_button :type, type, checked: (@type == type)
     = f.label "type_#{type}".to_sym, type.capitalize
     br
   = f.submit "Search"
 
+- if @result
+  = paginate @result
+  - @result = @result.group_by(&:class)
+
 .result
   .questions
+    - if @result && @result[Question]
+      = render partial: "search/questions", locals: { questions: @result[Question] }
   .answers
+    - if @result && @result[Answer]
+      = render partial: "search/answers", locals: { answers: @result[Answer] }
   .comments
+    - if @result && @result[Comment]
+      = render partial: "search/comments", locals: { comments: @result[Comment] }
   .users
+    - if @result && @result[User]
+      = render partial: "search/users", locals: { users: @result[User] }
