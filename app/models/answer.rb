@@ -5,7 +5,7 @@ class Answer < ApplicationRecord
 
   default_scope { order(best: :desc, created_at: :asc) }
 
-  belongs_to :question
+  belongs_to :question, touch: true
   has_many :links, as: :linkable, dependent: :destroy
   has_many_attached :files
 

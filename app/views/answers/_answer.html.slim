@@ -1,59 +1,60 @@
-tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
-  td
-    = render partial: "shared/votes", locals: {resource: answer}
+- cache answer do
+  tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
+    td
+      = render partial: "shared/votes", locals: {resource: answer}
 
-  td
-    table
-      tr 
-        td 
-          - if can? :mark_best, answer
-            = button_to('Mark best', mark_best_answer_path(answer), remote: true, data: { type: :js }, class: (answer.best? ? "mark_best hide" : "mark_best"))
-      
-      tr 
-        td
-          strong Body: 
-          = answer.body
-      tr 
-        td 
-          strong Author: 
-          = answer.author.email 
-      
-      - if answer.files.attached?
+    td
+      table
+        tr 
+          td 
+            - if can? :mark_best, answer
+              = button_to('Mark best', mark_best_answer_path(answer), remote: true, data: { type: :js }, class: (answer.best? ? "mark_best hide" : "mark_best"))
+        
+        tr 
+          td
+            strong Body: 
+            = answer.body
+        tr 
+          td 
+            strong Author: 
+            = answer.author.email 
+        
+        - if answer.files.attached?
+          tr
+            td 
+              strong Attachments: 
+              br
+              - answer.files.each do |file|
+                = link_to file.filename.to_s, url_for(file)
+                br
+
+        - if answer.links.present?
+          tr
+            td
+              table.links
+                thead 
+                  tr 
+                    th = "Links:"
+                - answer.links.each do |link|
+                  tr 
+                    td = link_to link.title, link.url, target: "_blank", data: (link.gist? ? {'gist-id' => link.gist_id} : '')
+
         tr
           td 
-            strong Attachments: 
-            br
-            - answer.files.each do |file|
-              = link_to file.filename.to_s, url_for(file)
-              br
+            - if can? :update, answer
+              = button_to('Edit answer', edit_answer_path(answer), method: :get)
+            - if can? :destroy, answer
+              = button_to('Delete answer', answer_path(answer), method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: "delete_answer")
 
-      - if answer.links.present?
         tr
           td
-            table.links
-              thead 
-                tr 
-                  th = "Links:"
-              - answer.links.each do |link|
-                tr 
-                  td = link_to link.title, link.url, target: "_blank", data: (link.gist? ? {'gist-id' => link.gist_id} : '')
-
-      tr
-        td 
-          - if can? :update, answer
-            = button_to('Edit answer', edit_answer_path(answer), method: :get)
-          - if can? :destroy, answer
-            = button_to('Delete answer', answer_path(answer), method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: "delete_answer")
-
-      tr
-        td
-          table
-            tr
-              td 
-                table.table.bordered.comments
-                  - if answer.comments.present?
-                    = render partial: 'comments/comment', collection: answer.comments
-            tr
-              - if current_user.present?
-                = render partial: "comments/form", locals: {commentable: answer}
-    
+            table
+              tr
+                td 
+                  table.table.bordered.comments
+                    - if answer.comments.present?
+                      = render partial: 'comments/comment', collection: answer.comments
+              tr
+                - if current_user.present?
+                  = render partial: "comments/form", locals: {commentable: answer}
+      

@@ -1,66 +1,68 @@
-h1 Show question
+- cache @question do
 
-table.question *{'item-id': @question.id}
-  tr
-    td
-      = render partial: "shared/votes", locals: {resource: @question}
-          
-    td
-      table
-        tr
-          td
-            h2 = "Title: #{@question.title}"
+  h1 Show question
+
+  table.question *{'item-id': @question.id}
+    tr
+      td
+        = render partial: "shared/votes", locals: {resource: @question}
             
-            - if can? :subscribe, Question
-              - subscribe_button = @question.followers.include?(current_user) ? 'Unsubscribe' : 'Subscribe'
-              = button_to "#{subscribe_button}", subscribe_question_path(@question), remote: true, data: { type: :js }, class: "subscribe"
+      td
+        table
+          tr
+            td
+              h2 = "Title: #{@question.title}"
+              
+              - if can? :subscribe, Question
+                - subscribe_button = @question.followers.include?(current_user) ? 'Unsubscribe' : 'Subscribe'
+                = button_to "#{subscribe_button}", subscribe_question_path(@question), remote: true, data: { type: :js }, class: "subscribe"
 
-            strong Body: 
-            = @question.body
-            br
-            strong Author: 
-            = @question.author.email
-            br
-            - if @question.awarding.present?
-              #awarding
-                strong Awarding: 
-                = @question.awarding.title
-                br
-                = image_tag(@question.awarding.image.variant(resize_to_limit: [100, 100]))
+              strong Body: 
+              = @question.body
+              br
+              strong Author: 
+              = @question.author.email
+              br
+              - if @question.awarding.present?
+                #awarding
+                  strong Awarding: 
+                  = @question.awarding.title
+                  br
+                  = image_tag(@question.awarding.image.variant(resize_to_limit: [100, 100]))
 
-            - if can? :update, @question
-              = button_to "Edit Question", edit_question_path(@question), method: :get, local: true
-            - if can? :destroy, @question
-              = button_to "Delete Question", question_path(@question), method: :delete, local: true, data: { confirm: "Are you sure?" }
+              - if can? :update, @question
+                = button_to "Edit Question", edit_question_path(@question), method: :get, local: true
+              - if can? :destroy, @question
+                = button_to "Delete Question", question_path(@question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
-            - if @question.files.attached?
-              table.attachments
-                thead 
-                  tr 
-                    th = "Attachments:"
-                - @question.files.each do |file|
-                  tr 
-                    td = link_to file.filename.to_s, url_for(file)
+              - if @question.files.attached?
+                table.attachments
+                  thead 
+                    tr 
+                      th = "Attachments:"
+                  - @question.files.each do |file|
+                    tr 
+                      td = link_to file.filename.to_s, url_for(file)
 
-            - if @question.links.present?
-              table.links
-                thead 
-                  tr 
-                    th = "Links:"
-                - @question.links.each do |link|
-                  tr 
-                    td = link_to link.title, link.url, target: "_blank"
-            br
-        tr
-          td
-            table
-              tr
-                td 
-                  table.table.bordered.comments
-                    = render @comments
-              tr
-                - if current_user.present?
-                  = render partial: "comments/form", locals: {commentable: @question}
+              - if @question.links.present?
+                table.links
+                  thead 
+                    tr 
+                      th = "Links:"
+                  - @question.links.each do |link|
+                    tr 
+                      td = link_to link.title, link.url, target: "_blank"
+              br
+          tr
+            td
+              table
+                tr
+                  td 
+                    table.table.bordered.comments
+                      = render @comments
+                tr
+                  - if current_user.present?
+                    = render partial: "comments/form", locals: {commentable: @question}
 
 h3 Answers
 table.answers
