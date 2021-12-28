@@ -56,3 +56,18 @@ set :rvm_ruby_string, '2.7.4'              # use the same ruby as used locally f
 set :pty, false
 
 after 'deploy:publishing', 'unicorn:restart'
+
+namespace :thinking_sphinx do
+  desc "Start sphinx"
+  task :configure do
+    on roles(:app) do
+      within "#{current_path}" do
+        # with rails_env: :production do
+          execute("cd #{release_path} && /home/deployer/.rvm/bin/rvm default do bundle exec rake ts:configure RAILS_ENV=production")
+        # end
+      end
+    end
+  end
+end
+
+after 'deploy:publishing', 'thinking_sphinx:configure'

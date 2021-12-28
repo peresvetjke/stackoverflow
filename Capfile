@@ -4,6 +4,7 @@ require "capistrano/setup"
 # Include default deployment tasks
 require "capistrano/deploy"
 require "capistrano/rvm"
+# require 'rvm1/capistrano3'
 require "capistrano/bundler"
 require "capistrano/rails"
 # require "capistrano/passenger"
@@ -11,7 +12,6 @@ require "capistrano/sidekiq"
 install_plugin Capistrano::Sidekiq
 install_plugin Capistrano::Sidekiq::Systemd
 require "whenever/capistrano"
-require "thinking_sphinx/capistrano"
 require "thinking_sphinx/capistrano"
 require "capistrano3/unicorn"
 
