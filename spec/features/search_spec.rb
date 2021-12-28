@@ -20,6 +20,7 @@ feature 'User can perform full-text search', %q{
     }
 
     it "serach though all types of records" do
+      save_and_open_page
       expect(page).to have_text(question.title)
       expect(page).to have_text(answer.body)
       expect(page).to have_text(comment.body)

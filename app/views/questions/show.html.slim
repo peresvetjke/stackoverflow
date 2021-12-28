@@ -26,8 +26,8 @@ table.question *{'item-id': @question.id}
               = @question.author.email
               br
             
-            - if @question.awarding.present?
-              - cache [@question, "awarding"] do   
+            - cache [@question, "awarding"] do  
+              - if @question.awarding.present?   
                 #awarding
                   strong Awarding: 
                   = @question.awarding.title
@@ -35,24 +35,21 @@ table.question *{'item-id': @question.id}
                   = image_tag(@question.awarding.image.variant(resize_to_limit: [100, 100]))
 
             - if can? :update, @question
-              - cache [@question, "edit"] do   
-                = button_to "Edit Question", edit_question_path(@question), method: :get, local: true
+              = button_to "Edit Question", edit_question_path(@question), method: :get, local: true
             - if can? :destroy, @question
-              - cache [@question, "destroy"] do   
-                = button_to "Delete Question", question_path(@question), method: :delete, local: true, data: { confirm: "Are you sure?" }
+              = button_to "Delete Question", question_path(@question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
             - if @question.files.attached?
-              - cache [@question, "files"] do   
-                table.attachments
-                  thead 
-                    tr 
-                      th = "Attachments:"
-                  - @question.files.each do |file|
-                    tr 
-                      td = link_to file.filename.to_s, url_for(file)
+              table.attachments
+                thead 
+                  tr 
+                    th = "Attachments:"
+                - @question.files.each do |file|
+                  tr 
+                    td = link_to file.filename.to_s, url_for(file)
 
-            - if @question.links.present?
-              - cache [@question, "links"] do
+            - cache [@question, "links"] do
+              - if @question.links.present?
                 table.links
                   thead 
                     tr 

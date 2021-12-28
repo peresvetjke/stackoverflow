@@ -4,7 +4,7 @@ class Link < ApplicationRecord
   
   GIST_HOST = 'gist.github.com'
 
-  belongs_to :linkable, polymorphic: true
+  belongs_to :linkable, polymorphic: true, touch: true
 
   validates :title, :url, presence: true
   validate  :validate_url

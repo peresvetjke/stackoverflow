@@ -8,8 +8,7 @@ tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
       tr 
         td 
           - if can? :mark_best, answer
-            - cache [answer, "matk_best"] do
-              = button_to('Mark best', mark_best_answer_path(answer), remote: true, data: { type: :js }, class: (answer.best? ? "mark_best hide" : "mark_best"))
+            = button_to('Mark best', mark_best_answer_path(answer), remote: true, data: { type: :js }, class: (answer.best? ? "mark_best hide" : "mark_best"))
       
       - cache [answer, "body"] do
         tr 
@@ -22,7 +21,6 @@ tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
             = answer.author.email 
       
       - if answer.files.attached?
-        - cache [answer, "files"] do
           tr
             td 
               strong Attachments: 
@@ -31,8 +29,8 @@ tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
                 = link_to file.filename.to_s, url_for(file)
                 br
 
-      - if answer.links.present?
-        - cache [answer, "links"] do
+      - cache [answer, "links"] do
+        - if answer.links.present?
           tr
             td
               table.links
@@ -46,20 +44,19 @@ tr.answer class=(answer.best? ? "best" : nil) *{'item-id' => answer.id}
       tr
         td 
           - if can? :update, answer
-            - cache [answer, "edit"] do
-              = button_to('Edit answer', edit_answer_path(answer), method: :get)
+            = button_to('Edit answer', edit_answer_path(answer), method: :get)
           - if can? :destroy, answer
-            - cache [answer, "destroy"] do
-              = button_to('Delete answer', answer_path(answer), method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: "delete_answer")
+            = button_to('Delete answer', answer_path(answer), method: :delete, remote: true, data: { confirm: "Are you sure?" }, class: "delete_answer")
 
       tr
         td
           table
             tr
-              td 
-                table.table.bordered.comments
-                  - if answer.comments.present?
-                    = render partial: 'comments/comment', collection: answer.comments
+              - cache [answer, "comments"] do
+                td 
+                  table.table.bordered.comments
+                    - if answer.comments.present?
+                      = render partial: 'comments/comment', collection: answer.comments
             tr
               - if current_user.present?
                 - cache [answer, "new_comment_form"] do
