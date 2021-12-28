@@ -1,41 +1,48 @@
-- cache @question do
+h1 Show question
 
-  h1 Show question
-
-  table.question *{'item-id': @question.id}
-    tr
-      td
+table.question *{'item-id': @question.id}
+  tr
+    td
+      - cache [@question, "votes"] do 
         = render partial: "shared/votes", locals: {resource: @question}
-            
-      td
-        table
-          tr
-            td
+          
+    td
+      table
+        tr
+          td
+            - cache [@question, "title"] do 
               h2 = "Title: #{@question.title}"
-              
-              - if can? :subscribe, Question
-                - subscribe_button = @question.followers.include?(current_user) ? 'Unsubscribe' : 'Subscribe'
-                = button_to "#{subscribe_button}", subscribe_question_path(@question), remote: true, data: { type: :js }, class: "subscribe"
+            
+            - if can? :subscribe, Question
+              - subscribe_button = @question.followers.include?(current_user) ? 'Unsubscribe' : 'Subscribe'
+              = button_to "#{subscribe_button}", subscribe_question_path(@question), remote: true, data: { type: :js }, class: "subscribe"
 
+
+            - cache [@question, "body"] do   
               strong Body: 
               = @question.body
               br
               strong Author: 
               = @question.author.email
               br
-              - if @question.awarding.present?
+            
+            - if @question.awarding.present?
+              - cache [@question, "awarding"] do   
                 #awarding
                   strong Awarding: 
                   = @question.awarding.title
                   br
                   = image_tag(@question.awarding.image.variant(resize_to_limit: [100, 100]))
 
-              - if can? :update, @question
+            - if can? :update, @question
+              - cache [@question, "edit"] do   
                 = button_to "Edit Question", edit_question_path(@question), method: :get, local: true
-              - if can? :destroy, @question
+            - if can? :destroy, @question
+              - cache [@question, "destroy"] do   
                 = button_to "Delete Question", question_path(@question), method: :delete, local: true, data: { confirm: "Are you sure?" }
 
-              - if @question.files.attached?
+            - if @question.files.attached?
+              - cache [@question, "files"] do   
                 table.attachments
                   thead 
                     tr 
@@ -44,7 +51,8 @@
                     tr 
                       td = link_to file.filename.to_s, url_for(file)
 
-              - if @question.links.present?
+            - if @question.links.present?
+              - cache [@question, "links"] do
                 table.links
                   thead 
                     tr 
@@ -52,19 +60,21 @@
                   - @question.links.each do |link|
                     tr 
                       td = link_to link.title, link.url, target: "_blank"
-              br
-          tr
-            td
-              table
-                tr
-                  td 
-                    table.table.bordered.comments
-                      = render @comments
-                tr
-                  - if current_user.present?
+            br
+        tr
+          td
+            table
+              tr
+                td 
+                  table.table.bordered.comments
+                    = render @comments
+              tr
+                - if current_user.present?
+                  - cache [@question, "new_comment_form"] do
                     = render partial: "comments/form", locals: {commentable: @question}
 
 h3 Answers
+
 table.answers
   tbody
     - if @answers.present?
@@ -73,23 +83,8 @@ table.answers
 div.errors
 
 - if can? :create, Answer
-  br
-  = form_with url: question_answers_path(@question), model: @question.answers.new, local: false, id: "direct_upload_form" do |f|
-    h4 = f.label :body, "Your answer"
-    br
-    = f.text_area :body 
-    br
-    = f.file_field :files, multiple: true, direct_upload: true
-    br
-    h3 Links
-    #links
-      = f.fields_for :links do |link|
-        = render 'shared/link_fields', f: link
-      .links
-        = link_to_add_association 'add link', f, :links,
-          partial: 'shared/link_fields'
-    br
-    = f.submit
+  - cache [@question, "new_answer_form"] do
+    = render partial: "answers/form", locals: {question: @question}  
 - else 
   p 
     = link_to "Sign in", new_user_session_path, method: :get   
