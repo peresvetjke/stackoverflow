@@ -17,7 +17,8 @@ class SearchController < ApplicationController
 
     respond_to do |format|
       format.html { }
-      format.json { { "results" => serialized, "meta" => pagination_dict(@result) } }
+      format.json { render json: { "results" => serialized, "meta" => pagination_dict(@result) } }
+    end
   end
 
   private
