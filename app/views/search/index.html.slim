@@ -1,6 +1,6 @@
 h2 Search
 
-.sphinx_search = form_with url: search_path, method: :get do |f|
+.sphinx_search = form_with url: search_path, local: false, method: :get, data: { type: :json } do |f|
   = f.label :query, "Your query:"
   br
   = f.text_field :query, value: @query || ""
@@ -14,20 +14,9 @@ h2 Search
     br
   = f.submit "Search"
 
-- if @result
-  = paginate @result
-  - @result = @result.group_by(&:class)
-
 .result
+  .pages
   .questions
-    - if @result && @result[Question]
-      = render partial: "search/questions", locals: { questions: @result[Question] }
   .answers
-    - if @result && @result[Answer]
-      = render partial: "search/answers", locals: { answers: @result[Answer] }
   .comments
-    - if @result && @result[Comment]
-      = render partial: "search/comments", locals: { comments: @result[Comment] }
   .users
-    - if @result && @result[User]
-      = render partial: "search/users", locals: { users: @result[User] }
