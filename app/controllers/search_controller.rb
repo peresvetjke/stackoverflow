@@ -6,7 +6,7 @@ class SearchController < ApplicationController
 
     if @query
       @result = @type == "All" ? ThinkingSphinx.search(@query) : type_klass.search(@query)
-      @result = Kaminari.paginate_array(@result).page(params[:page] || 1).per(5)
+      @result = Kaminari.paginate_array(@result).page(params[:page] || 1).per(10)
 
       results = @result.group_by(&:class)
       serialized = serialize(results[Question], Search::QuestionsSerializer).
