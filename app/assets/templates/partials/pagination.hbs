@@ -1,0 +1,37 @@
+<nav class="pagination sphinx_search" role="navigation" aria-label="pager">
+  
+{{#if meta.prev_page}}
+
+  <span class="first">
+    <a href="/search?query={{ query }}&type={{ type }}" data-remote="true" data-type="json">« First</a>
+  </span>
+
+  <span class="prev">
+    <a rel="prev" href="/search?page={{ meta.prev_page }}&query={{ query }}&type={{ type }}" data-remote="true" data-type="json">‹ Prev</a>
+  </span>
+
+{{/if}}
+
+  <span class="page prev">
+    <a rel="next" href="/search?page={{ meta.prev_page }}&query={{ query }}&type={{ type }}" data-remote="true" data-type="json">{{ meta.prev_page }}</a>
+  </span>
+
+  <span class="page current">{{ meta.current_page }}</span>
+
+  <span class="page next">
+    <a rel="next" href="/search?page={{ meta.next_page }}&query={{ query }}&type={{ type }}" data-remote="true" data-type="json">{{ meta.next_page }}</a>
+  </span>
+
+{{#if meta.next_page}}
+
+  <span class="next">
+    <a rel="next" href="/search?page={{ meta.next_page }}&query={{ query }}&type={{ type }}" data-remote="true" data-type="json">Next ›</a>
+  </span>
+
+  <span class="last">
+    <a href="/search?page={{ meta.total_pages }}&query={{ query }}&type={{ type }}" data-remote="true" data-type="json">Last »</a>
+  </span>
+
+{{/if}}
+
+</nav>

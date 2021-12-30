@@ -1,0 +1,19 @@
+<h4>Comments</h4>
+
+<table class="comments table">
+
+  <thead>
+    <tr>
+      <td>#</td>
+      <td>Body</td>
+      <td>Author</td>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each comments}}
+      {{> comment}}
+    {{/each}}
+  </tbody>
+
+</table>
