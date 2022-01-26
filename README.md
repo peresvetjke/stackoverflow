@@ -6,13 +6,10 @@ This project was built as part of education program at [Thinknetica](https://thi
 Develop an analog of Stackoverflow.
 
 ### What
-- **questions and answers**
+- **questions, answers and comments**
 
     User should have an ability to post a question. 
     Other users should have an ability to post answers for it.
-    
-- **comments**
-
     User can post comment - either questions or answers.
     
 - **votes**
@@ -27,6 +24,10 @@ Develop an analog of Stackoverflow.
 
     User should have an ability to get daily email notifications about new questions or about the answers for the questions he subscribed for.
  
+- **awardings**
+
+    User as an author of question can assign an awarding for a question which is automaticcally granted to the best answer's author.
+    
 - **omni auth**
 
     User should have an ability to login in system via Twitter or Github.
