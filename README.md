@@ -58,3 +58,4 @@ Develop an analog of Stackoverflow.
  - Deployed (not available atm) with Capistrano
 
 ### ER Diagram
+![alt text](https://github.com/peresvetjke/stackoverflow/blob/main/stackoverflow%20v1.2.drawio.png?raw=true)
