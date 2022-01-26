@@ -1,24 +1,17 @@
-# README
+# Questions and Answers
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project was built as part of my education at [Thinknetica](https://thinknetica.com/) (c).
 
-Things you may want to cover:
+### Goals
+Develop an analog of Stackoverflow.
 
-* Ruby version
+### User roles
+- user
+- admin
 
-* System dependencies
+### Key features
+- **api**
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+    User should have an ability to get or proceed resources via API.
+    
+### ER Diagram
