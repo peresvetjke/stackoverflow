@@ -55,7 +55,7 @@ Develop an analog of Stackoverflow.
  - Thinking Sphinx + Kaminari are used for search and pagination
  - Cancancan was chosen as an authorization manager
  - RSpec, Factory bot, Shoulda matchers and Capybara as part of TDD process
- - Deployed (not available atm) with Capistrano
+ - Deployed with Capistrano
 
 ### ER Diagram
 ![alt text](https://github.com/peresvetjke/stackoverflow/blob/main/stackoverflow%20v1.2.drawio.png?raw=true)
