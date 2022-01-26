@@ -5,6 +5,9 @@ This project was built as part of education program at [Thinknetica](https://thi
 ### Goals
 Develop an analog of Stackoverflow.
 
+### When
+07.11.21 - 30.12.21
+
 ### What
 - **questions, answers and comments**
 
