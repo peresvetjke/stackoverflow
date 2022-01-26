@@ -5,17 +5,11 @@ This project was built as part of education program at [Thinknetica](https://thi
 ### Goals
 Develop an analog of Stackoverflow.
 
-### User roles
-- user
-- admin
-
-### Key features
+### What
 - **questions and answers**
 
-    User posts a question. Other users should have an ability to post answers for it.
-    - AWS S3 is used as a storage for images direct upload.
-    - Action Cable is used for getting the changes available for all the users. 
-    - Cocoon is used for nested forms
+    User should have an ability to post a question. 
+    Other users should have an ability to post answers for it.
     
 - **comments**
 
@@ -32,7 +26,6 @@ Develop an analog of Stackoverflow.
 - **subscriptions and notifications**
 
     User should have an ability to get daily email notifications about new questions or about the answers for the questions he subscribed for.
-    - Sidekiq + Active Job + Whenever
  
 - **omni auth**
 
@@ -41,20 +34,27 @@ Develop an analog of Stackoverflow.
 - **search**
     
     User should have an ability to perform a search for questions, answers, comments or user.
-    - Thinking Sphinx
-    - Kaminari
     
 - **api**
 
     User should have an ability to get or proceed resources via API.
-    - Doorkeeper
-    - Active model serializers + Oj
 
 - **authorization**
     
     User roles and permissions should be divided.
-    - Cancancan
 
 - **and other!**
+
+### How
+ - Action Cable is used for getting the changes available for all the users "online".
+ - AWS S3 is used as a storage for images direct upload.
+ - Cocoon is used for proceeding nested forms
+ - Active Job + Sidekiq + Whenever made daily tasks possible
+ - Doorkeeper is used for omniauth in part of api
+ - Active model serializers + Oj are used for serialization of json's
+ - Thinking Sphinx + Kaminari are used for search and pagination
+ - Cancancan was chosen as an authorization manager
+ - RSpec, Factory bot, Shoulda matchers and Capybara as part of TDD process
+ - Deployed (not available atm) with Capistrano
 
 ### ER Diagram
